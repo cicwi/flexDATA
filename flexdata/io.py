@@ -27,7 +27,6 @@ import psutil         # RAM tester
 import toml           # TOML format parcer
 import transforms3d   # rotation matrices
 from tqdm import tqdm # progress bar
-import shutil         # Use it to remove files
 
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>> Constants >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -430,13 +429,6 @@ def astra_proj_geom(geometry, data_shape, index = None):
     proj_geom = _modify_astra_vector_(proj_geom, geometry)
     
     return proj_geom
-
-def delete_path(path):
-    """
-    Delete everything. Remove the evidence!
-    """
-    print('Deleting:', path)
-    shutil.rmtree(path)
    
 def read_toml(file_path):
     """

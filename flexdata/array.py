@@ -28,21 +28,56 @@ def free_memory(percent = False):
     
     else:
         return psutil.virtual_memory().available / psutil.virtual_memory().total * 100
+    
+def cast2type(array, dtype, bounds = None):
+    """
+    Cast from float to int or float to float rescaling values if needed.
+    """
+    # No? Yes? OK...
+    if array.dtype == dtype:
+        return array
+    
+    # Make sure dtype is not a string:
+    dtype = numpy.dtype(dtype)
+    
+    # If cast to float, simply cast:
+    if dtype.kind == 'f':
+        return array.astype(dtype)
+    
+    # If to integer, rescale:
+    if bounds is None:
+        bounds = [numpy.amin(array), numpy.amax(array)]
+    
+    data_max = numpy.iinfo(dtype).max
+    
+    array -= bounds[0]
+    array *= data_max / (bounds[1] - bounds[0])
+    
+    array[array < 0] = 0
+    array[array > data_max] = data_max
+    
+    array = numpy.array(array, dtype)    
+    
+    return array
    
 def shape_alike(array_1, array_2):
     '''
     Make sure two arrays have the same shape by padding either array_1 or array_2:
+        Returns: array1, array2 - reshaped.
     '''
+    if array_2.ndim != array_1.ndim:
+        raise Exception('Array dimensions not equal!')
+        
     d_shape = numpy.array(array_2.shape)
     d_shape -= array_1.shape
 
-    for dim in [0,1,2]:
+    for dim in range(3):
         
         pp = d_shape[dim]
         if pp > 0:
-            array_1 = pad(array_1, dim, pp, symmetric = True, mode = 'zero')
+            array_1 = pad(array_1, dim, [0, abs(pp)], mode = 'zero')
         if pp < 0:
-            array_2 = pad(array_2, dim, -pp, symmetric = True, mode = 'zero')
+            array_2 = pad(array_2, dim, [0, abs(pp)], mode = 'zero')
   
     return array_1, array_2
 
@@ -323,7 +358,7 @@ def add_dim(array_1, array_2):
             array_1 += array_2[None, None, :]
             
     else:
-        raise('ERROR! array_1.ndim - array_2.ndim should be 1 or 2')
+        raise Exception('ERROR! array_1.ndim - array_2.ndim should be 1 or 2')
            
 def mult_dim(array_1, array_2):    
     """

@@ -24,6 +24,7 @@ import paramiko       # SCP client
 import errno          # Uesd for error tracking in SCP client
 from traceback import print_exception # Error stack printer
 from sys import exc_info              # Error info 
+import shutil         # Use it to remove files
 
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>> Methods >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
  
@@ -109,7 +110,14 @@ def connect_sftp(hostname, username, password = None, log_file = None):
     
     # Go!
     return client 
-    
+
+def delete_local(local_path):
+    '''
+    Often useful to delete a directory recursively. Use with extreme care!
+    '''    
+    print('Deleting:', path)
+    shutil.rmtree(path)
+
 class _MySFTPClient_(paramiko.SFTPClient):
     '''
     Class needed for copying recursively through ssh (paramiko.SFTPClient only allows to copy single files).
