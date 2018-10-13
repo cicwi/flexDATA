@@ -8,6 +8,7 @@ setup(
     install_requires=[
     "numpy",
     "astra-toolbox",
+    "matplotlib",
     "tqdm",
     "imageio",
     "tifffile",

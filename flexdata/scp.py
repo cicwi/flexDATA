@@ -58,6 +58,10 @@ def ssh_get_path(local_path, remote_path, hostname, username, password = None, o
 def ssh_put_path(local_path, remote_path, hostname, username, password = None, ovewrite = 'different'):
     '''
     Copy files and directories recursively from local path to remote path.
+    Set overwrite to: 
+        'different' to overwrite files with a different size;
+        'always' to overwrite all files
+        'never' to never overwrite
     '''
     # Create the destination directory
     if not os.path.exists(local_path):

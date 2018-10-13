@@ -461,6 +461,3 @@ def tiles_shape(shape, geometry_list):
     geometry['vol_tra'][2] = geometry['axs_hrz']
 
     return new_shape, geometry
-  
-# >>>>>>>>>>>>>>>>>>>>>>>>>>>> Utility functions >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
