@@ -139,7 +139,7 @@ def init_geometry(src2obj = 0, det2obj = 0, det_pixel = 0, unit = 'millimetre', 
         
     return geometry
          
-def read_flexray(path, sample = 1, skip = 1, memmap = None, index = None):
+def read_flexray(path, sample = 1, skip = 1, memmap = None):
     '''
     Read raw projecitions, dark and flat-field, scan parameters from a typical FlexRay folder.
     
@@ -161,7 +161,7 @@ def read_flexray(path, sample = 1, skip = 1, memmap = None, index = None):
     flat = read_tiffs(path, 'io', skip, sample)
     
     # Read the raw data
-    proj = read_tiffs(path, 'scan_', skip, sample, [], [], 'float32', memmap, index)
+    proj = read_tiffs(path, 'scan_', skip, sample, [], [], 'float32', memmap)
     
     # Try to retrieve metadata:
     if os.path.exists(os.path.join(path, 'metadata.toml')):
@@ -205,10 +205,10 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
         
     # Create a mapped array if needed:
     if memmap:
-        data = numpy.memmap(memmap, dtype=image.dtype, mode='w+', shape = (file_n, sz[0], sz[1]))
+        data = numpy.memmap(memmap, dtype=dtype, mode='w+', shape = (file_n, sz[0], sz[1]))
         
     else:    
-        data = numpy.zeros((file_n, sz[0], sz[1]), dtype = image.dtype)
+        data = numpy.zeros((file_n, sz[0], sz[1]), dtype = dtype)
     
     # In flexbox this function can handle tiff stacks with corrupted files. 
     # Here I removed this functionality to make code simplier.

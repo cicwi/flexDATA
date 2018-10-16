@@ -27,7 +27,7 @@ proj = -numpy.log(proj)
 
 proj = array.raw2astra(proj)    
 
-display.display_slice(proj)
+display.display_slice(proj, title = 'projections')
 
 #%% Recon:
 

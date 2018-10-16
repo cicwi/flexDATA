@@ -6,12 +6,10 @@ Array manipulations example.
 #%% Imports:
 
 from flexdata import array
-from flexdata import display
-
 import numpy
 
 #%% Initialize an array mapped on disk:
-file = 'C:/test/temp1/mem_001'
+file = '/ufs/ciacc/flexbox/swap/test_001'
 
 data_0 = numpy.memmap(file, dtype = 'float32', mode = 'w+', shape = (50,100,150))
 

@@ -8,8 +8,7 @@ import flexdata as data
 
 #%% Read / write a geometry file:
 
-#path = '/ufs/ciacc/flexbox/al_test/90KV_no_filt/'
-path = 'D:/Data/al_dummy_vertical_tile_1'
+path = '/ufs/ciacc/flexbox/al_test/90KV_no_filt/'
 
 meta = data.io.read_meta(path, 'flexray')
 

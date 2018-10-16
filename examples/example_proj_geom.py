@@ -3,8 +3,12 @@
 """
 Read flexray log file and save a TOML file and an ASTRA geometry file.
 """
+#%% Imports
+
 import os
 from flexdata import io
+
+#%% Reading log file, saving ASTRA file
 
 # Extract arguments:
 path = '/ufs/ciacc/flexbox/al_test/90KV_no_filt/'
