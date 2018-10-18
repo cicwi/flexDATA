@@ -27,6 +27,9 @@ import psutil         # RAM tester
 import toml           # TOML format parcer
 import transforms3d   # rotation matrices
 from tqdm import tqdm # progress bar
+import time           # pausing
+
+from . import array   # operations witb arrays
 
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>> Constants >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -198,7 +201,7 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
     if len(files) == 0: raise IOError('Tiff files not found at:', os.path.join(path, name))
     
     # Read the first file:
-    image = _read_tiff_(files[0], sample, x_roi, y_roi)
+    image = read_tiff(files[0], sample, x_roi, y_roi)
         
     sz = numpy.shape(image)
     file_n = len(files)
@@ -220,7 +223,7 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
     for k in tqdm(range(len(files)), unit = 'files'):
         
         try:
-            a = _read_tiff_(files[k], sample, x_roi, y_roi)
+            a = read_tiff(files[k], sample, x_roi, y_roi)
                         
             # Summ RGB:    
             if a.ndim > 2:
@@ -240,16 +243,101 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
                 
     print('%u files were loaded.' % success)
     print('%u%% memory left (%u GB).' % (free_memory(True), free_memory(False)))
+    time.sleep(0.1) # This is needed to let print message be printed before the next porogress bar is created
     
     return data
 
-def read_meta(path, meta_type = 'flexray'):
+def write_tiffs(path, name, data, dim = 1, skip = 1, dtype = None, compress = None):
+    """
+    Write a tiff stack.
+    
+    Args:
+        path (str): destination path
+        name (str): first part of the files name
+        data (numpy.array): data to write
+        dim (int): dimension along which array is separated into images
+        skip (int): how many images to skip in between
+        dtype (type): forse this data type   
+        compress (str): use None, 'zip' or 'jp2'.
+    """
+    
+    print('Writing data...')
+    
+    # Make path if does not exist:
+    if not os.path.exists(path):
+        os.makedirs(path)
+    
+    # Write files stack:    
+    file_num = int(numpy.ceil(data.shape[dim] / skip))
+
+    bounds = [data.min(), data.max()]
+    
+    for ii in tqdm(range(file_num), unit = 'file'):
+        
+        path_name = os.path.join(path, name + '_%06u'% (ii*skip))
+        
+        # Extract one slice from the big array
+        sl = array.anyslice(data, ii * skip, dim)
+        img = data[sl]
+          
+        # Cast data to another type if needed
+        if dtype is not None:
+            img = array.cast2type(img, dtype, bounds)
+        
+        # Write it!!!
+        if (compress == 'zip'):
+            write_tiff(path_name + '.tiff', img, 1)
+            
+        elif (not compress):
+            write_tiff(path_name + '.tiff', img, 0)
+            
+        elif compress == 'jp2':  
+            write_tiff(path_name + '.jp2', img, 1)
+            
+            '''
+            To enable JPEG 2000 support, you need to build and install the OpenJPEG library, version 2.0.0 or higher, before building the Python Imaging Library.
+            conda install -c conda-forge openjpeg
+            '''
+            
+        else:
+            raise ValueError('Unknown compression!')
+                
+def write_tiff(filename, image, compress = 0):
+    """
+    Write a single tiff image. Use compression is needed (0-9).
+    """     
+    with imageio.get_writer(filename) as w:
+        w.append_data(image, {'compress': compress})
+
+def read_tiff(file, sample = 1, x_roi = [], y_roi = []):
+    """
+    Read a single tiff image.
+    """
+    if os.path.splitext(file)[1] == '':
+        #im = imageio.imread(file, format = 'tif', offset = 0)
+        im = imageio.imread(file, format = 'tif')
+    else:
+        #im = imageio.imread(file, offset = 0)
+        im = imageio.imread(file)
+        
+    # TODO: Use kwags offset and size to apply roi!
+    if (y_roi != []):
+        im = im[y_roi[0]:y_roi[1], :]
+    if (x_roi != []):
+        im = im[:, x_roi[0]:x_roi[1]]
+
+    if sample != 1:
+        im = im[::sample, ::sample]
+    
+    return im
+
+def read_meta(path, meta_type = 'flexray', sample = 1):
     """
     Read the log file and return dictionaries with parameters of the scan.
     
     Args:
         path (str): path to the files location
-        log_meta (bool): type of the meta file
+        meta_type (str): type of the meta file: 'flexray' (read settings file), 'metadata' (meta script output) or 'toml' (raw meta record saved in toml format).
         
     Returns:    
         geometry : src2obj, det2obj, det_pixel, thetas, det_hrz, det_vrt, det_mag, det_rot, src_hrz, src_vrt, src_mag, axs_hrz, vol_hrz, vol_tra 
@@ -269,8 +357,15 @@ def read_meta(path, meta_type = 'flexray'):
         records = _file_to_dictionary_(path, 'metadata.toml', separator = '=')
         meta = _metadata_translate_(records)
         
+    elif meta_type == 'toml':
+        meta = read_toml(os.path.join(path, 'meta.toml'))
+            
     else:
         raise ValueError('Unknown meta_type: ' + meta_type)
+        
+    # Apply external sampling to the pixel sizes if needed:
+    meta['geometry']['det_pixel'] *= sample
+    meta['geometry']['img_pixel'] *= sample    
       
     # Convert units to standard:    
     unit_to_mm(meta)    
@@ -494,28 +589,6 @@ def _get_files_sorted_(path, name):
 
     return files 
 
-def _read_tiff_(file, sample = 1, x_roi = [], y_roi = []):
-    """
-    Read a single tiff image.
-    """
-    if os.path.splitext(file)[1] == '':
-        #im = imageio.imread(file, format = 'tif', offset = 0)
-        im = imageio.imread(file, format = 'tif')
-    else:
-        #im = imageio.imread(file, offset = 0)
-        im = imageio.imread(file)
-        
-    # TODO: Use kwags offset and size to apply roi!
-    if (y_roi != []):
-        im = im[y_roi[0]:y_roi[1], :]
-    if (x_roi != []):
-        im = im[:, x_roi[0]:x_roi[1]]
-
-    if sample != 1:
-        im = im[::sample, ::sample]
-    
-    return im
-
 def _sanity_check_(meta):
     '''
     Simple sanity check of the geometry record.
@@ -540,9 +613,9 @@ def _file_to_dictionary_(path, file_mask, separator = ':'):
 
     # Check if there is one file:
     if len(log_file) == 0:
-        warnings.warn('Log file not found in path: ' + path + ' *'+file_mask+'*')
-
-        return None
+        #warnings.warn('Log file not found in path: ' + path + ' *'+file_mask+'*')
+        raise Exception('Log file not found in path: ' + path + ' *'+file_mask+'*')    
+        #return None
         
     if len(log_file) > 1:
         print('Found several log files. Currently using: ' + log_file[0])
@@ -574,7 +647,7 @@ def _file_to_dictionary_(path, file_mask, separator = ':'):
                     
     if not records:
         raise Exception('Something went wrong during parsing the log file at:' + path)                    
-                
+        
     return records                
 
 def _parse_unit_(string):
@@ -601,6 +674,7 @@ def _flexray_translate_(records):
     Translate records parsed from the Flex-Ray log file (scan settings.txt) to the meta object.
     """
     # If the file was not found:
+        
     if records is None: raise Exception('No records found!')
     
     # Initialize empty meta record:
