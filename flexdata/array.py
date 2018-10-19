@@ -404,6 +404,9 @@ def anyslice(array, index, dim):
     """
     sl = [slice(None)] * array.ndim
     sl[dim] = index
+    
+    # Nowadays python asks for tuples:
+    sl = tuple(sl)
       
     return sl   
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Array manipulations example.
+BIG array manipulations example.
 """
 
 #%% Imports:
@@ -9,32 +9,40 @@ from flexdata import array
 import numpy
 
 #%% Initialize an array mapped on disk:
-file = '/ufs/ciacc/flexbox/swap/test_001'
 
-data_0 = numpy.memmap(file, dtype = 'float32', mode = 'w+', shape = (50,100,150))
+file = '[some SSD folder]/test_001'
 
-#%% Add arrays of different dimensions (in place):
-data_1 = numpy.ones([50, 150])
-array.add_dim(data_0, data_1)
+x = numpy.memmap(file, dtype = 'float32', mode = 'w+', shape = (50,100,150))
 
-print(data_0.min())
+#%% Add arrays of different dimensions to eachother (in place):
+
+y = numpy.ones([50, 150])
+
+array.add_dim(x, y)
+
+print(x.min())
 
 #%% Multiply two arrays:
-data_1 = numpy.ones([100])
-array.mult_dim(data_0, data_1)
 
-print(data_0.min())
+y = numpy.ones([100])
+
+array.mult_dim(x, y)
+
+print(x.min())
 
 #%% Slice in an arbitrary direction:
-slc = array.anyslice(data_0, index = 89, dim = 1)
 
-print(data_0[slc])
+slc = array.anyslice(x, index = 89, dim = 1)
+
+print(x[slc])
 
 #%% Make arrays the same shape:
-data_1 = numpy.ones([100, 1, 150])
-data_0, data_1 = array.shape_alike(data_0, data_1)
 
-print(data_0.shape)
+x = numpy.ones([100, 1, 150])
+x, y = array.shape_alike(x, y)
+
+print(x.shape)
 
 #%% Check free memory:
+
 print('%u GB' % array.free_memory())

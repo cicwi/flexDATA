@@ -241,9 +241,8 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
     if success != file_n:
         warnings.warn('%u files are CORRUPTED!'%(file_n - success))
                 
-    print('%u files were loaded.' % success)
-    print('%u%% memory left (%u GB).' % (free_memory(True), free_memory(False)))
-    time.sleep(0.1) # This is needed to let print message be printed before the next porogress bar is created
+    print('%u files were loaded. %u%% memory left (%u GB).' % (success, free_memory(True), free_memory(False)))
+    time.sleep(0.01) # This is needed to let print message be printed before the next porogress bar is created
     
     return data
 
@@ -407,7 +406,23 @@ def unit_to_mm(meta):
         print('Faulty geoemtry record')
         print(meta['geometry'])
         raise Exception('Unit conversion failed')
-         
+       
+def read_toml(file_path):
+    """
+    Read a toml file.
+    """  
+    meta = toml.load(file_path)
+    
+    # Somehow TOML doesnt support numpy. Here is a workaround:
+    for key in meta.keys():
+        if isinstance(meta[key], dict):
+            for subkey in meta[key].keys():
+                meta[key][subkey] = _python2numpy_(meta[key][subkey])
+        else:
+            meta[key] = _python2numpy_(meta[key])
+
+    return meta        
+        
 def write_toml(filename, meta):
     """
     Write a toml file.
@@ -417,20 +432,50 @@ def write_toml(filename, meta):
     path = os.path.dirname(filename)
     if not os.path.exists(path):
         os.makedirs(path)
-        
-    # It looks like toml doesnt like numpy arrays. Use lists.
-    # TODO: make nested:
+
+    # It looks like TOML module doesnt like numpy arrays and numpy types. 
+    # Use lists and native types for TOML.
     for key in meta.keys():
-        if isinstance(meta[key], numpy.ndarray):
-            #meta[key] = numpy.array2string(meta[key], suppress_small=True, separator=',')
-            meta[key] = meta[key].tolist()
-    
+        if isinstance(meta[key], dict):
+            for subkey in meta[key].keys():
+                meta[key][subkey] = _numpy2python_(meta[key][subkey])
+        else:
+            meta[key] = _numpy2python_(meta[key])
+            
     # Save TOML to a file:
     with open(filename, 'w') as f:
         d = toml.dumps(meta)
         f.write(d)
         
         #toml.dump(meta, f)
+        
+def _numpy2python_(numpy_var):
+    """
+    Small utility to translate numpy to standard python (needed for TOML compatibility)
+    """        
+    # Numpy array:
+    if isinstance(numpy_var, numpy.ndarray):
+        numpy_var = numpy.round(numpy_var, 6).tolist()
+    
+    # Numpy scalar:
+    if isinstance(numpy_var, numpy.generic):
+        numpy_var = numpy.round(numpy_var, 6).item()
+    
+    # If list still use round:
+    if isinstance(numpy_var, list):
+        numpy_var = numpy.round(numpy_var, 6).tolist()
+        
+    return numpy_var
+    
+def _python2numpy_(var):
+    """
+    Small utility to translate standard python to numpy (needed for TOML compatibility)
+    """        
+    # Numpy array:
+    if isinstance(var, list):
+        var = numpy.array(var, type(var))
+
+    return var
         
 def write_astra(filename, data_shape, meta):
     """
@@ -524,21 +569,7 @@ def astra_proj_geom(geometry, data_shape, index = None):
     proj_geom = _modify_astra_vector_(proj_geom, geometry)
     
     return proj_geom
-   
-def read_toml(file_path):
-    """
-    Read a toml file.
-    """  
     
-    try:
-        meta = toml.load(file_path)
-        
-    except:
-        warnings.warn('No meta file found at:'+file_path)
-        meta = None    
-    
-    return meta
-  
 def free_memory(percent = False):
     '''
     Return amount of free memory in GB.
@@ -614,7 +645,7 @@ def _file_to_dictionary_(path, file_mask, separator = ':'):
     # Check if there is one file:
     if len(log_file) == 0:
         #warnings.warn('Log file not found in path: ' + path + ' *'+file_mask+'*')
-        raise Exception('Log file not found in path: ' + path + ' *'+file_mask+'*')    
+        raise Exception('Log file not found @ ' + os.path.join(path, '*'+file_mask+'*'))    
         #return None
         
     if len(log_file) > 1:

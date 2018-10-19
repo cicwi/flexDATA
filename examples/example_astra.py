@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-How to load data with flexdata and process it with ASTRA.
+How to load data with flexdata and reconstruct it using ASTRA.
 """
-#%%
+#%% Imports:
+
 from flexdata import io
 from flexdata import array
 from flexdata import display
+
 import numpy
 import astra
 
@@ -14,8 +16,8 @@ import astra
     
 path = '/ufs/ciacc/flexbox/al_test/90KV_no_filt/'
 
-dark = io.read_tiffs(path, 'di')
-flat = io.read_tiffs(path, 'io')    
+dark = io.read_tiffs(path, 'di00')
+flat = io.read_tiffs(path, 'io00')    
 proj = io.read_tiffs(path, 'scan_')
 
 meta = io.read_meta(path, 'flexray')   
@@ -27,7 +29,7 @@ proj = -numpy.log(proj)
 
 proj = array.raw2astra(proj)    
 
-display.display_slice(proj, title = 'projections')
+display.display_slice(proj, title = 'Sinogram. What else?')
 
 #%% Recon:
 
@@ -54,4 +56,4 @@ astra.data3d.delete(vol_id)
 
 #%% Display:
     
-display.display_slice(vol)    
+display.display_slice(vol, title = 'Volume')    
