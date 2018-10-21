@@ -160,8 +160,8 @@ def read_flexray(path, sample = 1, skip = 1, memmap = None):
         meta (dict): description of the geometry, physical settings and comments
     '''
     
-    dark = read_tiffs(path, 'di', skip, sample)
-    flat = read_tiffs(path, 'io', skip, sample)
+    dark = read_tiffs(path, 'di00', skip, sample)
+    flat = read_tiffs(path, 'io00', skip, sample)
     
     # Read the raw data
     proj = read_tiffs(path, 'scan_', skip, sample, [], [], 'float32', memmap)
@@ -169,11 +169,11 @@ def read_flexray(path, sample = 1, skip = 1, memmap = None):
     # Try to retrieve metadata:
     if os.path.exists(os.path.join(path, 'metadata.toml')):
         
-        meta = read_meta(path, 'metadata')   
+        meta = read_meta(path, 'metadata', sample)   
         
     else:
         
-        meta = read_meta(path, 'flexray')   
+        meta = read_meta(path, 'flexray', sample)   
     
     return proj, flat, dark, meta
 
@@ -199,6 +199,9 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
     # Retrieve file names, sorted by name
     files = _get_files_sorted_(path, name)    
     if len(files) == 0: raise IOError('Tiff files not found at:', os.path.join(path, name))
+    
+    # Apply skip:
+    files = files[::skip]
     
     # Read the first file:
     image = read_tiff(files[0], sample, x_roi, y_roi)
