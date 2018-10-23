@@ -222,6 +222,8 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
     # Success index
     success = 0
     
+    time.sleep(0.1) # This is needed to let print message be printed before the next porogress bar is created
+    
     # Loop with a progress bar:
     for k in tqdm(range(len(files)), unit = 'files'):
         
@@ -245,7 +247,7 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
         warnings.warn('%u files are CORRUPTED!'%(file_n - success))
                 
     print('%u files were loaded. %u%% memory left (%u GB).' % (success, free_memory(True), free_memory(False)))
-    time.sleep(0.01) # This is needed to let print message be printed before the next porogress bar is created
+    time.sleep(0.1) # This is needed to let print message be printed before the next porogress bar is created
     
     return data
 
@@ -265,6 +267,10 @@ def write_tiffs(path, name, data, dim = 1, skip = 1, dtype = None, compress = No
     
     print('Writing data...')
     
+    # Add underscore:
+    if '_' not in name:
+        name = name + '_'
+    
     # Make path if does not exist:
     if not os.path.exists(path):
         os.makedirs(path)
@@ -276,7 +282,7 @@ def write_tiffs(path, name, data, dim = 1, skip = 1, dtype = None, compress = No
     
     for ii in tqdm(range(file_num), unit = 'file'):
         
-        path_name = os.path.join(path, name + '_%06u'% (ii*skip))
+        path_name = os.path.join(path, name + '%06u'% (ii*skip))
         
         # Extract one slice from the big array
         sl = array.anyslice(data, ii * skip, dim)
@@ -466,7 +472,9 @@ def _numpy2python_(numpy_var):
     
     # If list still use round:
     if isinstance(numpy_var, list):
-        numpy_var = numpy.round(numpy_var, 6).tolist()
+        for ii in range(len(numpy_var)):
+            if type(numpy_var[ii]) == 'float':
+                numpy_var[ii] = numpy.round(numpy_var[ii], 6)
         
     return numpy_var
     
@@ -476,7 +484,7 @@ def _python2numpy_(var):
     """        
     # Numpy array:
     if isinstance(var, list):
-        var = numpy.array(var, type(var))
+        var = numpy.array(var, type(var[0]))
 
     return var
         
