@@ -60,7 +60,7 @@ proj_geom = io.astra_proj_geom(meta['geometry'], proj.shape)
 
 * **Alexander Kostenko** - *Initial work*
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/cicwi/flexdata/contributors) who participated in this project.
 
 ## License
 
