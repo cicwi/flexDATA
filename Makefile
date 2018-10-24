@@ -9,4 +9,4 @@ install_dev:
 	pip install -e .[dev]
 
 docs: install_dev
-	@cd docs && make html
+	@cd doc_sources && make html
