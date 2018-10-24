@@ -24,6 +24,7 @@ setup(
             'flake8',
             'importmagic',
             'autopep8',
+            'black',
             'yapf',
             'snakeviz',
             # Documentation

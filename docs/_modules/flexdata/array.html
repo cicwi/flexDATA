@@ -156,77 +156,81 @@
 
 <span class="c1"># &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Imports &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span>          <span class="c1"># arrays arrays arrays</span>
-<span class="kn">import</span> <span class="nn">psutil</span>         <span class="c1"># RAM test</span>
+<span class="kn">import</span> <span class="nn">numpy</span>  <span class="c1"># arrays arrays arrays</span>
+<span class="kn">import</span> <span class="nn">psutil</span>  <span class="c1"># RAM test</span>
 
 <span class="c1"># &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Methods &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span>
-   
-<div class="viewcode-block" id="free_memory"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.free_memory">[docs]</a><span class="k">def</span> <span class="nf">free_memory</span><span class="p">(</span><span class="n">percent</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+
+<div class="viewcode-block" id="free_memory"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.free_memory">[docs]</a><span class="k">def</span> <span class="nf">free_memory</span><span class="p">(</span><span class="n">percent</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return amount of free memory in GB.</span>
 <span class="sd">    Args:</span>
 <span class="sd">        percent (bool): percentage of the total or in GB.</span>
 <span class="sd">        </span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">percent</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">psutil</span><span class="o">.</span><span class="n">virtual_memory</span><span class="p">()</span><span class="o">.</span><span class="n">available</span><span class="o">/</span><span class="mf">1e9</span>
-    
+        <span class="k">return</span> <span class="n">psutil</span><span class="o">.</span><span class="n">virtual_memory</span><span class="p">()</span><span class="o">.</span><span class="n">available</span> <span class="o">/</span> <span class="mf">1e9</span>
+
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">psutil</span><span class="o">.</span><span class="n">virtual_memory</span><span class="p">()</span><span class="o">.</span><span class="n">available</span> <span class="o">/</span> <span class="n">psutil</span><span class="o">.</span><span class="n">virtual_memory</span><span class="p">()</span><span class="o">.</span><span class="n">total</span> <span class="o">*</span> <span class="mi">100</span></div>
-    
-<div class="viewcode-block" id="cast2type"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.cast2type">[docs]</a><span class="k">def</span> <span class="nf">cast2type</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+
+
+<div class="viewcode-block" id="cast2type"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.cast2type">[docs]</a><span class="k">def</span> <span class="nf">cast2type</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Cast from float to int or float to float rescaling values if needed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># No? Yes? OK...</span>
     <span class="k">if</span> <span class="n">array</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">dtype</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">array</span>
-    
+
     <span class="c1"># Make sure dtype is not a string:</span>
     <span class="n">dtype</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
-    
+
     <span class="c1"># If cast to float, simply cast:</span>
-    <span class="k">if</span> <span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;f&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">array</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
-    
+
     <span class="c1"># If to integer, rescale:</span>
     <span class="k">if</span> <span class="n">bounds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">bounds</span> <span class="o">=</span> <span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">array</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">array</span><span class="p">)]</span>
-    
+
     <span class="n">data_max</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">max</span>
-    
+
     <span class="n">array</span> <span class="o">-=</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">array</span> <span class="o">*=</span> <span class="n">data_max</span> <span class="o">/</span> <span class="p">(</span><span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    
+
     <span class="n">array</span><span class="p">[</span><span class="n">array</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">array</span><span class="p">[</span><span class="n">array</span> <span class="o">&gt;</span> <span class="n">data_max</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_max</span>
-    
-    <span class="n">array</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>    
-    
+
+    <span class="n">array</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">array</span></div>
-   
+
+
 <div class="viewcode-block" id="shape_alike"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.shape_alike">[docs]</a><span class="k">def</span> <span class="nf">shape_alike</span><span class="p">(</span><span class="n">array_1</span><span class="p">,</span> <span class="n">array_2</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Make sure two arrays have the same shape by padding either array_1 or array_2:</span>
 <span class="sd">        Returns: array1, array2 - reshaped.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">array_2</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="n">array_1</span><span class="o">.</span><span class="n">ndim</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Array dimensions not equal!&#39;</span><span class="p">)</span>
-        
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Array dimensions not equal!&quot;</span><span class="p">)</span>
+
     <span class="n">d_shape</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">array_2</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
     <span class="n">d_shape</span> <span class="o">-=</span> <span class="n">array_1</span><span class="o">.</span><span class="n">shape</span>
 
     <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
-        
+
         <span class="n">pp</span> <span class="o">=</span> <span class="n">d_shape</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">pp</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">array_1</span> <span class="o">=</span> <span class="n">pad</span><span class="p">(</span><span class="n">array_1</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pp</span><span class="p">)],</span> <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;zero&#39;</span><span class="p">)</span>
+            <span class="n">array_1</span> <span class="o">=</span> <span class="n">pad</span><span class="p">(</span><span class="n">array_1</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pp</span><span class="p">)],</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;zero&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">pp</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">array_2</span> <span class="o">=</span> <span class="n">pad</span><span class="p">(</span><span class="n">array_2</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pp</span><span class="p">)],</span> <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;zero&#39;</span><span class="p">)</span>
-  
+            <span class="n">array_2</span> <span class="o">=</span> <span class="n">pad</span><span class="p">(</span><span class="n">array_2</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pp</span><span class="p">)],</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;zero&quot;</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">array_1</span><span class="p">,</span> <span class="n">array_2</span></div>
 
-<div class="viewcode-block" id="ramp"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.ramp">[docs]</a><span class="k">def</span> <span class="nf">ramp</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;linear&#39;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ramp"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.ramp">[docs]</a><span class="k">def</span> <span class="nf">ramp</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;linear&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create ramps at the ends of the array (without changing its size). </span>
 <span class="sd">    modes:</span>
@@ -234,7 +238,7 @@
 <span class="sd">        &#39;edge&#39; - smears data in a costant manner</span>
 <span class="sd">        &#39;zero&#39; - sets values to zeroes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
     <span class="c1"># Left and right:</span>
     <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">width</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">rampl</span> <span class="o">=</span> <span class="n">width</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -242,134 +246,137 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">rampl</span> <span class="o">=</span> <span class="n">width</span>
         <span class="n">rampr</span> <span class="o">=</span> <span class="n">width</span>
-        
+
     <span class="k">if</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">rampl</span> <span class="o">+</span> <span class="n">rampr</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">array</span>
-    
+
     <span class="c1"># Index of the left and right ramp:</span>
     <span class="n">left_sl</span> <span class="o">=</span> <span class="n">anyslice</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rampl</span><span class="p">),</span> <span class="n">dim</span><span class="p">)</span>
     <span class="n">right_sl</span> <span class="o">=</span> <span class="n">anyslice</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="o">-</span><span class="n">rampr</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">dim</span><span class="p">)</span>
-    
-    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;zero&#39;</span><span class="p">:</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;zero&quot;</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">rampl</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">array</span><span class="p">[</span><span class="n">left_sl</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">0</span>
-            
-        <span class="k">if</span> <span class="n">rampr</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>    
+
+        <span class="k">if</span> <span class="n">rampr</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">array</span><span class="p">[</span><span class="n">right_sl</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">0</span>
-            
-    <span class="k">elif</span> <span class="p">(</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;edge&#39;</span><span class="p">):</span>
+
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;edge&quot;</span><span class="p">:</span>
         <span class="c1"># Set everything to the edge value:</span>
         <span class="k">if</span> <span class="n">rampl</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">array</span><span class="p">[</span><span class="n">left_sl</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">0</span>
-            <span class="n">add_dim</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="n">left_sl</span><span class="p">],</span> <span class="n">array</span><span class="p">[</span><span class="n">anyslice</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">rampl</span><span class="p">,</span> <span class="n">dim</span><span class="p">)])</span>            
-            
-        <span class="k">if</span> <span class="n">rampr</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>    
+            <span class="n">add_dim</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="n">left_sl</span><span class="p">],</span> <span class="n">array</span><span class="p">[</span><span class="n">anyslice</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">rampl</span><span class="p">,</span> <span class="n">dim</span><span class="p">)])</span>
+
+        <span class="k">if</span> <span class="n">rampr</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">array</span><span class="p">[</span><span class="n">right_sl</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">0</span>
-            <span class="n">add_dim</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="n">right_sl</span><span class="p">],</span> <span class="n">array</span><span class="p">[</span><span class="n">anyslice</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="o">-</span><span class="n">rampr</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="p">)])</span>            
-    
-    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;linear&#39;</span><span class="p">:</span>
+            <span class="n">add_dim</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="n">right_sl</span><span class="p">],</span> <span class="n">array</span><span class="p">[</span><span class="n">anyslice</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="o">-</span><span class="n">rampr</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="p">)])</span>
+
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span><span class="p">:</span>
         <span class="c1"># Set to edge and multiply by a ramp:</span>
-        
-        <span class="k">if</span> <span class="n">rampl</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>            
+
+        <span class="k">if</span> <span class="n">rampl</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># Replace values using add_dim:</span>
             <span class="n">array</span><span class="p">[</span><span class="n">left_sl</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">0</span>
-            <span class="n">add_dim</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="n">left_sl</span><span class="p">],</span> <span class="n">array</span><span class="p">[</span><span class="n">anyslice</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">rampl</span><span class="p">,</span> <span class="n">dim</span><span class="p">)])</span>            
-            
-            <span class="n">mult_dim</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="n">left_sl</span><span class="p">],</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">rampl</span><span class="p">))</span>        
-            
-        <span class="k">if</span> <span class="n">rampr</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>    
+            <span class="n">add_dim</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="n">left_sl</span><span class="p">],</span> <span class="n">array</span><span class="p">[</span><span class="n">anyslice</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">rampl</span><span class="p">,</span> <span class="n">dim</span><span class="p">)])</span>
+
+            <span class="n">mult_dim</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="n">left_sl</span><span class="p">],</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">rampl</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">rampr</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># Replace values using add_dim:</span>
             <span class="n">array</span><span class="p">[</span><span class="n">right_sl</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">0</span>
-            <span class="n">add_dim</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="n">right_sl</span><span class="p">],</span> <span class="n">array</span><span class="p">[</span><span class="n">anyslice</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="o">-</span><span class="n">rampr</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="p">)])</span>            
+            <span class="n">add_dim</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="n">right_sl</span><span class="p">],</span> <span class="n">array</span><span class="p">[</span><span class="n">anyslice</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="o">-</span><span class="n">rampr</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="p">)])</span>
 
-            <span class="n">mult_dim</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="n">right_sl</span><span class="p">],</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">rampr</span><span class="p">))</span>                    
-        
+            <span class="n">mult_dim</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="n">right_sl</span><span class="p">],</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">rampr</span><span class="p">))</span>
+
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="s1">&#39;- unknown mode! Use linear, edge or zero.&#39;</span><span class="p">)</span>
-        
+        <span class="k">raise</span> <span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="s2">&quot;- unknown mode! Use linear, edge or zero.&quot;</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">array</span></div>
 
-<div class="viewcode-block" id="pad"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.pad">[docs]</a><span class="k">def</span> <span class="nf">pad</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;edge&#39;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="pad"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.pad">[docs]</a><span class="k">def</span> <span class="nf">pad</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;edge&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Pad an array along a given dimension.</span>
 <span class="sd">    </span>
 <span class="sd">    numpy.pad seems to be very memory hungry! Don&#39;t use it for large arrays.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Padding data...&#39;</span><span class="p">)</span>
-    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Padding data...&quot;</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">width</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">padl</span> <span class="o">=</span> <span class="n">width</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">padr</span> <span class="o">=</span> <span class="n">width</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">padl</span> <span class="o">=</span> <span class="n">width</span>
         <span class="n">padr</span> <span class="o">=</span> <span class="n">width</span>
-    
+
     <span class="c1"># Original shape:</span>
-    <span class="n">sz1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>    
+    <span class="n">sz1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
     <span class="n">sz1</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">+=</span> <span class="n">padl</span> <span class="o">+</span> <span class="n">padr</span>
-    
+
     <span class="c1"># Initialize bigger array (it&#39;s RAM-based array - need enough memory here!):</span>
-    <span class="n">new</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">sz1</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>    
-    
-    <span class="n">sl</span> <span class="o">=</span> <span class="n">anyslice</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="n">padl</span><span class="p">,</span><span class="o">-</span><span class="n">padr</span><span class="p">),</span> <span class="n">dim</span><span class="p">)</span>
-    
+    <span class="n">new</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">sz1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">array</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="n">sl</span> <span class="o">=</span> <span class="n">anyslice</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="n">padl</span><span class="p">,</span> <span class="o">-</span><span class="n">padr</span><span class="p">),</span> <span class="n">dim</span><span class="p">)</span>
+
     <span class="n">new</span><span class="p">[</span><span class="n">sl</span><span class="p">]</span> <span class="o">=</span> <span class="n">array</span>
-    
+
     <span class="n">new</span> <span class="o">=</span> <span class="n">ramp</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
-    
+
     <span class="c1"># If input is memmap - update it&#39;s size, release RAM memory.</span>
     <span class="k">return</span> <span class="n">rewrite_memmap</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">new</span><span class="p">)</span></div>
- 
-<div class="viewcode-block" id="bin"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.bin">[docs]</a><span class="k">def</span> <span class="nf">bin</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+
+
+<div class="viewcode-block" id="bin"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.bin">[docs]</a><span class="k">def</span> <span class="nf">bin</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Simple binning of the data along the chosen direction.</span>
-<span class="sd">    &quot;&quot;&quot;</span> 
-          
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="n">dim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># apply binning in one dimension</span>
-        
+
         <span class="c1"># First apply division by 2:</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;i&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;u&#39;</span><span class="p">):</span>    
-            <span class="n">array</span> <span class="o">//=</span> <span class="mi">2</span> <span class="c1"># important for integers</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;i&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;u&quot;</span><span class="p">):</span>
+            <span class="n">array</span> <span class="o">//=</span> <span class="mi">2</span>  <span class="c1"># important for integers</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">array</span> <span class="o">/=</span> <span class="mi">2</span>
-            
+
         <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-             <span class="n">array</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">+=</span> <span class="n">array</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
-             <span class="k">return</span> <span class="n">array</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
-             
+            <span class="n">array</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">+=</span> <span class="n">array</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+            <span class="k">return</span> <span class="n">array</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+
         <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-             <span class="n">array</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+=</span> <span class="n">array</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
-             <span class="k">return</span> <span class="n">array</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
-             
+            <span class="n">array</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+=</span> <span class="n">array</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="k">return</span> <span class="n">array</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
+
         <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-             <span class="n">array</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">array</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
-             <span class="k">return</span> <span class="n">array</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
-             
-    <span class="k">else</span><span class="p">:</span>        
-    
+            <span class="n">array</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">array</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">array</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
         <span class="c1"># First apply division by 8:</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;i&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;u&#39;</span><span class="p">):</span>    
+        <span class="k">if</span> <span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;i&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;u&quot;</span><span class="p">):</span>
             <span class="n">array</span> <span class="o">//=</span> <span class="mi">8</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">array</span> <span class="o">/=</span> <span class="mi">8</span>
-        
+
         <span class="c1"># Try to avoid memory overflow here:</span>
         <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
             <span class="n">sl</span> <span class="o">=</span> <span class="n">anyslice</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">ii</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-            
+
             <span class="n">x</span> <span class="o">=</span> <span class="n">array</span><span class="p">[</span><span class="n">sl</span><span class="p">]</span>
-            <span class="n">array</span><span class="p">[</span><span class="n">sl</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,:]</span> <span class="o">+=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,:]</span>
-            <span class="n">array</span><span class="p">[</span><span class="n">sl</span><span class="p">][:,:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">x</span><span class="p">[:,</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
-            
+            <span class="n">array</span><span class="p">[</span><span class="n">sl</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">array</span><span class="p">[</span><span class="n">sl</span><span class="p">][:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">x</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+
         <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
             <span class="n">sl</span> <span class="o">=</span> <span class="n">anyslice</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">ii</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-            
-            <span class="n">array</span><span class="p">[</span><span class="n">sl</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">array</span><span class="p">[</span><span class="n">sl</span><span class="p">][</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>    
-        
+
+            <span class="n">array</span><span class="p">[</span><span class="n">sl</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">array</span><span class="p">[</span><span class="n">sl</span><span class="p">][</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+
         <span class="k">return</span> <span class="n">array</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span></div>
-    
-<div class="viewcode-block" id="crop"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.crop">[docs]</a><span class="k">def</span> <span class="nf">crop</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">geometry</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+
+
+<div class="viewcode-block" id="crop"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.crop">[docs]</a><span class="k">def</span> <span class="nf">crop</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">geometry</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Crop an array along the given dimension. Provide geometry if cropping the projection data,</span>
 <span class="sd">    it will update the detector center.</span>
@@ -377,93 +384,103 @@
     <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">width</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">widthl</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">width</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">widthr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">width</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        
+
     <span class="k">else</span><span class="p">:</span>
         <span class="n">widthl</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">width</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
-        <span class="n">widthr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">width</span><span class="p">)</span> <span class="o">-</span> <span class="n">widthl</span> 
-   
+        <span class="n">widthr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">width</span><span class="p">)</span> <span class="o">-</span> <span class="n">widthl</span>
+
     <span class="c1"># Geometry shifts:</span>
     <span class="n">h</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span>
-    
+
     <span class="c1"># If widthr we need to sample up to None index according to Python rules</span>
     <span class="n">widthr</span> <span class="o">=</span> <span class="o">-</span><span class="n">widthr</span>
-    
+
     <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">v</span> <span class="o">=</span> <span class="p">(</span><span class="n">widthl</span> <span class="o">+</span> <span class="n">widthr</span><span class="p">)</span>
-        
-        <span class="k">if</span> <span class="n">widthr</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="n">widthr</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">array</span> <span class="o">=</span> <span class="n">array</span><span class="p">[</span><span class="n">widthl</span><span class="p">:</span><span class="n">widthr</span><span class="p">,</span> <span class="p">:,:]</span>
-        
+        <span class="n">v</span> <span class="o">=</span> <span class="n">widthl</span> <span class="o">+</span> <span class="n">widthr</span>
+
+        <span class="k">if</span> <span class="n">widthr</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">widthr</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">array</span> <span class="o">=</span> <span class="n">array</span><span class="p">[</span><span class="n">widthl</span><span class="p">:</span><span class="n">widthr</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+
     <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">h</span> <span class="o">=</span> <span class="p">(</span><span class="n">widthl</span> <span class="o">+</span> <span class="n">widthr</span><span class="p">)</span>
-        
-        <span class="k">if</span> <span class="n">widthr</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="n">widthr</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">array</span> <span class="o">=</span> <span class="n">array</span><span class="p">[:,</span><span class="n">widthl</span><span class="p">:</span><span class="n">widthr</span><span class="p">,:]</span>
-        
+        <span class="n">h</span> <span class="o">=</span> <span class="n">widthl</span> <span class="o">+</span> <span class="n">widthr</span>
+
+        <span class="k">if</span> <span class="n">widthr</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">widthr</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">array</span> <span class="o">=</span> <span class="n">array</span><span class="p">[:,</span> <span class="n">widthl</span><span class="p">:</span><span class="n">widthr</span><span class="p">,</span> <span class="p">:]</span>
+
     <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="n">h</span> <span class="o">=</span> <span class="p">(</span><span class="n">widthl</span> <span class="o">+</span> <span class="n">widthr</span><span class="p">)</span>
-        
-        <span class="k">if</span> <span class="n">widthr</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="n">widthr</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">array</span> <span class="o">=</span> <span class="n">array</span><span class="p">[:,:,</span><span class="n">widthl</span><span class="p">:</span><span class="n">widthr</span><span class="p">]</span>   
-    
-    <span class="k">if</span> <span class="n">geometry</span><span class="p">:</span> <span class="n">shift_geometry</span><span class="p">(</span><span class="n">geometry</span><span class="p">,</span> <span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">v</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
-    
+        <span class="n">h</span> <span class="o">=</span> <span class="n">widthl</span> <span class="o">+</span> <span class="n">widthr</span>
+
+        <span class="k">if</span> <span class="n">widthr</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">widthr</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">array</span> <span class="o">=</span> <span class="n">array</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">widthl</span><span class="p">:</span><span class="n">widthr</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">geometry</span><span class="p">:</span>
+        <span class="n">shift_geometry</span><span class="p">(</span><span class="n">geometry</span><span class="p">,</span> <span class="n">h</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">v</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">array</span></div>
 
-<div class="viewcode-block" id="shift_geometry"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.shift_geometry">[docs]</a><span class="k">def</span> <span class="nf">shift_geometry</span><span class="p">(</span><span class="n">geometry</span><span class="p">,</span> <span class="n">hrz</span><span class="p">,</span> <span class="n">vrt</span><span class="p">,</span> <span class="n">update_volume_pos</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="shift_geometry"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.shift_geometry">[docs]</a><span class="k">def</span> <span class="nf">shift_geometry</span><span class="p">(</span><span class="n">geometry</span><span class="p">,</span> <span class="n">hrz</span><span class="p">,</span> <span class="n">vrt</span><span class="p">,</span> <span class="n">update_volume_pos</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Apply geometry shift in pixels.</span>
-<span class="sd">    &quot;&quot;&quot;</span>    
-    <span class="n">hrz</span> <span class="o">=</span> <span class="n">hrz</span> <span class="o">*</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;det_pixel&#39;</span><span class="p">]</span>
-    <span class="n">vrt</span> <span class="o">=</span> <span class="n">vrt</span> <span class="o">*</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;det_pixel&#39;</span><span class="p">]</span>
-    
-    <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;det_hrz&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">hrz</span>
-    <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;det_vrt&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">vrt</span>
-    
-    <span class="k">if</span> <span class="n">update_volume_pos</span><span class="p">:</span>        
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">hrz</span> <span class="o">=</span> <span class="n">hrz</span> <span class="o">*</span> <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;det_pixel&quot;</span><span class="p">]</span>
+    <span class="n">vrt</span> <span class="o">=</span> <span class="n">vrt</span> <span class="o">*</span> <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;det_pixel&quot;</span><span class="p">]</span>
+
+    <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;det_hrz&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">hrz</span>
+    <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;det_vrt&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">vrt</span>
+
+    <span class="k">if</span> <span class="n">update_volume_pos</span><span class="p">:</span>
         <span class="c1"># Here we are computing magnification without taking into account vol_tra[1], det_mag</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="p">(</span><span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;src2obj&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;det2obj&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;src2obj&#39;</span><span class="p">]</span>
-        <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;vol_tra&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">hrz</span> <span class="o">/</span> <span class="n">m</span>
-        <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;vol_tra&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">vrt</span> <span class="o">/</span> <span class="n">m</span>    </div>
+        <span class="n">m</span> <span class="o">=</span> <span class="p">(</span><span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;src2obj&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;det2obj&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;src2obj&quot;</span><span class="p">]</span>
+        <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;vol_tra&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">hrz</span> <span class="o">/</span> <span class="n">m</span>
+        <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;vol_tra&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">vrt</span> <span class="o">/</span> <span class="n">m</span></div>
+
 
 <div class="viewcode-block" id="raw2astra"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.raw2astra">[docs]</a><span class="k">def</span> <span class="nf">raw2astra</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert a given numpy array (sorted: index, hor, vert) to ASTRA-compatible projections stack</span>
-<span class="sd">    &quot;&quot;&quot;</span>    
-    <span class="c1"># Transpose seems to be compatible with memmaps:    </span>
-    <span class="n">array</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Transpose seems to be compatible with memmaps:</span>
+    <span class="n">array</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
     <span class="n">array</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
-        
+
     <span class="k">return</span> <span class="n">array</span></div>
+
 
 <div class="viewcode-block" id="medipix2astra"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.medipix2astra">[docs]</a><span class="k">def</span> <span class="nf">medipix2astra</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert a given numpy array (sorted: index, hor, vert) to ASTRA-compatible projections stack</span>
-<span class="sd">    &quot;&quot;&quot;</span>    
-    <span class="c1"># Don&#39;t apply ascontignuousarray on memmaps!    </span>
-    <span class="n">array</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Don&#39;t apply ascontignuousarray on memmaps!</span>
+    <span class="n">array</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
     <span class="n">array</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
-    
+
     <span class="k">return</span> <span class="n">array</span></div>
 
+
 <div class="viewcode-block" id="rewrite_memmap"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.rewrite_memmap">[docs]</a><span class="k">def</span> <span class="nf">rewrite_memmap</span><span class="p">(</span><span class="n">old_array</span><span class="p">,</span> <span class="n">new_array</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reshaping memmaps is tough. We will recreate one instead hoping that this will not overflow our RAM...</span>
 <span class="sd">    This is a dirty qick fix! Try to use resize instead!</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">old_array</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">memmap</span><span class="p">):</span>
-        
+
         <span class="c1"># Trick is to open the file in r+ mode:</span>
-        <span class="n">old_array</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">memmap</span><span class="p">(</span><span class="n">old_array</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float32&#39;</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;r+&#39;</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">new_array</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">old_array</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">memmap</span><span class="p">(</span>
+            <span class="n">old_array</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float32&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r+&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">new_array</span><span class="o">.</span><span class="n">shape</span>
+        <span class="p">)</span>
         <span class="n">old_array</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">new_array</span><span class="p">[:]</span>
-        
+
     <span class="k">else</span><span class="p">:</span>
         <span class="k">del</span> <span class="n">old_array</span>
-        
+
         <span class="c1"># array is not a memmmap:</span>
         <span class="n">old_array</span> <span class="o">=</span> <span class="n">new_array</span>
-        
+
     <span class="k">return</span> <span class="n">old_array</span></div>
 
 
@@ -471,137 +488,143 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Add two arrays with arbitrary dimensions. We assume that one or two dimensions match.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
     <span class="c1"># Shapes to compare:</span>
     <span class="n">shp1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">array_1</span><span class="p">)</span>
     <span class="n">shp2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">array_2</span><span class="p">)</span>
-    
+
     <span class="n">dim1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">array_1</span><span class="p">)</span>
     <span class="n">dim2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">array_2</span><span class="p">)</span>
-    
+
     <span class="k">if</span> <span class="n">dim1</span> <span class="o">-</span> <span class="n">dim2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        
+
         <span class="c1"># Find dimension that is missing in array_2:</span>
         <span class="n">dim</span> <span class="o">=</span> <span class="p">[</span><span class="n">ii</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">shp2</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="n">shp1</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        
+
         <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">array_1</span> <span class="o">+=</span> <span class="n">array_2</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
         <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">array_1</span> <span class="o">+=</span> <span class="n">array_2</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
         <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="n">array_1</span> <span class="o">+=</span> <span class="n">array_2</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span>            
-        
+            <span class="n">array_1</span> <span class="o">+=</span> <span class="n">array_2</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span>
+
     <span class="k">elif</span> <span class="n">dim1</span> <span class="o">-</span> <span class="n">dim2</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
         <span class="c1"># Find dimension that is matching in array_2:</span>
         <span class="n">dim</span> <span class="o">=</span> <span class="p">[</span><span class="n">ii</span> <span class="ow">in</span> <span class="n">shp2</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="n">shp1</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        
+
         <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">array_1</span> <span class="o">+=</span> <span class="n">array_2</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
         <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">array_1</span> <span class="o">+=</span> <span class="n">array_2</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">array_1</span> <span class="o">+=</span> <span class="n">array_2</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
-            
+
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;ERROR! array_1.ndim - array_2.ndim should be 1 or 2&#39;</span><span class="p">)</span></div>
-           
-<div class="viewcode-block" id="mult_dim"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.mult_dim">[docs]</a><span class="k">def</span> <span class="nf">mult_dim</span><span class="p">(</span><span class="n">array_1</span><span class="p">,</span> <span class="n">array_2</span><span class="p">):</span>    
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;ERROR! array_1.ndim - array_2.ndim should be 1 or 2&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="mult_dim"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.mult_dim">[docs]</a><span class="k">def</span> <span class="nf">mult_dim</span><span class="p">(</span><span class="n">array_1</span><span class="p">,</span> <span class="n">array_2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Multiply a 3D array by a 1D or a 2D vector along one of the dimensions.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Shapes to compare:</span>
     <span class="n">shp1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">array_1</span><span class="p">)</span>
     <span class="n">shp2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">array_2</span><span class="p">)</span>
-    
+
     <span class="n">dim1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">array_1</span><span class="p">)</span>
     <span class="n">dim2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">array_2</span><span class="p">)</span>
-    
+
     <span class="k">if</span> <span class="n">dim1</span> <span class="o">-</span> <span class="n">dim2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        
+
         <span class="c1"># Find dimension that is missing in array_2:</span>
         <span class="n">dim</span> <span class="o">=</span> <span class="p">[</span><span class="n">ii</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">shp2</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="n">shp1</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        
+
         <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">array_1</span> <span class="o">*=</span> <span class="n">array_2</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
         <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">array_1</span> <span class="o">*=</span> <span class="n">array_2</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
         <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="n">array_1</span> <span class="o">*=</span> <span class="n">array_2</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span>            
-        
+            <span class="n">array_1</span> <span class="o">*=</span> <span class="n">array_2</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span>
+
     <span class="k">elif</span> <span class="n">dim1</span> <span class="o">-</span> <span class="n">dim2</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-        
+
         <span class="c1"># Find dimension that is matching in array_2:</span>
         <span class="n">dim</span> <span class="o">=</span> <span class="p">[</span><span class="n">ii</span> <span class="ow">in</span> <span class="n">shp2</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="n">shp1</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        
+
         <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">array_1</span> <span class="o">*=</span> <span class="n">array_2</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
         <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">array_1</span> <span class="o">*=</span> <span class="n">array_2</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">array_1</span> <span class="o">*=</span> <span class="n">array_2</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
-            
+
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span><span class="p">(</span><span class="s1">&#39;ERROR! array_1.ndim - array_2.ndim should be 1 or 2&#39;</span><span class="p">)</span></div>
-        
+        <span class="k">raise</span> <span class="p">(</span><span class="s2">&quot;ERROR! array_1.ndim - array_2.ndim should be 1 or 2&quot;</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="anyslice"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.anyslice">[docs]</a><span class="k">def</span> <span class="nf">anyslice</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">dim</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Slice an array along an arbitrary dimension.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">sl</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)]</span> <span class="o">*</span> <span class="n">array</span><span class="o">.</span><span class="n">ndim</span>
     <span class="n">sl</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">index</span>
-    
+
     <span class="c1"># Nowadays python asks for tuples:</span>
     <span class="n">sl</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">sl</span><span class="p">)</span>
-      
-    <span class="k">return</span> <span class="n">sl</span>   </div>
+
+    <span class="k">return</span> <span class="n">sl</span></div>
+
 
 <div class="viewcode-block" id="detector_size"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.detector_size">[docs]</a><span class="k">def</span> <span class="nf">detector_size</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">geometry</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the size of detector in mm.</span>
-<span class="sd">    &#39;&#39;&#39;</span>       
-    <span class="k">return</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;det_pixel&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span></div>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;det_pixel&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="volume_bounds"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.volume_bounds">[docs]</a><span class="k">def</span> <span class="nf">volume_bounds</span><span class="p">(</span><span class="n">proj_shape</span><span class="p">,</span> <span class="n">geometry</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A very simplified version of volume bounds...</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># TODO: Compute this propoerly.... Dont trus the horizontal bounds!!!</span>
-    
+
     <span class="c1"># Detector bounds:</span>
     <span class="n">det_bounds</span> <span class="o">=</span> <span class="n">detector_bounds</span><span class="p">(</span><span class="n">proj_shape</span><span class="p">,</span> <span class="n">geometry</span><span class="p">)</span>
-    
+
     <span class="c1"># Demagnify detector bounds:</span>
-    <span class="n">fact</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;src2obj&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;src2obj&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;det2obj&#39;</span><span class="p">])</span>
-    <span class="n">vrt</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">det_bounds</span><span class="p">[</span><span class="s1">&#39;vrt&#39;</span><span class="p">])</span>
-    <span class="n">vrt_bounds</span> <span class="o">=</span> <span class="p">(</span><span class="n">vrt</span> <span class="o">*</span> <span class="n">fact</span> <span class="o">+</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;src_vrt&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">fact</span><span class="p">))</span>
-    
-    <span class="n">hrz</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">det_bounds</span><span class="p">[</span><span class="s1">&#39;hrz&#39;</span><span class="p">])</span>
-    <span class="n">max_x</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">hrz</span> <span class="o">-</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;axs_hrz&#39;</span><span class="p">])</span>
-    
-    <span class="n">hrz_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;vol_tra&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">max_x</span><span class="p">,</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;vol_tra&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">max_x</span><span class="p">]</span>
-    <span class="n">mag_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;vol_tra&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">max_x</span><span class="p">,</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;vol_tra&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">max_x</span><span class="p">]</span>
-            
-    <span class="n">vol_bounds</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vrt&#39;</span><span class="p">:</span><span class="n">vrt_bounds</span><span class="p">,</span> <span class="s1">&#39;mag&#39;</span><span class="p">:</span> <span class="n">mag_bounds</span><span class="p">,</span> <span class="s1">&#39;hrz&#39;</span><span class="p">:</span> <span class="n">hrz_bounds</span><span class="p">}</span>
-    
+    <span class="n">fact</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;src2obj&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;src2obj&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;det2obj&quot;</span><span class="p">])</span>
+    <span class="n">vrt</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">det_bounds</span><span class="p">[</span><span class="s2">&quot;vrt&quot;</span><span class="p">])</span>
+    <span class="n">vrt_bounds</span> <span class="o">=</span> <span class="n">vrt</span> <span class="o">*</span> <span class="n">fact</span> <span class="o">+</span> <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;src_vrt&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">fact</span><span class="p">)</span>
+
+    <span class="n">hrz</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">det_bounds</span><span class="p">[</span><span class="s2">&quot;hrz&quot;</span><span class="p">])</span>
+    <span class="n">max_x</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">hrz</span> <span class="o">-</span> <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;axs_hrz&quot;</span><span class="p">])</span>
+
+    <span class="n">hrz_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;vol_tra&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">max_x</span><span class="p">,</span> <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;vol_tra&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">max_x</span><span class="p">]</span>
+    <span class="n">mag_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;vol_tra&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">max_x</span><span class="p">,</span> <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;vol_tra&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">max_x</span><span class="p">]</span>
+
+    <span class="n">vol_bounds</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;vrt&quot;</span><span class="p">:</span> <span class="n">vrt_bounds</span><span class="p">,</span> <span class="s2">&quot;mag&quot;</span><span class="p">:</span> <span class="n">mag_bounds</span><span class="p">,</span> <span class="s2">&quot;hrz&quot;</span><span class="p">:</span> <span class="n">hrz_bounds</span><span class="p">}</span>
+
     <span class="k">return</span> <span class="n">vol_bounds</span></div>
 
+
 <div class="viewcode-block" id="detector_bounds"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.detector_bounds">[docs]</a><span class="k">def</span> <span class="nf">detector_bounds</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">geometry</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the boundaries of the detector in mm</span>
-<span class="sd">    &#39;&#39;&#39;</span>   
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">bounds</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="n">xmin</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;det_hrz&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;det_pixel&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>
-    <span class="n">xmax</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;det_hrz&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;det_pixel&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">xmin</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;det_hrz&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;det_pixel&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">xmax</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;det_hrz&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;det_pixel&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>
 
-    <span class="n">ymin</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;det_vrt&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;det_pixel&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>
-    <span class="n">ymax</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;det_vrt&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;det_pixel&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">ymin</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;det_vrt&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;det_pixel&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">ymax</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;det_vrt&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;det_pixel&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>
 
-    <span class="n">bounds</span><span class="p">[</span><span class="s1">&#39;hrz&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">]</span>
-    <span class="n">bounds</span><span class="p">[</span><span class="s1">&#39;vrt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">]</span>
-    
+    <span class="n">bounds</span><span class="p">[</span><span class="s2">&quot;hrz&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">]</span>
+    <span class="n">bounds</span><span class="p">[</span><span class="s2">&quot;vrt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">]</span>
+
     <span class="k">return</span> <span class="n">bounds</span></div>
-    
+
+
 <div class="viewcode-block" id="tiles_shape"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.tiles_shape">[docs]</a><span class="k">def</span> <span class="nf">tiles_shape</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">geometry_list</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the size of the stiched dataset.</span>
@@ -613,35 +636,40 @@
     <span class="c1"># Phisical detector size:</span>
     <span class="n">min_x</span><span class="p">,</span> <span class="n">min_y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">inf</span>
     <span class="n">max_x</span><span class="p">,</span> <span class="n">max_y</span> <span class="o">=</span> <span class="o">-</span><span class="n">numpy</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="o">-</span><span class="n">numpy</span><span class="o">.</span><span class="n">inf</span>
-    
-    <span class="n">det_pixel</span> <span class="o">=</span> <span class="n">geometry_list</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;det_pixel&#39;</span><span class="p">]</span>
-    
+
+    <span class="n">det_pixel</span> <span class="o">=</span> <span class="n">geometry_list</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;det_pixel&quot;</span><span class="p">]</span>
+
     <span class="c1"># Find out the size required for the final dataset</span>
     <span class="k">for</span> <span class="n">geo</span> <span class="ow">in</span> <span class="n">geometry_list</span><span class="p">:</span>
-        
+
         <span class="n">bounds</span> <span class="o">=</span> <span class="n">detector_bounds</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">geo</span><span class="p">)</span>
-        
-        <span class="n">min_x</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">min_x</span><span class="p">,</span> <span class="n">bounds</span><span class="p">[</span><span class="s1">&#39;hrz&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]])</span>
-        <span class="n">min_y</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">min_y</span><span class="p">,</span> <span class="n">bounds</span><span class="p">[</span><span class="s1">&#39;vrt&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]])</span>
-        <span class="n">max_x</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">max_x</span><span class="p">,</span> <span class="n">bounds</span><span class="p">[</span><span class="s1">&#39;hrz&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]])</span>
-        <span class="n">max_y</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">max_y</span><span class="p">,</span> <span class="n">bounds</span><span class="p">[</span><span class="s1">&#39;vrt&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]])</span>
-        
+
+        <span class="n">min_x</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">min_x</span><span class="p">,</span> <span class="n">bounds</span><span class="p">[</span><span class="s2">&quot;hrz&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="n">min_y</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">min_y</span><span class="p">,</span> <span class="n">bounds</span><span class="p">[</span><span class="s2">&quot;vrt&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="n">max_x</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">max_x</span><span class="p">,</span> <span class="n">bounds</span><span class="p">[</span><span class="s2">&quot;hrz&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="n">max_y</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">max_y</span><span class="p">,</span> <span class="n">bounds</span><span class="p">[</span><span class="s2">&quot;vrt&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]])</span>
+
     <span class="c1"># Big slice:</span>
-    <span class="n">new_shape</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="n">max_y</span> <span class="o">-</span> <span class="n">min_y</span><span class="p">)</span> <span class="o">/</span> <span class="n">det_pixel</span><span class="p">,</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">(</span><span class="n">max_x</span> <span class="o">-</span> <span class="n">min_x</span><span class="p">)</span> <span class="o">/</span> <span class="n">det_pixel</span><span class="p">])</span>                     
-    <span class="n">new_shape</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">new_shape</span><span class="p">))</span>  
-    
+    <span class="n">new_shape</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[(</span><span class="n">max_y</span> <span class="o">-</span> <span class="n">min_y</span><span class="p">)</span> <span class="o">/</span> <span class="n">det_pixel</span><span class="p">,</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">(</span><span class="n">max_x</span> <span class="o">-</span> <span class="n">min_x</span><span class="p">)</span> <span class="o">/</span> <span class="n">det_pixel</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">new_shape</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">new_shape</span><span class="p">))</span>
+
     <span class="c1"># Copy one of the geometry records and sett the correct translation:</span>
     <span class="n">geometry</span> <span class="o">=</span> <span class="n">geometry_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    
-    <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;det_hrz&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_x</span> <span class="o">+</span> <span class="n">min_x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
-    <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;det_vrt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_y</span> <span class="o">+</span> <span class="n">min_y</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
-    
+
+    <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;det_hrz&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_x</span> <span class="o">+</span> <span class="n">min_x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;det_vrt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_y</span> <span class="o">+</span> <span class="n">min_y</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+
     <span class="c1"># Update volume center:</span>
-    <span class="c1">#geometry[&#39;vol_vrt&#39;] = (geometry[&#39;det_vrt&#39;] * geometry[&#39;src2obj&#39;] + geometry[&#39;src_vrt&#39;] * geometry[&#39;det2obj&#39;]) / geometry.get(&#39;src2det&#39;)</span>
-    <span class="c1">#geometry[&#39;vol_hrz&#39;] = (geometry[&#39;det_hrz&#39;] + geometry[&#39;src_hrz&#39;]) / 2</span>
-    <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;vol_tra&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;det_vrt&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;src2obj&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;src_vrt&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;det2obj&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="n">geometry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;src2det&#39;</span><span class="p">)</span>
-    <span class="c1">#geometry[&#39;vol_tra&#39;][2] = (geometry[&#39;det_hrz&#39;] + geometry[&#39;src_hrz&#39;]) / 2</span>
-    <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;vol_tra&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;axs_hrz&#39;</span><span class="p">]</span>
+    <span class="c1"># geometry[&#39;vol_vrt&#39;] = (geometry[&#39;det_vrt&#39;] * geometry[&#39;src2obj&#39;] + geometry[&#39;src_vrt&#39;] * geometry[&#39;det2obj&#39;]) / geometry.get(&#39;src2det&#39;)</span>
+    <span class="c1"># geometry[&#39;vol_hrz&#39;] = (geometry[&#39;det_hrz&#39;] + geometry[&#39;src_hrz&#39;]) / 2</span>
+    <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;vol_tra&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;det_vrt&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;src2obj&quot;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;src_vrt&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;det2obj&quot;</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">/</span> <span class="n">geometry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;src2det&quot;</span><span class="p">)</span>
+    <span class="c1"># geometry[&#39;vol_tra&#39;][2] = (geometry[&#39;det_hrz&#39;] + geometry[&#39;src_hrz&#39;]) / 2</span>
+    <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;vol_tra&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s2">&quot;axs_hrz&quot;</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="n">new_shape</span><span class="p">,</span> <span class="n">geometry</span></div>
 </pre></div>

@@ -10,3 +10,6 @@ install_dev:
 
 docs: install_dev
 	@cd doc_sources && make html
+
+style: install_dev
+	black flexdata
