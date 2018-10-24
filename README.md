@@ -62,6 +62,12 @@ proj_geom = io.astra_proj_geom(meta['geometry'], proj.shape)
 
 See also the list of [contributors](https://github.com/cicwi/flexdata/contributors) who participated in this project.
 
+## How to contribute
+
+Contributions are always welcome. Please submit pull requests against the `develop` branch.
+
+If you have any issues, questions, or remarks, then please open an issue on GitHub.
+
 ## License
 
 This project is licensed under the GNU GENERAL PUBLIC License - see the [LICENSE.md](LICENSE.md) file for details
