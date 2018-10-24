@@ -9,10 +9,12 @@ Welcome to flexdata's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 2
 
+
+   home
    flexdata
-   setup
+   changelog
 
 
 Indices and tables
@@ -21,4 +23,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

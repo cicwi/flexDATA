@@ -21,6 +21,15 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+
+# -- Support markdown -----------------------------------------------------
+# See: <https://blog.readthedocs.com/adding-markdown-support/>
+
+from recommonmark.parser import CommonMarkParser
+source_parsers = {'.md': CommonMarkParser}
+source_suffix = ['.rst', '.md']
+
+
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.

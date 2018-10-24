@@ -26,8 +26,10 @@ setup(
             'autopep8',
             'yapf',
             'snakeviz',
+            # Documentation
             'sphinx',
             'sphinx_rtd_theme',
+            'recommonmark'
         ]
     },
     version='0.0.1',
