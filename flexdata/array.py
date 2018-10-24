@@ -18,11 +18,12 @@ import psutil  # RAM test
 
 
 def free_memory(percent=False):
-    """
-    Return amount of free memory in GB.
-    Args:
-        percent (bool): percentage of the total or in GB.
-        
+    """Return amount of free memory in GB.
+
+    :param percent: bool. percentage of the total or in GB.
+    :returns:
+    :rtype:
+
     """
     if not percent:
         return psutil.virtual_memory().available / 1e9
@@ -32,8 +33,12 @@ def free_memory(percent=False):
 
 
 def cast2type(array, dtype, bounds=None):
-    """
-    Cast from float to int or float to float rescaling values if needed.
+    """Cast from float to int or float to float rescaling values if needed.
+
+    :param array:
+    :param dtype:
+    :param bounds:
+
     """
     # No? Yes? OK...
     if array.dtype == dtype:
@@ -64,9 +69,14 @@ def cast2type(array, dtype, bounds=None):
 
 
 def shape_alike(array_1, array_2):
-    """
-    Make sure two arrays have the same shape by padding either array_1 or array_2:
-        Returns: array1, array2 - reshaped.
+    """Make sure two arrays have the same shape by padding either array_1 or array_2.
+
+    :param array_1:
+    :param array_2:
+    :returns:
+        array1, array2 - reshaped.
+    :rtype:
+
     """
     if array_2.ndim != array_1.ndim:
         raise Exception("Array dimensions not equal!")
@@ -87,7 +97,7 @@ def shape_alike(array_1, array_2):
 
 def ramp(array, dim, width, mode="linear"):
     """
-    Create ramps at the ends of the array (without changing its size). 
+    Create ramps at the ends of the array (without changing its size).
     modes:
         'linear' - creates linear decay of intensity
         'edge' - smears data in a costant manner
@@ -152,7 +162,7 @@ def ramp(array, dim, width, mode="linear"):
 def pad(array, dim, width, mode="edge"):
     """
     Pad an array along a given dimension.
-    
+
     numpy.pad seems to be very memory hungry! Don't use it for large arrays.
     """
     print("Padding data...")
@@ -486,7 +496,7 @@ def tiles_shape(shape, geometry_list):
     Args:
         shape: shape of a single projection stack.
         geometry_list: list of geometries.
-        
+
     """
     # Phisical detector size:
     min_x, min_y = numpy.inf, numpy.inf

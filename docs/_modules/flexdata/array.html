@@ -163,11 +163,12 @@
 
 
 <div class="viewcode-block" id="free_memory"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.free_memory">[docs]</a><span class="k">def</span> <span class="nf">free_memory</span><span class="p">(</span><span class="n">percent</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return amount of free memory in GB.</span>
-<span class="sd">    Args:</span>
-<span class="sd">        percent (bool): percentage of the total or in GB.</span>
-<span class="sd">        </span>
+    <span class="sd">&quot;&quot;&quot;Return amount of free memory in GB.</span>
+
+<span class="sd">    :param percent: bool. percentage of the total or in GB.</span>
+<span class="sd">    :returns:</span>
+<span class="sd">    :rtype:</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">percent</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">psutil</span><span class="o">.</span><span class="n">virtual_memory</span><span class="p">()</span><span class="o">.</span><span class="n">available</span> <span class="o">/</span> <span class="mf">1e9</span>
@@ -177,8 +178,12 @@
 
 
 <div class="viewcode-block" id="cast2type"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.cast2type">[docs]</a><span class="k">def</span> <span class="nf">cast2type</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Cast from float to int or float to float rescaling values if needed.</span>
+    <span class="sd">&quot;&quot;&quot;Cast from float to int or float to float rescaling values if needed.</span>
+
+<span class="sd">    :param array:</span>
+<span class="sd">    :param dtype:</span>
+<span class="sd">    :param bounds:</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># No? Yes? OK...</span>
     <span class="k">if</span> <span class="n">array</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">dtype</span><span class="p">:</span>
@@ -209,9 +214,14 @@
 
 
 <div class="viewcode-block" id="shape_alike"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.shape_alike">[docs]</a><span class="k">def</span> <span class="nf">shape_alike</span><span class="p">(</span><span class="n">array_1</span><span class="p">,</span> <span class="n">array_2</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Make sure two arrays have the same shape by padding either array_1 or array_2:</span>
-<span class="sd">        Returns: array1, array2 - reshaped.</span>
+    <span class="sd">&quot;&quot;&quot;Make sure two arrays have the same shape by padding either array_1 or array_2.</span>
+
+<span class="sd">    :param array_1:</span>
+<span class="sd">    :param array_2:</span>
+<span class="sd">    :returns:</span>
+<span class="sd">        array1, array2 - reshaped.</span>
+<span class="sd">    :rtype:</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">array_2</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="n">array_1</span><span class="o">.</span><span class="n">ndim</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Array dimensions not equal!&quot;</span><span class="p">)</span>
@@ -232,7 +242,7 @@
 
 <div class="viewcode-block" id="ramp"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.ramp">[docs]</a><span class="k">def</span> <span class="nf">ramp</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;linear&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Create ramps at the ends of the array (without changing its size). </span>
+<span class="sd">    Create ramps at the ends of the array (without changing its size).</span>
 <span class="sd">    modes:</span>
 <span class="sd">        &#39;linear&#39; - creates linear decay of intensity</span>
 <span class="sd">        &#39;edge&#39; - smears data in a costant manner</span>
@@ -297,7 +307,7 @@
 <div class="viewcode-block" id="pad"><a class="viewcode-back" href="../../flexdata.html#flexdata.array.pad">[docs]</a><span class="k">def</span> <span class="nf">pad</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;edge&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Pad an array along a given dimension.</span>
-<span class="sd">    </span>
+
 <span class="sd">    numpy.pad seems to be very memory hungry! Don&#39;t use it for large arrays.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Padding data...&quot;</span><span class="p">)</span>
@@ -631,7 +641,7 @@
 <span class="sd">    Args:</span>
 <span class="sd">        shape: shape of a single projection stack.</span>
 <span class="sd">        geometry_list: list of geometries.</span>
-<span class="sd">        </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Phisical detector size:</span>
     <span class="n">min_x</span><span class="p">,</span> <span class="n">min_y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">inf</span>
