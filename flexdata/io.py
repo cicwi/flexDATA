@@ -366,6 +366,7 @@ def read_meta(path, meta_type = 'flexray', sample = 1):
         meta = _metadata_translate_(records)
         
     elif meta_type == 'toml':
+        
         meta = read_toml(os.path.join(path, 'meta.toml'))
             
     else:
@@ -809,8 +810,11 @@ def _flex_motor_correct_(geometry, settings):
     centre = [(roi[0] + roi[2]) // 2 - 971, (roi[1] + roi[3]) // 2 - 767]
     
     # Take into account the ROI of the detector:
-    geometry['det_vrt'] -= centre[1] / settings.get('binning') * geometry['det_pixel']
-    geometry['det_hrz'] -= centre[0] / settings.get('binning') * geometry['det_pixel']
+    #geometry['det_vrt'] -= centre[1] / settings.get('binning') * geometry['det_pixel']
+    #geometry['det_hrz'] -= centre[0] / settings.get('binning') * geometry['det_pixel']
+    # Not sure the binning should be taken into account...
+    geometry['det_vrt'] -= centre[1] * geometry['det_pixel']
+    geometry['det_hrz'] -= centre[0] * geometry['det_pixel']
     
     geometry['vol_tra'][0] = (geometry['det_vrt'] * geometry['src2obj'] + geometry['src_vrt'] * geometry['det2obj']) / geometry.get('src2det')
 
