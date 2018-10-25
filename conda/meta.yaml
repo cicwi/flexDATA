@@ -15,6 +15,7 @@ requirements:
         - transforms3d
 
     run:
+        - python
         - numpy
         - astra-toolbox
         - matplotlib
