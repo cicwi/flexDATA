@@ -7,7 +7,15 @@ flexDATA contains IO routines that were originally developed for the Flex-Ray X-
 
 It takes a few steps to setup flexDATA on your machine. We recommend that the user installs [Anaconda package manager](https://www.anaconda.com/download/) for Python 3.
 
-### Prerequisites
+### Installing with conda
+
+Simply install with:
+```
+conda create -n <your-environment> python=3.6
+conda install -c cicwi -c astra-toolbox/label/dev -c conda-forge -c owlas flexdata
+```
+
+### Installing from source
 
 To install flexDATA you will need the latest version of the ASTRA toobox (preferably development version). It can be installed via command line with Anaconda:
 
@@ -15,14 +23,14 @@ To install flexDATA you will need the latest version of the ASTRA toobox (prefer
 conda install -c astra-toolbox/label/dev astra-toolbox
 ```
 
-### Installing
-
 To install flexDATA, simply clone this GitHub project. Go to the cloned directory and run PIP installer:
 ```
 git clone https://github.com/teascavenger/flexdata.git
 cd flexdata
 pip install -e .
 ```
+
+
 ## Running the examples
 
 To learn about the functionality of the package check out our examples folder. Examples are separated into blocks that are best to run in Spyder environment step-by-step.
