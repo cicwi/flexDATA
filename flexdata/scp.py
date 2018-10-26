@@ -115,8 +115,8 @@ def delete_local(local_path):
     '''
     Often useful to delete a directory recursively. Use with extreme care!
     '''    
-    print('Deleting:', path)
-    shutil.rmtree(path)
+    print('Deleting:', local_path)
+    shutil.rmtree(local_path)
 
 class _MySFTPClient_(paramiko.SFTPClient):
     '''
