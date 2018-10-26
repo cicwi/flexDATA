@@ -20,6 +20,7 @@ We can also copy data over SCP!
 import os             # operations with filenames
 import stat           # same here...
 from tqdm import tqdm # progress bar
+from time import sleep
 import paramiko       # SCP client
 import errno          # Uesd for error tracking in SCP client
 from traceback import print_exception # Error stack printer
@@ -116,8 +117,9 @@ def delete_local(local_path):
     Often useful to delete a directory recursively. Use with extreme care!
     '''    
     print('Deleting:', local_path)
-    shutil.rmtree(local_path)
-
+    if os.path.exists(local_path):
+        shutil.rmtree(local_path)
+    
 class _MySFTPClient_(paramiko.SFTPClient):
     '''
     Class needed for copying recursively through ssh (paramiko.SFTPClient only allows to copy single files).
@@ -144,17 +146,14 @@ class _MySFTPClient_(paramiko.SFTPClient):
             for x in self.sftp_walk(new_path):
                 yield x
     
-    def _put_path_(self, local, remote, overwrite):
+    def _put_path_(self, local, remote, overwrite, pbar):
         '''
         Recursive function for uploading directories.
         '''
         if not self._exists_remote_(remote):
             #print('*making:', remote)
             self.mkdir(remote, ignore_existing=True)
-        
-        # Loop with a progress bar:
-        pbar = tqdm(total=self._total_file_count_)
-        
+                
         for item in os.listdir(local):
             if os.path.isfile(os.path.join(local, item)):
                 
@@ -171,10 +170,8 @@ class _MySFTPClient_(paramiko.SFTPClient):
                 
                 #print('making:', os.path.join(remote, item))
                 #self.mkdir(os.path.join(remote, item), ignore_existing=True)
-                self._put_path_(os.path.join(local, item), os.path.join(remote, item))
+                self._put_path_(os.path.join(local, item), os.path.join(remote, item), overwrite, pbar)
     
-        pbar.close()
-        
     def put_path(self, local, remote, overwrite = 'different'):
         ''' Uploads the contents of the local directory to the remote path. The
             target directory needs to exists. All subdirectories in local are 
@@ -189,9 +186,16 @@ class _MySFTPClient_(paramiko.SFTPClient):
         
         # Upload files recursively:
         self._current_file_count_= 0
-        self._put_path_(local, remote)
+        
+        # Loop with a progress bar:
+        sleep(0.5)
+        pbar = tqdm(total=self._total_file_count_)
+        
+        self._put_path_(local, remote, overwrite, pbar)
+        
+        pbar.close()
 
-    def _get_path_(self, local, remote, overwrite):
+    def _get_path_(self, local, remote, overwrite, pbar):
         """
         Recursive get method.
         """      
@@ -201,16 +205,13 @@ class _MySFTPClient_(paramiko.SFTPClient):
             os.mkdir(local)
             #print('Local directory created:', local)
         
-        # Progress bar:
-        pbar = tqdm(total=self._total_file_count_)
-        
         # Copy files:
         for filename in self.listdir(remote):
 
             if stat.S_ISDIR(self.stat(os.path.join(remote, filename)).st_mode):
                 
                 # uses '/' path delimiter for remote server
-                self._get_path_(os.path.join(local, filename), os.path.join(remote, filename))
+                self._get_path_(os.path.join(local, filename), os.path.join(remote, filename), overwrite, pbar)
                 
             else:
                 self._current_file_count_ += 1
@@ -221,11 +222,9 @@ class _MySFTPClient_(paramiko.SFTPClient):
                     # Actual get has remote first:
                     self.get(os.path.join(remote, filename), os.path.join(local, filename))
                     
-                    pbar.update()
-                    
-        pbar.close()
+                    pbar.update(1)
                 
-    def get_path(self, local, remote = 'different'):
+    def get_path(self, local, remote, overwrite = 'different'):
         '''
         Download the content of the remote to the local path.
         '''
@@ -242,7 +241,14 @@ class _MySFTPClient_(paramiko.SFTPClient):
         
         # Upload files recursively:
         self._current_file_count_= 0
-        self._get_path_(local, remote)   
+        
+        # Loop with a progress bar:
+        sleep(0.5)
+        pbar = tqdm(total=self._total_file_count_)
+        
+        self._get_path_(local, remote, overwrite, pbar)  
+        
+        pbar.close()
 
     def mkdir(self, path, mode=511, ignore_existing=False):
         ''' Augments mkdir by adding an option to not fail if the folder exists  '''
