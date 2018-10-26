@@ -222,7 +222,7 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
     # Success index
     success = 0
     
-    time.sleep(0.1) # This is needed to let print message be printed before the next porogress bar is created
+    time.sleep(0.5) # This is needed to let print message be printed before the next porogress bar is created
     
     # Loop with a progress bar:
     for k in tqdm(range(len(files)), unit = 'files'):
@@ -247,7 +247,7 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
         warnings.warn('%u files are CORRUPTED!'%(file_n - success))
                 
     print('%u files were loaded. %u%% memory left (%u GB).' % (success, free_memory(True), free_memory(False)))
-    time.sleep(0.1) # This is needed to let print message be printed before the next porogress bar is created
+    time.sleep(0.5) # This is needed to let print message be printed before the next porogress bar is created
     
     return data
 
@@ -279,6 +279,9 @@ def write_tiffs(path, name, data, dim = 1, skip = 1, dtype = None, compress = No
     file_num = int(numpy.ceil(data.shape[dim] / skip))
 
     bounds = [data.min(), data.max()]
+    
+    # To let things be printed in time:
+    time.sleep(0.5)                            
     
     for ii in tqdm(range(file_num), unit = 'file'):
         
