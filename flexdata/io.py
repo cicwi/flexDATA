@@ -151,20 +151,21 @@ def read_flexray(path, sample = 1, skip = 1, memmap = None):
         skip   (int): read every ## image
         sample (int): keep every ## x ## pixel
         memmap (str): output a memmap array using the given path
-        index(array): index of the files that could be loaded
         
     Returns:
         proj (numpy.array): projections stack
         flat (numpy.array): reference flat field images
         dark (numpy.array): dark field images   
         meta (dict): description of the geometry, physical settings and comments
+        
     '''
     
     dark = read_tiffs(path, 'di00', skip, sample)
     flat = read_tiffs(path, 'io00', skip, sample)
     
     # Read the raw data
-    proj = read_tiffs(path, 'scan_', skip, sample, [], [], 'float32', memmap)
+    success = []             # check whether files were actually read
+    proj = read_tiffs(path, 'scan_', skip, sample, [], [], 'float32', memmap, success)
     
     # Try to retrieve metadata:
     if os.path.exists(os.path.join(path, 'metadata.toml')):
@@ -173,11 +174,14 @@ def read_flexray(path, sample = 1, skip = 1, memmap = None):
         
     else:
         
-        meta = read_meta(path, 'flexray', sample)   
+        meta = read_meta(path, 'flexray', sample)  
+        
+    # Check success. If a few files were not read - interpolate, otherwise adjust the meta record.
+    _check_success_(proj, meta, success)
     
     return proj, flat, dark, meta
 
-def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype = 'float32', memmap = None):
+def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype = 'float32', memmap = None, success = None):
     """
     Read tiff files stack and return a numpy array.
     
@@ -190,6 +194,7 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
         y_roi ([y0, y1]): vertical range
         dtype (str or numpy.dtype): data type to return
         memmap (str): if provided, return a disk mapped array to save RAM
+        success(array): map of the files that could be loaded (equals 0 in case of a read failure)
         
     Returns:
         numpy.array : 3D array with the first dimension representing the image index
@@ -208,6 +213,16 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
         
     sz = numpy.shape(image)
     file_n = len(files)
+    
+    # Initialize sucess_index:
+    if success is not None:
+        
+        # this will be visible outside:
+        success[:] = numpy.zeros(file_n)
+    else:
+        
+        # this is an internal variable:
+        success = numpy.zeros(file_n)
         
     # Create a mapped array if needed:
     if memmap:
@@ -218,10 +233,7 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
     
     # In flexbox this function can handle tiff stacks with corrupted files. 
     # Here I removed this functionality to make code simplier.
-    
-    # Success index
-    success = 0
-    
+        
     time.sleep(0.5) # This is needed to let print message be printed before the next porogress bar is created
     
     # Loop with a progress bar:
@@ -235,18 +247,21 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
                 a = a.mean(2)
          
             data[k, :, :] = a
-            success += 1
+            
+            success[k] = 1
         
         except:
+            
+            success[k] = 0
             
             warnings.warn('Error reading file:' + files[k])
             pass
  
     # Get rid of the corrupted data:
-    if success != file_n:
-        warnings.warn('%u files are CORRUPTED!'%(file_n - success))
+    if sum(success) != file_n:
+        warnings.warn('%u files are CORRUPTED!'%(file_n - sum(success)))
                 
-    print('%u files were loaded. %u%% memory left (%u GB).' % (success, free_memory(True), free_memory(False)))
+    print('%u files were loaded. %u%% memory left (%u GB).' % (sum(success), free_memory(True), free_memory(False)))
     time.sleep(0.5) # This is needed to let print message be printed before the next porogress bar is created
     
     return data
@@ -1024,3 +1039,32 @@ def _copydict_(destination, source, dictionary):
             
         else:
             warnings.warn('Record is not found: ' + dictionary[key])
+            
+def _check_success_(proj, meta, success):
+    """
+    If few files are missing - interpolate, if many - adjust theta record in meta
+    """
+    if len(success) == sum(success):
+        return
+    
+    # Check if failed projections come in bunches or singles:
+    fails = numpy.where(numpy.array(success) == 0)[0]
+    
+    if fails.size == 1:
+        print('One projection is missing, we will try to interpoolate.')
+        ii = fails[0]
+        proj[ii] = (proj[ii - 1] + proj[ii + 1]) / 2
+        
+    else:
+        if min(fails[1:] - fails[:-1]) > 1:
+            print('Few projections are missing, we will try to interpoolate them.')
+            
+            # Very simple interpolation:
+            for ii in fails:
+                proj[ii] = (proj[ii - 1] + proj[ii + 1]) / 2
+            
+        else:
+            print('Some clusters of projections are missing. We will adjust the thetas record.')
+            
+            thetas = numpy.linspace(meta['geometry']['theta_min'], meta['geometry']['theta_max'], len(success))
+            meta['geometry']['_thetas_'] = thetas

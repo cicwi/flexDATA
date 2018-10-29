@@ -189,7 +189,7 @@ class _MySFTPClient_(paramiko.SFTPClient):
         
         # Loop with a progress bar:
         sleep(0.5)
-        pbar = tqdm(total=self._total_file_count_)
+        pbar = tqdm(total=self._total_file_count_, unit = 'files')
         
         self._put_path_(local, remote, overwrite, pbar)
         
@@ -244,7 +244,7 @@ class _MySFTPClient_(paramiko.SFTPClient):
         
         # Loop with a progress bar:
         sleep(0.5)
-        pbar = tqdm(total=self._total_file_count_)
+        pbar = tqdm(total=self._total_file_count_, unit = 'files')
         
         self._get_path_(local, remote, overwrite, pbar)  
         
