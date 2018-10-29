@@ -142,7 +142,7 @@ def init_geometry(src2obj = 0, det2obj = 0, det_pixel = 0, unit = 'millimetre', 
         
     return geometry
          
-def read_flexray(path, sample = 1, skip = 1, memmap = None):
+def read_flexray(path, sample = 1, skip = 1, memmap = None, proj_number = None):
     '''
     Read raw projecitions, dark and flat-field, scan parameters from a typical FlexRay folder.
     
@@ -151,6 +151,7 @@ def read_flexray(path, sample = 1, skip = 1, memmap = None):
         skip   (int): read every ## image
         sample (int): keep every ## x ## pixel
         memmap (str): output a memmap array using the given path
+        proj_number (int): force projection number (treat lesser numbers as missing)
         
     Returns:
         proj (numpy.array): projections stack
@@ -164,7 +165,12 @@ def read_flexray(path, sample = 1, skip = 1, memmap = None):
     flat = read_tiffs(path, 'io00', skip, sample)
     
     # Read the raw data
-    success = []             # check whether files were actually read
+    # check whether files were actually read
+    if proj_number:
+        success = numpy.zeros(proj_number)        
+    else:
+        success = []
+        
     proj = read_tiffs(path, 'scan_', skip, sample, [], [], 'float32', memmap, success)
     
     # Try to retrieve metadata:
@@ -177,7 +183,7 @@ def read_flexray(path, sample = 1, skip = 1, memmap = None):
         meta = read_meta(path, 'flexray', sample)  
         
     # Check success. If a few files were not read - interpolate, otherwise adjust the meta record.
-    _check_success_(proj, meta, success)
+    proj = _check_success_(proj, meta, success)
     
     return proj, flat, dark, meta
 
@@ -214,11 +220,13 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
     sz = numpy.shape(image)
     file_n = len(files)
     
-    # Initialize sucess_index:
+    # Initialize sucess index:
     if success is not None:
-        
-        # this will be visible outside:
-        success[:] = numpy.zeros(file_n)
+        if len(success) == 0:
+            # this will be visible outside:
+            success[:] = numpy.zeros(file_n)
+        else:
+            success *= 0
     else:
         
         # this is an internal variable:
@@ -1044,11 +1052,13 @@ def _check_success_(proj, meta, success):
     """
     If few files are missing - interpolate, if many - adjust theta record in meta
     """
+    success = numpy.array(success)
+    
     if len(success) == sum(success):
         return
     
     # Check if failed projections come in bunches or singles:
-    fails = numpy.where(numpy.array(success) == 0)[0]
+    fails = numpy.where(success == 0)[0]
     
     if fails.size == 1:
         print('One projection is missing, we will try to interpoolate.')
@@ -1067,4 +1077,8 @@ def _check_success_(proj, meta, success):
             print('Some clusters of projections are missing. We will adjust the thetas record.')
             
             thetas = numpy.linspace(meta['geometry']['theta_min'], meta['geometry']['theta_max'], len(success))
-            meta['geometry']['_thetas_'] = thetas
+            
+            meta['geometry']['_thetas_'] = thetas[success == 1]
+            proj = proj[success == 1]
+            
+    return proj

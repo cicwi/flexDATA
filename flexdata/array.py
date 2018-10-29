@@ -420,7 +420,7 @@ def volume_bounds(proj_shape, geometry):
     '''
     A very simplified version of volume bounds...
     '''
-    # TODO: Compute this propoerly.... Dont trus the horizontal bounds!!!
+    # TODO: Compute this propoerly.... Dont trust the horizontal bounds!!!
     
     # Detector bounds:
     det_bounds = detector_bounds(proj_shape, geometry)
@@ -436,10 +436,28 @@ def volume_bounds(proj_shape, geometry):
     hrz_bounds = [geometry['vol_tra'][2] - max_x, geometry['vol_tra'][2] + max_x]
     mag_bounds = [geometry['vol_tra'][1] - max_x, geometry['vol_tra'][1] + max_x]
             
-    vol_bounds = {'vrt':vrt_bounds, 'mag': mag_bounds, 'hrz': hrz_bounds}
+    vol_bounds = {'vrt':numpy.array(vrt_bounds), 
+                  'mag': numpy.array(mag_bounds), 
+                  'hrz': numpy.array(hrz_bounds)}
     
     return vol_bounds
 
+def volume_shape(proj_shape, geometry):
+    '''
+    Based on physical volume bnounds compute shape in pixels:
+    '''
+    bounds = volume_bounds(proj_shape, geometry)
+
+    range_vrt = numpy.ceil(bounds['vrt'] / geometry['img_pixel'])
+    range_hrz = numpy.ceil(bounds['hrz'] / geometry['img_pixel'])
+    range_mag = numpy.ceil(bounds['mag'] / geometry['img_pixel'])
+    
+    range_vrt = range_vrt[1] - range_vrt[0]
+    range_hrz = range_hrz[1] - range_hrz[0]
+    range_mag = range_mag[1] - range_mag[0]
+    
+    return numpy.int32([range_vrt, range_mag, range_hrz])
+    
 def detector_bounds(shape, geometry):
     '''
     Get the boundaries of the detector in mm
