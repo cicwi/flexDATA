@@ -54,6 +54,8 @@ def ssh_get_path(local_path, remote_path, hostname, username, password = None, o
         info = exc_info()
         print_exception(*info)
         
+        print('SFTP failure @' + remote_path)
+        
     finally:        
         sftp.close()
     
@@ -162,7 +164,13 @@ class _MySFTPClient_(paramiko.SFTPClient):
                 
                 # Overwrite if need to:
                 if self._overwrite_(os.path.join(local, item), os.path.join(remote, item), overwrite):
-                    self.put(os.path.join(local, item), os.path.join(remote, item))
+                    try:
+                        self.put(os.path.join(local, item), os.path.join(remote, item))
+               
+                    except: 
+                        info = exc_info()
+                        print_exception(*info)
+                        print('SFTP PUT failed @' + os.path.join(local, item))
                 
                 pbar.update(1)
                 
@@ -189,7 +197,7 @@ class _MySFTPClient_(paramiko.SFTPClient):
         
         # Loop with a progress bar:
         sleep(0.5)
-        pbar = tqdm(total=self._total_file_count_, unit = 'files')
+        pbar = tqdm(total=self._total_file_count_, unit = 'files', ascii = True)
         
         self._put_path_(local, remote, overwrite, pbar)
         
@@ -220,9 +228,15 @@ class _MySFTPClient_(paramiko.SFTPClient):
                 if self._overwrite_(os.path.join(local, filename), os.path.join(remote, filename), overwrite):
                     
                     # Actual get has remote first:
-                    self.get(os.path.join(remote, filename), os.path.join(local, filename))
+                    try:
+                        self.get(os.path.join(remote, filename), os.path.join(local, filename))
+               
+                    except: 
+                        info = exc_info()
+                        print_exception(*info)
+                        print('SFTP GET failed @' + os.path.join(remote, filename))
                     
-                    pbar.update(1)
+                pbar.update(1)
                 
     def get_path(self, local, remote, overwrite = 'different'):
         '''
@@ -244,7 +258,7 @@ class _MySFTPClient_(paramiko.SFTPClient):
         
         # Loop with a progress bar:
         sleep(0.5)
-        pbar = tqdm(total=self._total_file_count_, unit = 'files')
+        pbar = tqdm(total=self._total_file_count_, unit = 'files', ascii = True)
         
         self._get_path_(local, remote, overwrite, pbar)  
         
