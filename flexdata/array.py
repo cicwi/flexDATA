@@ -191,15 +191,15 @@ def bin(array, dim = None):
             
         if dim == 0:
              array[:-1:2, :, :] += array[1::2, :, :]
-             return array[:-1:2, :, :]
+             return rewrite_memmap(array, array[:-1:2, :, :])
              
         elif dim == 1:
              array[:, :-1:2, :] += array[:, 1::2, :]
-             return array[:, :-1:2, :]
+             return rewrite_memmap(array, array[:, :-1:2, :])
              
         elif dim == 2:
              array[:, :, :-1:2] += array[:, :, 1::2]
-             return array[:, :, :-1:2]
+             return rewrite_memmap(array, array[:, :, :-1:2])
              
     else:        
     
@@ -220,9 +220,9 @@ def bin(array, dim = None):
         for ii in range(array.shape[2]):
             sl = anyslice(array, ii, 2)
             
-            array[sl][:-1:2,:-1:2] += array[sl][1::2,:-1:2]    
+            array[sl][:-1:2,:-1:2] += array[sl][1::2,:-1:2]   
         
-        return array[:-1:2, :-1:2, :-1:2]
+        return rewrite_memmap(array, array[:-1:2, :-1:2, :-1:2])
     
 def crop(array, dim, width, geometry = None):
     """
@@ -248,23 +248,23 @@ def crop(array, dim, width, geometry = None):
         v = (widthl + widthr)
         
         if widthr == 0: widthr = None
-        array = array[widthl:widthr, :,:]
+        new = array[widthl:widthr, :,:]
         
     elif dim == 1:
         h = (widthl + widthr)
         
         if widthr == 0: widthr = None
-        array = array[:,widthl:widthr,:]
+        new = array[:,widthl:widthr,:]
         
     elif dim == 2:
         h = (widthl + widthr)
         
         if widthr == 0: widthr = None
-        array = array[:,:,widthl:widthr]   
+        new = array[:,:,widthl:widthr]   
     
     if geometry: shift_geometry(geometry, h/2, v/2)
-    
-    return array
+        
+    return rewrite_memmap(array, new)
 
 def shift_geometry(geometry, hrz, vrt, update_volume_pos = True):
     """
