@@ -167,7 +167,7 @@ def read_flexray(path, sample = 1, skip = 1, memmap = None, proj_number = None):
     # Read the raw data
     # check whether files were actually read
     if proj_number:
-        success = numpy.zeros(proj_number)        
+        success = numpy.zeros(int(numpy.ceil(proj_number / skip)))        
     else:
         success = []
         
@@ -219,6 +219,7 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
         
     sz = numpy.shape(image)
     file_n = len(files)
+    proj_n = len(files) # may change if projection_number was forced
     
     # Initialize sucess index:
     if success is not None:
@@ -226,18 +227,23 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
             # this will be visible outside:
             success[:] = numpy.zeros(file_n)
         else:
+            
             success *= 0
+            
+            if len(success) > file_n:
+                warnings.warn('The file number is not equal to the forced projection number! Hopefully everything will be fine...')
+                proj_n = len(success)
     else:
         
-        # this is an internal variable:
+        # This is an internal variable:
         success = numpy.zeros(file_n)
         
     # Create a mapped array if needed:
     if memmap:
-        data = numpy.memmap(memmap, dtype=dtype, mode='w+', shape = (file_n, sz[0], sz[1]))
+        data = numpy.memmap(memmap, dtype=dtype, mode='w+', shape = (proj_n, sz[0], sz[1]))
         
     else:    
-        data = numpy.zeros((file_n, sz[0], sz[1]), dtype = dtype)
+        data = numpy.zeros((proj_n, sz[0], sz[1]), dtype = dtype)
     
     # In flexbox this function can handle tiff stacks with corrupted files. 
     # Here I removed this functionality to make code simplier.
@@ -489,6 +495,10 @@ def _numpy2python_(numpy_var):
     """
     Small utility to translate numpy to standard python (needed for TOML compatibility)
     """        
+    # TOML parcer doesnt like tuples:
+    if isinstance(numpy_var, tuple):
+        numpy_var = list(numpy.round(numpy_var, 6))
+    
     # Numpy array:
     if isinstance(numpy_var, numpy.ndarray):
         numpy_var = numpy.round(numpy_var, 6).tolist()
@@ -1055,7 +1065,7 @@ def _check_success_(proj, meta, success):
     success = numpy.array(success)
     
     if len(success) == sum(success):
-        return
+        return proj
     
     # Check if failed projections come in bunches or singles:
     fails = numpy.where(success == 0)[0]
