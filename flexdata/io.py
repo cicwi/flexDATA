@@ -240,7 +240,7 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
         
     # Create a mapped array if needed:
     if memmap:
-        data = numpy.memmap(memmap, dtype=dtype, mode='w+', shape = (proj_n, sz[0], sz[1]))
+        data = array.memmap(memmap, dtype=dtype, mode='w+', shape = (proj_n, sz[0], sz[1]))
         
     else:    
         data = numpy.zeros((proj_n, sz[0], sz[1]), dtype = dtype)

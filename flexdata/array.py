@@ -13,8 +13,28 @@ results. This can be improved through better use of memmaps.
 
 import numpy          # arrays arrays arrays
 import psutil         # RAM test
+from os import remove # File deletion
 
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>> Methods >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+class memmap(numpy.memmap):
+    '''
+    Standard memmaps don't seem to reliably delete files that are created on disk.
+    This fixes it...
+    '''
+    def __init__(self, file, shape, dtype = 'float32', mode = 'w+'):
+        
+        # Initialize parrent:
+        numpy.memmap.__init__(file, dtype = dtype, mode = mode, shape = shape)
+        
+        self._filepath_ = file
+        
+    def __del__(self):
+        
+        if hasattr(self, '_filepath_'):
+            
+            print('Deleting a memmap @' + self._filepath_)
+            remove(self._filepath_)
    
 def free_memory(percent = False):
     '''
@@ -307,10 +327,10 @@ def rewrite_memmap(old_array, new_array):
     Reshaping memmaps is tough. We will recreate one instead hoping that this will not overflow our RAM...
     This is a dirty qick fix! Try to use resize instead!
     '''
-    if isinstance(old_array, numpy.memmap):
+    if isinstance(old_array, memmap):
         
         # Trick is to open the file in r+ mode:
-        old_array = numpy.memmap(old_array.filename, dtype='float32', mode = 'r+', shape = new_array.shape)
+        old_array = memmap(old_array.filename, dtype='float32', mode = 'r+', shape = new_array.shape)
         old_array[:] = new_array[:]
         
     else:
