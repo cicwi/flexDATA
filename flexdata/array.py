@@ -13,7 +13,7 @@ results. This can be improved through better use of memmaps.
 
 import numpy          # arrays arrays arrays
 import psutil         # RAM test
-from os import remove # File deletion
+import os             # File deletion
 
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>> Methods >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -21,21 +21,16 @@ class memmap(numpy.memmap):
     '''
     Standard memmaps don't seem to reliably delete files that are created on disk.
     This fixes it...
-    '''
-    def __init__(self, file, shape, dtype = 'float32', mode = 'w+'):
+    '''        
+    def delete(self):
         
-        # Initialize parrent:
-        numpy.memmap.__init__(file, dtype = dtype, mode = mode, shape = shape)
-        
-        self._filepath_ = file
-        
-    def __del__(self):
-        
-        if hasattr(self, '_filepath_'):
+        # Ref counting doesnt work.... will need to delte the file by hand.
+        if self.filename:
+            if os.path.exists(self.filename):
             
-            print('Deleting a memmap @' + self._filepath_)
-            remove(self._filepath_)
-   
+                print('Deleting a memmap @' + self.filename)
+                os.remove(self.filename)
+       
 def free_memory(percent = False):
     '''
     Return amount of free memory in GB.
@@ -76,9 +71,9 @@ def cast2type(array, dtype, bounds = None):
     array[array < 0] = 0
     array[array > data_max] = data_max
     
-    array = numpy.array(array, dtype)    
+    new = numpy.array(array, dtype)    
     
-    return array
+    return rewrite_memmap(array, new)
    
 def shape_alike(array_1, array_2):
     '''
@@ -242,7 +237,8 @@ def bin(array, dim = None):
             
             array[sl][:-1:2,:-1:2] += array[sl][1::2,:-1:2]   
         
-        return rewrite_memmap(array, array[:-1:2, :-1:2, :-1:2])
+        new = array[:-1:2, :-1:2, :-1:2]
+        return rewrite_memmap(array, new)
     
 def crop(array, dim, width, geometry = None):
     """
@@ -329,10 +325,14 @@ def rewrite_memmap(old_array, new_array):
     '''
     if isinstance(old_array, memmap):
         
-        # Trick is to open the file in r+ mode:
-        old_array = memmap(old_array.filename, dtype='float32', mode = 'r+', shape = new_array.shape)
-        old_array[:] = new_array[:]
-        
+        # Sometimes memmaps are created without a file (a guess they are kind of copies of views of actual memmaps...)
+        if old_array.filename:
+            # Trick is to open the file in r+ mode:
+            old_array = memmap(old_array.filename, dtype='float32', mode = 'r+', shape = new_array.shape)
+            old_array[:] = new_array[:]
+            
+        else:
+            old_array = new_array
     else:
         del old_array
         
