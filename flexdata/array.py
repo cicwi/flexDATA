@@ -21,10 +21,11 @@ class memmap(numpy.memmap):
     '''
     Standard memmaps don't seem to reliably delete files that are created on disk.
     This fixes it...
-    '''        
+    '''     
     def delete(self):
         
-        # Ref counting doesnt work.... will need to delte the file by hand.
+        # Ref counting wit gc doesnt work.... will need to delte the file by hand.
+        # self.flag[OWNDATA] doesn't work either ...
         if self.filename:
             if os.path.exists(self.filename):
             
@@ -264,19 +265,19 @@ def crop(array, dim, width, geometry = None):
         v = (widthl + widthr)
         
         if widthr == 0: widthr = None
-        new = array[widthl:widthr, :,:]
+        new = array[widthl:widthr, :,:].copy()
         
     elif dim == 1:
         h = (widthl + widthr)
         
         if widthr == 0: widthr = None
-        new = array[:,widthl:widthr,:]
+        new = array[:,widthl:widthr,:].copy()
         
     elif dim == 2:
         h = (widthl + widthr)
         
         if widthr == 0: widthr = None
-        new = array[:,:,widthl:widthr]   
+        new = array[:,:,widthl:widthr].copy()  
     
     if geometry: shift_geometry(geometry, h/2, v/2)
         
