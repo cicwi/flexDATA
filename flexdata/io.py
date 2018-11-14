@@ -264,7 +264,7 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
             
             success[k] = 1
         
-        except:
+        except Exception:
             
             success[k] = 0
             
