@@ -1,0 +1,37 @@
+package:
+    name: flexdata
+    version: "0.0.1"
+
+source:
+    path: ../
+
+build:
+    number: '0'
+
+requirements:
+    build:
+        - python {{ python }}
+        - tifffile
+        - transforms3d
+
+    run:
+        - python
+        - numpy
+        - astra-toolbox
+        - matplotlib
+        - tqdm
+        - imageio
+        - tifffile
+        - psutil
+        - toml
+        - transforms3d
+        - paramiko
+
+about:
+    home: https://github.com/cicwi/flexdata
+    license_file: LICENSE.md
+    summary: "This project comprises IO routines that make life easier with Flex-Ray scanner."
+
+extra:
+    maintainers:
+        - Alexander Kostenko
