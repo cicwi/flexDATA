@@ -207,15 +207,15 @@ def bin(array, dim = None):
             
         if dim == 0:
              array[:-1:2, :, :] += array[1::2, :, :]
-             return rewrite_memmap(array, array[:-1:2, :, :])
+             return array[:-1:2, :, :]
              
         elif dim == 1:
              array[:, :-1:2, :] += array[:, 1::2, :]
-             return rewrite_memmap(array, array[:, :-1:2, :])
+             return array[:, :-1:2, :]
              
         elif dim == 2:
              array[:, :, :-1:2] += array[:, :, 1::2]
-             return rewrite_memmap(array, array[:, :, :-1:2])
+             return array[:, :, :-1:2]
              
     else:        
     
@@ -227,19 +227,13 @@ def bin(array, dim = None):
         
         # Try to avoid memory overflow here:
         for ii in range(array.shape[0]):
-            sl = anyslice(array, ii, 0)
-            
-            x = array[sl]
-            array[sl][:-1:2,:] += x[1::2,:]
-            array[sl][:,:-1:2] += x[:,1::2]
+            array[ii, :-1:2, :] += array[ii, 1::2,:]
+            array[ii, :, :-1:2] += array[ii, :,1::2]
             
         for ii in range(array.shape[2]):
-            sl = anyslice(array, ii, 2)
-            
-            array[sl][:-1:2,:-1:2] += array[sl][1::2,:-1:2]   
+            array[:-1:2,:-1:2, :, ii] += array[:-1:2,:-1:2, :, ii]
         
-        new = array[:-1:2, :-1:2, :-1:2]
-        return rewrite_memmap(array, new)
+        return array[:-1:2, :, :]
     
 def crop(array, dim, width, geometry = None):
     """
@@ -265,23 +259,24 @@ def crop(array, dim, width, geometry = None):
         v = (widthl + widthr)
         
         if widthr == 0: widthr = None
-        new = array[widthl:widthr, :,:].copy()
+        new = array[widthl:widthr, :,:]
         
     elif dim == 1:
         h = (widthl + widthr)
         
         if widthr == 0: widthr = None
-        new = array[:,widthl:widthr,:].copy()
+        new = array[:,widthl:widthr,:]
         
     elif dim == 2:
         h = (widthl + widthr)
         
         if widthr == 0: widthr = None
-        new = array[:,:,widthl:widthr].copy()  
+        new = array[:,:,widthl:widthr]  
     
     if geometry: shift_geometry(geometry, h/2, v/2)
         
-    return rewrite_memmap(array, new)
+    # Its better to leave the memmap file as it is. Return a view to it:
+    return new
 
 def shift_geometry(geometry, hrz, vrt, update_volume_pos = True):
     """
@@ -522,7 +517,7 @@ def tiles_shape(shape, geometry_list):
         
     # Big slice:
     new_shape = numpy.array([(max_y - min_y) / det_pixel, shape[1], (max_x - min_x) / det_pixel])                     
-    new_shape = numpy.int32(numpy.ceil(new_shape))  
+    new_shape = numpy.round(new_shape).astype('int')
     
     # Copy one of the geometry records and sett the correct translation:
     geometry = geometry_list[0].copy()

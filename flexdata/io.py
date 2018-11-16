@@ -174,11 +174,11 @@ def read_flexray(path, sample = 1, skip = 1, memmap = None, proj_number = None):
     proj = read_tiffs(path, 'scan_', skip, sample, [], [], 'float32', memmap, success)
     
     # Try to retrieve metadata:
-    if os.path.exists(os.path.join(path, 'metadata.toml')):
+    try:
         
         meta = read_meta(path, 'metadata', sample)   
         
-    else:
+    except:
         
         meta = read_meta(path, 'flexray', sample)  
         
@@ -366,8 +366,7 @@ def read_tiff(file, sample = 1, x_roi = [], y_roi = []):
     if (x_roi != []):
         im = im[:, x_roi[0]:x_roi[1]]
 
-    if sample != 1:
-        im = im[::sample, ::sample]
+    im = _sample_image_(im, sample)
     
     return im
 
@@ -729,6 +728,33 @@ def _file_to_dictionary_(path, file_mask, separator = ':'):
         
     return records                
 
+def _sample_image_(image, sample):
+    '''
+    Subsample the image or bin it if possible...
+    '''
+    
+    if sample == 1:
+        return image
+    
+    if sample % 2 != 0:
+        warnings.warn('Sampling is not even. Won`t use binning.')
+        image = image[::sample, ::sample]
+        
+    else:
+        while sample > 1:
+            
+            if (image.dtype.kind == 'i') | (image.dtype.kind == 'u'):   
+                image //= 4
+            else:
+                image /= 4
+                
+            image = (image[:-1:2, :] + image[1::2, :])
+            image = (image[:, :-1:2] + image[:, 1::2]) 
+            
+            sample /= 2 
+            
+        return image
+
 def _parse_unit_(string):
     '''
     Look for units in the string and return a factor that converts this unit to Si.
@@ -1036,6 +1062,12 @@ def _metadata_translate_(records):
     roi = re.sub('[] []', '', geometry['roi']).split(sep=',')
     roi = numpy.int32(roi)
     geometry['roi'] = roi.tolist()
+    
+    # Detector pixel is not changed here when binning mode is on...
+    if (settings['mode'] == 'HW2SW1High')|(settings['mode'] == 'HW1SW2High'):
+        geometry['det_pixel'] *= 2    
+    elif (settings['mode'] == 'HW2SW2High'):
+        geometry['det_pixel'] *= 4   
 
     geometry['img_pixel'] = geometry['det_pixel'] / (geometry['src2det'] / geometry['src2obj'])    
 
@@ -1053,7 +1085,14 @@ def _copydict_(destination, source, dictionary):
     for key in dictionary.keys():
         
         if dictionary[key] in source.keys():
-            destination[key] = source[dictionary[key]]
+            #destination[key] = source[dictionary[key]]
+            
+            # Remove spaces:
+            val = source[dictionary[key]]
+            if type(val) is str:
+                val = val.strip()
+                
+            destination[key] = val
             
         else:
             warnings.warn('Record is not found: ' + dictionary[key])
