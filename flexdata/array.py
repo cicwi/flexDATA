@@ -230,8 +230,10 @@ def bin(array, dim = None):
             array[ii, :-1:2, :] += array[ii, 1::2,:]
             array[ii, :, :-1:2] += array[ii, :,1::2]
             
+        array = array[:, :-1:2, :-1:2]     
+            
         for ii in range(array.shape[2]):
-            array[:-1:2,:-1:2, :, ii] += array[:-1:2,:-1:2, :, ii]
+            array[:-1:2, :, ii] += array[1::2, :, ii]
         
         return array[:-1:2, :, :]
     

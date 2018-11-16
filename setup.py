@@ -10,12 +10,13 @@ setup(
         "astra-toolbox",
         "matplotlib",
         "tqdm",
-        "imageio",
-        "tifffile",
+        "imageio=2.4",
+        "tifffile=0.14",
         "psutil",
         "toml",
         "transforms3d",
         "paramiko"],
+
     extras_require={
         'dev': [
             'autopep8',
