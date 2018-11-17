@@ -25,11 +25,10 @@ conda install -c astra-toolbox/label/dev astra-toolbox
 
 To install flexDATA, simply clone this GitHub project. Go to the cloned directory and run PIP installer:
 ```
-git clone https://github.com/teascavenger/flexdata.git
+git clone https://github.com/cicwi/flexdata.git
 cd flexdata
 pip install -e .
 ```
-
 
 ## Running the examples
 
