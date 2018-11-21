@@ -166,6 +166,9 @@ def pad(array, dim, width, mode = 'edge'):
     
     numpy.pad seems to be very memory hungry! Don't use it for large arrays.
     """
+    if min(width) < 0:
+        raise Exception('Negative pad width found!')
+    
     print('Padding data...')
     
     if numpy.size(width) > 1:
@@ -279,6 +282,27 @@ def crop(array, dim, width, geometry = None):
         
     # Its better to leave the memmap file as it is. Return a view to it:
     return new
+
+def cast2shape(array, shape):
+    '''
+    Make the array to conform with the given shape.
+    '''
+    if array.ndim != len(shape):
+        raise Exception('Wrong array shape!')
+    
+    for ii in range(array.ndim):
+        dif = array.shape[ii] - shape[ii]
+        if dif > 0:
+            wl = dif // 2
+            wr = dif - wl
+            array = crop(array, ii, [wl, wr])
+            
+        elif dif < 0:
+            wl = -dif // 2
+            wr = -dif - wl
+            array = pad(array, ii, [wl, wr], mode = 'zero')
+            
+    return array
 
 def shift_geometry(geometry, hrz, vrt, update_volume_pos = True):
     """
@@ -449,7 +473,9 @@ def volume_bounds(proj_shape, geometry):
     vrt_bounds = (vrt * fact + geometry['src_vrt'] * (1 - fact))
     
     hrz = numpy.array(det_bounds['hrz'])
-    max_x = max(hrz - geometry['axs_hrz'])
+    hrz_bounds = (hrz * fact + geometry['src_hrz'] * (1 - fact))
+    #hrz = max(hrz_bounds)
+    max_x = max(hrz_bounds - geometry['axs_hrz'])
     
     hrz_bounds = [geometry['vol_tra'][2] - max_x, geometry['vol_tra'][2] + max_x]
     mag_bounds = [geometry['vol_tra'][1] - max_x, geometry['vol_tra'][1] + max_x]
