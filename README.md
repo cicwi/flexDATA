@@ -66,7 +66,7 @@ proj_geom = io.astra_proj_geom(meta['geometry'], proj.shape)
 ## Authors and contributors
 
 * **Alexander Kostenko** - *Initial work*
-* **Allard Handriksen** - *Packaging and installation*
+* **Allard Hendriksen** - *Packaging and installation*
 * **Jan-Willem Buurlage** - *Packaging and installation*
 
 See also the list of [contributors](https://github.com/cicwi/flexdata/contributors) who participated in this project.
