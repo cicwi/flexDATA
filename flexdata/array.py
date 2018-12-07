@@ -45,6 +45,30 @@ def free_memory(percent = False):
     else:
         return psutil.virtual_memory().available / psutil.virtual_memory().total * 100
     
+def gradient(array, axes = [0,1,2]):
+    num_dims = len(array.shape)
+    d = []
+    for ax in axes:
+        pad_pattern = [(0, 0)] * num_dims
+        pad_pattern[ax] = (0, 1)
+        temp_d = numpy.pad(array, pad_pattern, mode='edge')
+        temp_d = numpy.diff(temp_d, n=1, axis=ax)
+        d.append(temp_d)
+    return d
+
+def divergence(array, axes = [0, 1, 2]):
+    num_dims = len(array.shape)-1
+    for ii, ax in enumerate(axes):
+        pad_pattern = [(0, 0)] * num_dims
+        pad_pattern[ax] = (1, 0)
+        temp_d = numpy.pad(array[ax, ...], pad_pattern, mode='edge')
+        temp_d = numpy.diff(temp_d, n=1, axis=ax)
+        if ii == 0:
+            final_d = temp_d
+        else:
+            final_d += temp_d
+    return final_d    
+    
 def cast2type(array, dtype, bounds = None):
     """
     Cast from float to int or float to float rescaling values if needed.
