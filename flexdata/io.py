@@ -141,7 +141,7 @@ def init_geometry(src2obj = 0, det2obj = 0, det_pixel = 0, unit = 'millimetre', 
         geometry['axs_mag'] = zz # same here 
         
     return geometry
-         
+
 def read_flexray(path, sample = 1, skip = 1, memmap = None, proj_number = None):
     '''
     Read raw projecitions, dark and flat-field, scan parameters from a typical FlexRay folder.
@@ -646,10 +646,8 @@ def mm2pixel(value, geometry):
     img_pixel = geometry['det_pixel'] / m
 
     return value / img_pixel
-           
-# >>>>>>>>>>>>>>>>>>>>>>>>>>>> Utility functions >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-def _get_files_sorted_(path, name):
+def get_files_sorted(path, name):
     """
     Sort file entries using the natural (human) sorting
     """
@@ -667,6 +665,22 @@ def _get_files_sorted_(path, name):
 
     return files 
 
+def get_folders_sorted(path):
+    '''
+    Get all paths from a path with a star (using glob)
+    '''
+    # Get all folders if a '*' was used:
+	paths = sorted(glob(path))
+	
+    if len(paths) == 0:
+		log.error('No folders found at the specified path: ' + path)
+	
+    # Check if all paths are folders:	
+	paths = [p for p in paths if os.path.isdir(p)]
+	
+    return paths
+           
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>> Utility functions >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 def _sanity_check_(meta):
     '''
     Simple sanity check of the geometry record.
