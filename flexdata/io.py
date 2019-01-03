@@ -98,6 +98,8 @@ def init_geometry(src2obj = 0, det2obj = 0, det_pixel = 0, unit = 'millimetre', 
                 'img_pixel':img_pixel, 
                 'vol_sample':[1, 1, 1], 
                 'proj_sample':[1, 1, 1],
+                
+                'axs_hrz':0,
                               
                 'vol_rot':[0.,0.,0.], 
                 'vol_tra':[0.,0.,0.]
@@ -186,8 +188,8 @@ def read_flexray(path, sample = 1, skip = 1, memmap = None, proj_number = None):
     proj = _check_success_(proj, meta, success)
     
     return proj, flat, dark, meta
-
-def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype = 'float32', memmap = None, success = None):
+    
+def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype = None, flipdim = False, memmap = None, success = None):
     """
     Read tiff files stack and return a numpy array.
     
@@ -199,6 +201,7 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
         x_roi ([x0, x1]): horizontal range
         y_roi ([y0, y1]): vertical range
         dtype (str or numpy.dtype): data type to return
+        flipdim (bool): apply dimension switch for ASTRA compatibility
         memmap (str): if provided, return a disk mapped array to save RAM
         success(array): map of the files that could be loaded (equals 0 in case of a read failure)
         
@@ -206,18 +209,49 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
         numpy.array : 3D array with the first dimension representing the image index
         
     """  
+    read_stack(path, name, skip = skip, sample = sample, x_roi = x_roi, y_roi = y_roi, shape = [], 
+               dtype = dtype, format = 'tiff', flipdim = flipdim, memmap = memmap, success = success)
         
+def read_stack(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], shape = None, 
+               dtype = None, format = None, flipdim = False, memmap = None, success = None):    
+    """
+    Read stack of files and return a numpy array.
+    
+    Args:
+        path (str): path to the files location
+        name (str): common part of the files name
+        skip (int): read every so many files
+        sample (int): sampling factor in x/y direction
+        x_roi ([x0, x1]): horizontal range
+        y_roi ([y0, y1]): vertical range
+        shape (array): shape of the files. Use it when the format is 'raw'.
+        dtype (str or numpy.dtype): data type of the files
+        format (str): file format ('tif', 'raw', etc)
+        flipdim (bool): apply dimension switch for ASTRA compatibility
+        memmap (str): if provided, return a disk mapped array to save RAM
+        success(array): map of the files that could be loaded (equals 0 in case of a read failure)
+        
+    Returns:
+        numpy.array : 3D array with the first dimension representing the image index
+        
+    """  
     # Retrieve file names, sorted by name
     files = _get_files_sorted_(path, name)    
+    
     if len(files) == 0: raise IOError('Tiff files not found at:', os.path.join(path, name))
     
     # Apply skip:
     files = files[::skip]
     
-    # Read the first file:
-    image = read_tiff(files[0], sample, x_roi, y_roi)
+    # Confirm the shape and the dtype of the image:
+    image = read_image(files[0], sample, x_roi, y_roi, shape, format, dtype)
+    
+    shape = list(image.shape)
+    shape[0] *= sample
+    shape[1] *= sample
+    
+    dtype = image.dtype
         
-    sz = numpy.shape(image)
     file_n = len(files)
     proj_n = len(files) # may change if projection_number was forced
     
@@ -233,54 +267,60 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
             if len(success) > file_n:
                 warnings.warn('The file number is not equal to the forced projection number! Hopefully everything will be fine...')
                 proj_n = len(success)
-    else:
-        
-        # This is an internal variable:
-        success = numpy.zeros(file_n)
         
     # Create a mapped array if needed:
+    #if shape and sample are used, shape means the shape of the image on disk before subsampling
+    shape_samp = (proj_n, shape[0] // sample, shape[1] // sample)
+    
     if memmap:
-        data = array.memmap(memmap, dtype=dtype, mode='w+', shape = (proj_n, sz[0], sz[1]))
+        data = array.memmap(memmap, dtype=dtype, mode='w+', shape = shape_samp)
         
     else:    
-        data = numpy.zeros((proj_n, sz[0], sz[1]), dtype = dtype)
+        data = numpy.zeros(shape_samp, dtype = dtype)
     
     # In flexbox this function can handle tiff stacks with corrupted files. 
     # Here I removed this functionality to make code simplier.
         
-    time.sleep(0.5) # This is needed to let print message be printed before the next porogress bar is created
-    
+    time.sleep(0.3) # This is needed to let print message be printed before the next porogress bar is created
+            
     # Loop with a progress bar:
     for k in tqdm(range(len(files)), unit = 'files'):
         
-        try:
-            a = read_tiff(files[k], sample, x_roi, y_roi)
-                        
-            # Summ RGB:    
-            if a.ndim > 2:
-                a = a.mean(2)
-         
-            data[k, :, :] = a
-            
-            success[k] = 1
-        
-        except Exception:
-            
-            success[k] = 0
-            
-            warnings.warn('Error reading file:' + files[k])
-            pass
+        # Use try...escept only is success array is provided. Otherwise, crash on errors
+        if success is not None:
+            try:
+                im = read_image(files[k], sample, x_roi, y_roi, shape, format, dtype)
+                data[k, :, :] = im     
+                success[k] = 1
+                
+            except Exception:
+                
+                success[k] = 0            
+                warnings.warn('Error reading file:' + files[k])
+                pass
+        else:
+            im = read_image(files[k], sample, x_roi, y_roi, shape, format, dtype)    
+
+            data[k, :, :] = im
  
     # Get rid of the corrupted data:
-    if sum(success) != file_n:
-        warnings.warn('%u files are CORRUPTED!'%(file_n - sum(success)))
-                
-    print('%u files were loaded. %u%% memory left (%u GB).' % (sum(success), free_memory(True), free_memory(False)))
-    time.sleep(0.5) # This is needed to let print message be printed before the next porogress bar is created
+    if success is not None:                
+        if sum(success) != file_n:
+            warnings.warn('%u files are CORRUPTED!'%(file_n - sum(success)))
+                    
+        print('%u files were loaded. %u%% memory left (%u GB).' % (sum(success), free_memory(True), free_memory(False)))
+    else:
+        print('%u files were loaded. %u%% memory left (%u GB).' % (len(files), free_memory(True), free_memory(False)))
+    
+    # Apply dimension switch:    
+    if flipdim:    
+        data = array.raw2astra(data)    
+        
+    time.sleep(0.3) # This is needed to let print message be printed before the next porogress bar is created
     
     return data
 
-def write_tiffs(path, name, data, dim = 1, skip = 1, dtype = None, compress = None):
+def write_tiffs(path, name, data, dim = 1, skip = 1, dtype = None, zip = False):
     """
     Write a tiff stack.
     
@@ -291,7 +331,23 @@ def write_tiffs(path, name, data, dim = 1, skip = 1, dtype = None, compress = No
         dim (int): dimension along which array is separated into images
         skip (int): how many images to skip in between
         dtype (type): forse this data type   
+        zip (bool): use loseless zip compression or not.
+    """
+    write_stack(path, name, data, dim = dim, skip = skip, dtype = dtype, zip = zip, format = 'tiff')
+                 
+def write_stack(path, name, data, dim = 1, skip = 1, dtype = None, zip = False, format = 'tiff'):
+    """
+    Write an image stack.
+    
+    Args:
+        path (str): destination path
+        name (str): first part of the files name
+        data (numpy.array): data to write
+        dim (int): dimension along which array is separated into images
+        skip (int): how many images to skip in between
+        dtype (type): forse this data type   
         compress (str): use None, 'zip' or 'jp2'.
+        format (str): file extension ('raw', 'tiff', 'jp2', etc)
     """
     
     print('Writing data...')
@@ -325,41 +381,76 @@ def write_tiffs(path, name, data, dim = 1, skip = 1, dtype = None, compress = No
             img = array.cast2type(img, dtype, bounds)
         
         # Write it!!!
-        if (compress == 'zip'):
-            write_tiff(path_name + '.tiff', img, 1)
+        if format == 'raw':
+            img.tofile(os.path.join(path_name, '.raw'))
             
-        elif (not compress):
-            write_tiff(path_name + '.tiff', img, 0)
-            
-        elif compress == 'jp2':  
-            write_tiff(path_name + '.jp2', img, 1)
-            
-            '''
-            To enable JPEG 2000 support, you need to build and install the OpenJPEG library, version 2.0.0 or higher, before building the Python Imaging Library.
-            conda install -c conda-forge openjpeg
-            '''
-            
-        else:
-            raise ValueError('Unknown compression!')
-                
-def write_tiff(filename, image, compress = 0):
+        else:            
+            if zip:
+                write_image(os.path.join(path_name, '.', format), img, 1)
+            else:
+                write_image(os.path.join(path_name, '.', format), img, 0)   
+    
+def write_image(filename, image, compress = 0):
     """
-    Write a single tiff image. Use compression is needed (0-9).
+    Write a single image. Use compression if needed (0-9).
     """     
     with imageio.get_writer(filename) as w:
         w.append_data(image, {'compress': compress})
 
-def read_tiff(file, sample = 1, x_roi = [], y_roi = []):
+def read_image(file, sample = 1, x_roi = [], y_roi = [], shape = None, format = None, dtype = None):
     """
-    Read a single tiff image.
+    Read a single image. Use sampling and roi parameters to reduce the array size. 
+    Use shape, format and dtype to force file reading settings.
+    
     """
-    if os.path.splitext(file)[1] == '':
-        #im = imageio.imread(file, format = 'tif', offset = 0)
-        im = imageio.imread(file, format = 'tif')
+    
+    # File header size:
+    header = 0
+    
+    # File extension:
+    ext = os.path.splitext(file)[1]
+    
+    if (format == 'raw') | (ext == '.raw'):
+        if not dtype:
+            raise Exception('Define a dtype when reading "raw" format.')
+                
+        # First file in the stack:    
+        im = numpy.fromfile(file, dtype)
+        
+        if not shape:
+            sz = numpy.sqrt(im.size)
+            raise Exception('Define a shape when reading "raw" format. Should be ~ (%0.2f, %0.2f)' % (sz,sz))
+        
+        # Size of the intended array:
+        sz = numpy.prod(shape)
+        
+        # In raw formats header may be encountered. We will estimate it automatically:
+        header = (im.size - sz)
+            
+        #if header > 0:
+        #    print('WARNING: file size is larger than the given shape. Assuming header length: %u' % header)
+         
+        # 1D -> 2D
+        im = im[header:]    
+        im = im.reshape(shape)
+        
+    elif ext == '':
+        if not format: 
+            raise Exception("Can't find extension of the file. Use format to provide file format.")
+            
+        im = imageio.imread(file, format = format)
+        
     else:
-        #im = imageio.imread(file, offset = 0)
+        # Files with normal externsions:
         im = imageio.imread(file)
         
+    if dtype:
+        im = im.astype(dtype)
+        
+    # Sum RGB    
+    if im.ndim > 2:
+       im = im.mean(2)
+         
     # TODO: Use kwags offset and size to apply roi!
     if (y_roi != []):
         im = im[y_roi[0]:y_roi[1], :]
@@ -646,8 +737,10 @@ def mm2pixel(value, geometry):
     img_pixel = geometry['det_pixel'] / m
 
     return value / img_pixel
+           
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>> Utility functions >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-def get_files_sorted(path, name):
+def _get_files_sorted_(path, name):
     """
     Sort file entries using the natural (human) sorting
     """
@@ -665,22 +758,22 @@ def get_files_sorted(path, name):
 
     return files 
 
-def get_folders_sorted(path):
+def _get_folders_sorted_(path):
     '''
     Get all paths from a path with a star (using glob)
     '''
+    from glob import glob
     # Get all folders if a '*' was used:
-	paths = sorted(glob(path))
+    paths = sorted(glob(path))
 	
     if len(paths) == 0:
-		log.error('No folders found at the specified path: ' + path)
+        raise Exception('No folders found at the specified path: ' + path)
 	
     # Check if all paths are folders:	
-	paths = [p for p in paths if os.path.isdir(p)]
-	
+    paths = [p for p in paths if os.path.isdir(p)]
+    
     return paths
            
-# >>>>>>>>>>>>>>>>>>>>>>>>>>>> Utility functions >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 def _sanity_check_(meta):
     '''
     Simple sanity check of the geometry record.
@@ -918,8 +1011,8 @@ def _modify_astra_vector_(proj_geom, geometry):
             src_vrt = 0
             src_hrz = 0
             src_mag = 0
-            axs_hrz = 0
             axs_mag = 0
+            axs_hrz = geometry['axs_hrz']
         
         # Compute current offsets:
         elif geometry.get('type') == GEOM_STAOFF:

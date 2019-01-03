@@ -42,7 +42,7 @@ def plot(x, y=None, semilogy=False, title=None, legend=None):
     plt.show()
 
 
-def display_slice(
+def slice(
     data, index=None, dim=0, bounds=None, title=None, cmap="gray", file=None
 ):
 
@@ -87,7 +87,7 @@ def display_slice(
         plt.savefig(file, dpi=300, bbox_inches="tight")
 
 
-def display_mesh(stl_mesh):
+def mesh(stl_mesh):
     """
     Display an stl mesh. Use flexCompute.generate_stl(volume) to generate mesh.
     """
@@ -105,7 +105,7 @@ def display_mesh(stl_mesh):
     plt.show()
 
 
-def display_projection(data, dim=1, bounds=None, title=None, cmap="gray", file=None):
+def projection(data, dim=1, bounds=None, title=None, cmap="gray", file=None):
 
     img = data.sum(dim)
 
@@ -131,7 +131,7 @@ def display_projection(data, dim=1, bounds=None, title=None, cmap="gray", file=N
         plt.savefig(file, dpi=300, bbox_inches="tight")
 
 
-def display_max_projection(
+def max_projection(
     data, dim=0, bounds=None, title=None, cmap="gray", file=None
 ):
 
@@ -159,7 +159,7 @@ def display_max_projection(
         plt.savefig(file, dpi=300, bbox_inches="tight")
 
 
-def display_min_projection(data, dim=0, title=None, cmap="gray", file=None):
+def min_projection(data, dim=0, title=None, cmap="gray", file=None):
 
     img = data.min(dim)
 

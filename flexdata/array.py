@@ -490,14 +490,21 @@ def volume_bounds(proj_shape, geometry):
     
     # Detector bounds:
     det_bounds = detector_bounds(proj_shape, geometry)
-    
+    if geometry['type'] == 'simple':
+        src_vrt = 0
+        src_hrz = 0
+	
+    else:
+        src_vrt = geometry['src_vrt']
+        src_hrz = geometry['src_hrz']
+	
     # Demagnify detector bounds:
     fact = geometry['src2obj'] / (geometry['src2obj'] + geometry['det2obj'])
     vrt = numpy.array(det_bounds['vrt'])
-    vrt_bounds = (vrt * fact + geometry['src_vrt'] * (1 - fact))
+    vrt_bounds = (vrt * fact + src_vrt * (1 - fact))
     
     hrz = numpy.array(det_bounds['hrz'])
-    hrz_bounds = (hrz * fact + geometry['src_hrz'] * (1 - fact))
+    hrz_bounds = (hrz * fact + src_hrz * (1 - fact))
     #hrz = max(hrz_bounds)
     max_x = max(hrz_bounds - geometry['axs_hrz'])
     
@@ -531,12 +538,19 @@ def detector_bounds(shape, geometry):
     Get the boundaries of the detector in mm
     '''   
     bounds = {}
+	
+    if geometry['type'] == 'simple':
+        det_vrt = 0
+        det_hrz = 0
+    else:
+        det_vrt = geometry['det_vrt']
+        det_hrz = geometry['det_hrz']
 
-    xmin = geometry['det_hrz'] - geometry['det_pixel'] * shape[2] / 2
-    xmax = geometry['det_hrz'] + geometry['det_pixel'] * shape[2] / 2
+    xmin = det_hrz - geometry['det_pixel'] * shape[2] / 2
+    xmax = det_hrz + geometry['det_pixel'] * shape[2] / 2
 
-    ymin = geometry['det_vrt'] - geometry['det_pixel'] * shape[0] / 2
-    ymax = geometry['det_vrt'] + geometry['det_pixel'] * shape[0] / 2
+    ymin = det_vrt - geometry['det_pixel'] * shape[0] / 2
+    ymax = det_vrt + geometry['det_pixel'] * shape[0] / 2
 
     bounds['hrz'] = [xmin, xmax]
     bounds['vrt'] = [ymin, ymax]
