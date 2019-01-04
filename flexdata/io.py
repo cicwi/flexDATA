@@ -119,6 +119,7 @@ def init_geometry(src2obj = 0, det2obj = 0, det_pixel = 0, unit = 'millimetre', 
         # Axis of rotation position:        
         geometry['axs_hrz'] = 0.
         geometry['axs_mag'] = 0. # same here
+        geometry['axs_rot'] = numpy.zeros(2, dtype = 'float32')
         
         
     if geom_type == GEOM_LINOFF:
@@ -139,6 +140,7 @@ def init_geometry(src2obj = 0, det2obj = 0, det_pixel = 0, unit = 'millimetre', 
         # Axis of rotation position:        
         geometry['axs_hrz'] = zz
         geometry['axs_mag'] = zz # same here 
+        geometry['axs_rot'] = numpy.zeros((2,2), dtype = 'float32')
         
     return geometry
          
@@ -452,7 +454,17 @@ def read_toml(file_path):
     """
     Read a toml file.
     """  
-    meta = toml.load(file_path)
+    # TOML is terrible sometimes... which is why we are doing some fixing of the file that is loaded before parsing
+    file = open(file_path,'r') 
+    
+    s = file.read()
+    file.close()
+    
+    s = s.replace(u'\ufeff', '')
+    s = s.replace('(', '[')
+    s = s.replace(')', ']')
+        
+    meta = toml.loads(s)
     
     # Somehow TOML doesnt support numpy. Here is a workaround:
     for key in meta.keys():
@@ -885,63 +897,99 @@ def _modify_astra_vector_(proj_geom, geometry):
     Modify ASTRA vector using known offsets from the geometry records.
     """
     # Even if the geometry is of the type 'simple' (GEOM_SYMPLE), we need to generate ASTRA vector to be able to rotate the reconstruction volume if needed.
-    proj_geom = astra.geom_2vec(proj_geom)
-    vectors = proj_geom['Vectors']
+    thetas = proj_geom['ProjectionAngles']
+    theta_count = len(thetas)
     
-    theta_count = vectors.shape[0]
-    det_pixel = geometry['det_pixel'] * numpy.array(geometry.get('proj_sample'))
+    det_pixel = geometry['det_pixel'] * numpy.array(geometry.get('proj_sample'))[::2]
+    
+    # Compute current offsets (for this angle):
+    if geometry.get('type') == GEOM_SIMPLE:
+        
+        src2obj = geometry.get('src2obj')
+        det2obj = geometry.get('det2obj')
+        det_vrt = 0 
+        det_hrz = 0
+        det_mag = 0
+        det_rot = 0
+        src_vrt = 0
+        src_hrz = 0
+        src_mag = 0
+        axs_hrz = 0
+        axs_mag = 0
+        axs_rot = [0.0, 0.0]
+    
+    # Compute current offsets:
+    elif geometry.get('type') == GEOM_STAOFF:
+        
+        src2obj = geometry['src2obj']
+        det2obj = geometry['det2obj']
+        det_vrt = geometry['det_vrt'] 
+        det_hrz = geometry['det_hrz'] 
+        det_mag = geometry['det_mag'] 
+        det_rot = geometry['det_rot'] 
+        src_vrt = geometry['src_vrt'] 
+        src_hrz = geometry['src_hrz'] 
+        src_mag = geometry['src_mag'] 
+        axs_hrz = geometry['axs_hrz'] 
+        axs_mag = geometry['axs_mag'] 
+        axs_rot = geometry['axs_rot'] 
+      
+    # Use linear offsets:    
+    elif geometry.get('type') == GEOM_LINOFF:
+        b = numpy.linspace(0, 1, theta_count)
+        a = 1 - b
+        src2obj = geometry['src2obj']
+        det2obj = geometry['det2obj']
+        det_vrt = geometry['det_vrt'][0] * a + geometry['det_vrt'][1] * b
+        det_hrz = geometry['det_hrz'][0] * a + geometry['det_hrz'][1] * b  
+        det_mag = geometry['det_mag'][0] * a + geometry['det_mag'][1] * b  
+        det_rot = geometry['det_rot'][0] * a + geometry['det_rot'][1] * b  
+        src_vrt = geometry['src_vrt'][0] * a + geometry['src_vrt'][1] * b 
+        src_hrz = geometry['src_hrz'][0] * a + geometry['src_hrz'][1] * b 
+        src_mag = geometry['src_mag'][0] * a + geometry['src_mag'][1] * b 
+        axs_hrz = geometry['axs_hrz'][0] * a + geometry['axs_hrz'][1] * b 
+        axs_mag = geometry['axs_mag'][0] * a + geometry['axs_mag'][1] * b 
+        axs_rot = geometry['axs_rot'][0] * a + geometry['axs_rot'][1] * b 
+        
+    else: raise ValueError('Wrong geometry type: ' + geometry.get('type'))
+    
+    # We are going to generate vectors instead of taking them from ASTRA
+    axis = numpy.dot(transforms3d.euler.euler2mat(axs_rot[0], axs_rot[1], 0), [0,0,1])
+    
+    src_vect0 = numpy.array([0, -src2obj, 0]) 
+    det_vect0 = numpy.array([0, det2obj, 0])
+    
+    det_axis_hrz0 = numpy.array([det_pixel[0], 0, 0])
+    det_axis_vrt0 = numpy.array([0, 0, det_pixel[1]])
+    
+    src_vect = numpy.zeros([theta_count, 3])
+    det_vect = numpy.zeros([theta_count, 3])
+    det_axis_hrz = numpy.zeros([theta_count, 3])
+    det_axis_vrt = numpy.zeros([theta_count, 3])
+    
+    proj_geom = astra.geom_2vec(proj_geom)
+    
+    # Genertate initial circular orbit:
+    for ii, theta in enumerate(thetas):
+        
+        # Rotation matrix:
+        Ri = transforms3d.euler.axangle2mat(axis, theta)
+        
+        src_vect = numpy.dot(Ri, src_vect0)
+        det_vect = numpy.dot(Ri, det_vect0)
+        
+        det_axis_hrz = numpy.dot(Ri, det_axis_hrz0)
+        det_axis_vrt = numpy.dot(Ri, det_axis_vrt0)
     
     # Modify vector and apply it to astra projection geometry:
-    for ii in range(0, theta_count):
-        
-        # Compute current offsets (for this angle):
-        if geometry.get('type') == GEOM_SIMPLE:
-            
-            det_vrt = 0 
-            det_hrz = 0
-            det_mag = 0
-            det_rot = 0
-            src_vrt = 0
-            src_hrz = 0
-            src_mag = 0
-            axs_hrz = 0
-            axs_mag = 0
-        
-        # Compute current offsets:
-        elif geometry.get('type') == GEOM_STAOFF:
-            
-            det_vrt = geometry['det_vrt'] 
-            det_hrz = geometry['det_hrz'] 
-            det_mag = geometry['det_mag'] 
-            det_rot = geometry['det_rot'] 
-            src_vrt = geometry['src_vrt'] 
-            src_hrz = geometry['src_hrz'] 
-            src_mag = geometry['src_mag'] 
-            axs_hrz = geometry['axs_hrz'] 
-            axs_mag = geometry['axs_mag'] 
-          
-        # Use linear offsets:    
-        elif geometry.get('type') == GEOM_LINOFF:
-            b = (ii / (theta_count - 1))
-            a = 1 - b
-            det_vrt = geometry['det_vrt'][0] * a + geometry['det_vrt'][1] * b
-            det_hrz = geometry['det_hrz'][0] * a + geometry['det_hrz'][1] * b  
-            det_mag = geometry['det_mag'][0] * a + geometry['det_mag'][1] * b  
-            det_rot = geometry['det_rot'][0] * a + geometry['det_rot'][1] * b  
-            src_vrt = geometry['src_vrt'][0] * a + geometry['src_vrt'][1] * b 
-            src_hrz = geometry['src_hrz'][0] * a + geometry['src_hrz'][1] * b 
-            src_mag = geometry['src_mag'][0] * a + geometry['src_mag'][1] * b 
-            axs_hrz = geometry['axs_hrz'][0] * a + geometry['axs_hrz'][1] * b 
-            axs_mag = geometry['axs_mag'][0] * a + geometry['axs_mag'][1] * b 
-            
-        else: raise ValueError('Wrong geometry type: ' + geometry.get('type'))
+    #for ii in range(0, theta_count):
 
         # Define vectors:
-        src_vect = vectors[ii, 0:3]    
-        det_vect = vectors[ii, 3:6]    
-        det_axis_hrz = vectors[ii, 6:9]          
-        det_axis_vrt = vectors[ii, 9:12]
-
+        #src_vect = vectors[ii, 0:3]    
+        #det_vect = vectors[ii, 3:6]    
+        #det_axis_hrz = vectors[ii, 6:9]          
+        #det_axis_vrt = vectors[ii, 9:12]
+            
         #Precalculate vector perpendicular to the detector plane:
         det_normal = numpy.cross(det_axis_hrz, det_axis_vrt)
         det_normal = det_normal / numpy.sqrt(numpy.dot(det_normal, det_normal))
@@ -977,6 +1025,7 @@ def _modify_astra_vector_(proj_geom, geometry):
     
         T = transforms3d.axangles.axangle2mat(det_normal, det_rot)
         
+        # TODO: why it is T.T???
         det_axis_hrz[:] = numpy.dot(T.T, det_axis_hrz)
         det_axis_vrt[:] = numpy.dot(T, det_axis_vrt)
     
@@ -985,10 +1034,10 @@ def _modify_astra_vector_(proj_geom, geometry):
         R = transforms3d.euler.euler2mat(geometry['vol_rot'][0], geometry['vol_rot'][1], geometry['vol_rot'][2], 'rzyx')
 
         # Apply transformation:
-        det_axis_hrz[:] = numpy.dot(det_axis_hrz, R)
-        det_axis_vrt[:] = numpy.dot(det_axis_vrt, R)
-        src_vect[:] = numpy.dot(src_vect,R)
-        det_vect[:] = numpy.dot(det_vect,R)            
+        det_axis_hrz = numpy.dot(det_axis_hrz, R)
+        det_axis_vrt = numpy.dot(det_axis_vrt, R)
+        src_vect = numpy.dot(src_vect,R)
+        det_vect = numpy.dot(det_vect,R)            
                 
         # Add translation:
         vect_norm = numpy.sqrt((det_axis_vrt ** 2).sum())
@@ -996,11 +1045,15 @@ def _modify_astra_vector_(proj_geom, geometry):
         # Take into account that the center of rotation should be in the center of reconstruction volume:        
         T = numpy.array([geometry['vol_tra'][1] * vect_norm / det_pixel[1], geometry['vol_tra'][2] * vect_norm / det_pixel[1], geometry['vol_tra'][0] * vect_norm / det_pixel[0]])    
         
-        src_vect[:] -= numpy.dot(T, R)           
-        det_vect[:] -= numpy.dot(T, R)
+        src_vect -= numpy.dot(T, R)           
+        det_vect -= numpy.dot(T, R)
         
-    proj_geom['Vectors'] = vectors
-    
+        # Revrite vectors:
+        proj_geom['Vectors'][ii, 0:3] = src_vect
+        proj_geom['Vectors'][ii, 3:6] = det_vect
+        proj_geom['Vectors'][ii, 6:9] = det_axis_hrz
+        proj_geom['Vectors'][ii, 9:12] = det_axis_vrt
+                    
     return proj_geom
 
 def _metadata_translate_(records):                  
