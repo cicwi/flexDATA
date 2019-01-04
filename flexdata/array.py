@@ -45,6 +45,30 @@ def free_memory(percent = False):
     else:
         return psutil.virtual_memory().available / psutil.virtual_memory().total * 100
     
+def gradient(array, axes = [0,1,2]):
+    num_dims = len(array.shape)
+    d = []
+    for ax in axes:
+        pad_pattern = [(0, 0)] * num_dims
+        pad_pattern[ax] = (0, 1)
+        temp_d = numpy.pad(array, pad_pattern, mode='edge')
+        temp_d = numpy.diff(temp_d, n=1, axis=ax)
+        d.append(temp_d)
+    return d
+
+def divergence(array, axes = [0, 1, 2]):
+    num_dims = len(array.shape)-1
+    for ii, ax in enumerate(axes):
+        pad_pattern = [(0, 0)] * num_dims
+        pad_pattern[ax] = (1, 0)
+        temp_d = numpy.pad(array[ax, ...], pad_pattern, mode='edge')
+        temp_d = numpy.diff(temp_d, n=1, axis=ax)
+        if ii == 0:
+            final_d = temp_d
+        else:
+            final_d += temp_d
+    return final_d    
+    
 def cast2type(array, dtype, bounds = None):
     """
     Cast from float to int or float to float rescaling values if needed.
@@ -466,27 +490,25 @@ def volume_bounds(proj_shape, geometry):
     
     # Detector bounds:
     det_bounds = detector_bounds(proj_shape, geometry)
-    
+    if geometry['type'] == 'simple':
+        src_vrt = 0
+        src_hrz = 0
+	
+    else:
+        src_vrt = geometry['src_vrt']
+        src_hrz = geometry['src_hrz']
+	
     # Demagnify detector bounds:
     fact = geometry['src2obj'] / (geometry['src2obj'] + geometry['det2obj'])
     vrt = numpy.array(det_bounds['vrt'])
-    
-    if geometry['type'] is 'simple':
-        
-        src_vrt = 0
-        src_hrz = 0
-        axs_hrz = 0
-    else:
-        
-        src_vrt = geometry['src_vrt']
-        src_hrz = geometry['src_hrz']
-        axs_hrz = geometry['axs_hrz']
-    
+
     vrt_bounds = (vrt * fact + src_vrt * (1 - fact))
     
     hrz = numpy.array(det_bounds['hrz'])
     hrz_bounds = (hrz * fact + src_hrz * (1 - fact))
-    max_x = max(hrz_bounds - axs_hrz)
+
+    #hrz = max(hrz_bounds)
+    max_x = max(hrz_bounds - geometry['axs_hrz'])
     
     hrz_bounds = [geometry['vol_tra'][2] - max_x, geometry['vol_tra'][2] + max_x]
     mag_bounds = [geometry['vol_tra'][1] - max_x, geometry['vol_tra'][1] + max_x]
@@ -518,16 +540,14 @@ def detector_bounds(shape, geometry):
     Get the boundaries of the detector in mm
     '''   
     bounds = {}
-
-    if geometry['type'] is 'simple':
-        det_hrz = 0
+	
+    if geometry['type'] == 'simple':
         det_vrt = 0
-        
+        det_hrz = 0
     else:
-        det_hrz = geometry['det_hrz']
         det_vrt = geometry['det_vrt']
-        
-        
+        det_hrz = geometry['det_hrz']
+
     xmin = det_hrz - geometry['det_pixel'] * shape[2] / 2
     xmax = det_hrz + geometry['det_pixel'] * shape[2] / 2
 
