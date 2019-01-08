@@ -1066,8 +1066,8 @@ def _modify_astra_vector_(proj_geom, geometry):
     src_vect0 = numpy.array([0, -src2obj, 0]) 
     det_vect0 = numpy.array([0, det2obj, 0])
     
-    det_axis_hrz0 = numpy.array([det_pixel[0], 0, 0])
-    det_axis_vrt0 = numpy.array([0, 0, det_pixel[1]])
+    det_axis_hrz0 = numpy.array([det_pixel[1], 0, 0])
+    det_axis_vrt0 = numpy.array([0, 0, det_pixel[0]])
     
     src_vect = numpy.zeros([theta_count, 3])
     det_vect = numpy.zeros([theta_count, 3])

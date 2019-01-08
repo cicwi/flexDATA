@@ -525,9 +525,11 @@ def volume_shape(proj_shape, geometry):
     '''
     bounds = volume_bounds(proj_shape, geometry)
 
-    range_vrt = numpy.ceil(bounds['vrt'] / geometry['img_pixel'])
-    range_hrz = numpy.ceil(bounds['hrz'] / geometry['img_pixel'])
-    range_mag = numpy.ceil(bounds['mag'] / geometry['img_pixel'])
+    img_pixel = geometry['img_pixel'] * numpy.array(geometry['vol_sample'])
+    
+    range_vrt = numpy.ceil(bounds['vrt'] / img_pixel[0])
+    range_hrz = numpy.ceil(bounds['hrz'] / img_pixel[1])
+    range_mag = numpy.ceil(bounds['mag'] / img_pixel[2])
     
     range_vrt = range_vrt[1] - range_vrt[0]
     range_hrz = range_hrz[1] - range_hrz[0]
