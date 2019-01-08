@@ -23,13 +23,14 @@ proj = io.read_tiffs(path, 'scan_')
 meta = io.read_meta(path, 'flexray')   
  
 #%% Prepro:
-    
+   
 proj = (proj - dark) / (flat.mean(0) - dark)
 proj = -numpy.log(proj)
 
 proj = array.raw2astra(proj)    
+proj = numpy.ascontiguousarray(proj.astype('float32')) 
 
-display.display_slice(proj, title = 'Sinogram. What else?')
+display.slice(proj, title = 'Sinogram. What else?')
 
 #%% Recon:
 
@@ -40,8 +41,8 @@ vol_geom = io.astra_vol_geom(meta['geometry'], vol.shape)
 proj_geom = io.astra_proj_geom(meta['geometry'], proj.shape)
         
 # This is ASTRAAA!!!
-sin_id = astra.data3d.link('-sino', proj_geom, numpy.ascontiguousarray(proj))
-vol_id = astra.data3d.link('-vol', vol_geom, numpy.ascontiguousarray(vol))
+sin_id = astra.data3d.link('-sino', proj_geom, proj)
+vol_id = astra.data3d.link('-vol', vol_geom, vol)
 
 cfg = astra.astra_dict('FDK_CUDA')
 cfg['ReconstructionDataId'] = vol_id
@@ -56,4 +57,4 @@ astra.data3d.delete(vol_id)
 
 #%% Display:
     
-display.display_slice(vol, title = 'Volume')    
+display.slice(vol, title = 'Volume')    
