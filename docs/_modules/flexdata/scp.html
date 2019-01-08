@@ -162,305 +162,299 @@
 
 <span class="c1"># &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Imports &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span>
 
-<span class="kn">import</span> <span class="nn">os</span>  <span class="c1"># operations with filenames</span>
-<span class="kn">import</span> <span class="nn">stat</span>  <span class="c1"># same here...</span>
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="k">import</span> <span class="n">tqdm</span>  <span class="c1"># progress bar</span>
-<span class="kn">import</span> <span class="nn">paramiko</span>  <span class="c1"># SCP client</span>
-<span class="kn">import</span> <span class="nn">errno</span>  <span class="c1"># Uesd for error tracking in SCP client</span>
-<span class="kn">from</span> <span class="nn">traceback</span> <span class="k">import</span> <span class="n">print_exception</span>  <span class="c1"># Error stack printer</span>
-<span class="kn">from</span> <span class="nn">sys</span> <span class="k">import</span> <span class="n">exc_info</span>  <span class="c1"># Error info</span>
-<span class="kn">import</span> <span class="nn">shutil</span>  <span class="c1"># Use it to remove files</span>
+<span class="kn">import</span> <span class="nn">os</span>             <span class="c1"># operations with filenames</span>
+<span class="kn">import</span> <span class="nn">stat</span>           <span class="c1"># same here...</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="k">import</span> <span class="n">tqdm</span> <span class="c1"># progress bar</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="k">import</span> <span class="n">sleep</span>
+<span class="kn">import</span> <span class="nn">paramiko</span>       <span class="c1"># SCP client</span>
+<span class="kn">import</span> <span class="nn">errno</span>          <span class="c1"># Uesd for error tracking in SCP client</span>
+<span class="kn">from</span> <span class="nn">traceback</span> <span class="k">import</span> <span class="n">print_exception</span> <span class="c1"># Error stack printer</span>
+<span class="kn">from</span> <span class="nn">sys</span> <span class="k">import</span> <span class="n">exc_info</span>              <span class="c1"># Error info </span>
+<span class="kn">import</span> <span class="nn">shutil</span>         <span class="c1"># Use it to remove files</span>
 
 <span class="c1"># &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Methods &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span>
-
-
-<div class="viewcode-block" id="ssh_get_path"><a class="viewcode-back" href="../../flexdata.html#flexdata.scp.ssh_get_path">[docs]</a><span class="k">def</span> <span class="nf">ssh_get_path</span><span class="p">(</span>
-    <span class="n">local_path</span><span class="p">,</span> <span class="n">remote_path</span><span class="p">,</span> <span class="n">hostname</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ovewrite</span><span class="o">=</span><span class="s2">&quot;different&quot;</span>
-<span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+ 
+<div class="viewcode-block" id="ssh_get_path"><a class="viewcode-back" href="../../flexdata.html#flexdata.scp.ssh_get_path">[docs]</a><span class="k">def</span> <span class="nf">ssh_get_path</span><span class="p">(</span><span class="n">local_path</span><span class="p">,</span> <span class="n">remote_path</span><span class="p">,</span> <span class="n">hostname</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ovewrite</span> <span class="o">=</span> <span class="s1">&#39;different&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Copy files and directories recursively from remote path to local path.</span>
 <span class="sd">    Set overwrite to: </span>
 <span class="sd">        &#39;different&#39; to overwrite files with a different size;</span>
 <span class="sd">        &#39;always&#39; to overwrite all files</span>
 <span class="sd">        &#39;never&#39; to never overwrite</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># Create the destination directory</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">local_path</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">local_path</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Local directory created:&quot;</span><span class="p">,</span> <span class="n">local_path</span><span class="p">)</span>
-
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Local directory created:&#39;</span><span class="p">,</span> <span class="n">local_path</span><span class="p">)</span>
+    
     <span class="c1"># Connect to remote:</span>
-    <span class="n">sftp</span> <span class="o">=</span> <span class="n">connect_sftp</span><span class="p">(</span>
-        <span class="n">hostname</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local_path</span><span class="p">,</span> <span class="s2">&quot;scp.log&quot;</span><span class="p">)</span>
-    <span class="p">)</span>
+    <span class="n">sftp</span> <span class="o">=</span> <span class="n">connect_sftp</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local_path</span><span class="p">,</span> <span class="s1">&#39;scp.log&#39;</span><span class="p">))</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">sftp</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="n">local_path</span><span class="p">,</span> <span class="n">remote_path</span><span class="p">,</span> <span class="n">ovewrite</span><span class="p">)</span>
-
-    <span class="k">except</span><span class="p">:</span>
+        <span class="n">sftp</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="n">local_path</span><span class="p">,</span> <span class="n">remote_path</span><span class="p">,</span> <span class="n">ovewrite</span><span class="p">)</span>            
+        
+    <span class="k">except</span><span class="p">:</span> 
         <span class="n">sftp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
+        
         <span class="n">info</span> <span class="o">=</span> <span class="n">exc_info</span><span class="p">()</span>
         <span class="n">print_exception</span><span class="p">(</span><span class="o">*</span><span class="n">info</span><span class="p">)</span>
-
-    <span class="k">finally</span><span class="p">:</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;SFTP failure @&#39;</span> <span class="o">+</span> <span class="n">remote_path</span><span class="p">)</span>
+        
+    <span class="k">finally</span><span class="p">:</span>        
         <span class="n">sftp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
-
-
-<div class="viewcode-block" id="ssh_put_path"><a class="viewcode-back" href="../../flexdata.html#flexdata.scp.ssh_put_path">[docs]</a><span class="k">def</span> <span class="nf">ssh_put_path</span><span class="p">(</span>
-    <span class="n">local_path</span><span class="p">,</span> <span class="n">remote_path</span><span class="p">,</span> <span class="n">hostname</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ovewrite</span><span class="o">=</span><span class="s2">&quot;different&quot;</span>
-<span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="ssh_put_path"><a class="viewcode-back" href="../../flexdata.html#flexdata.scp.ssh_put_path">[docs]</a><span class="k">def</span> <span class="nf">ssh_put_path</span><span class="p">(</span><span class="n">local_path</span><span class="p">,</span> <span class="n">remote_path</span><span class="p">,</span> <span class="n">hostname</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ovewrite</span> <span class="o">=</span> <span class="s1">&#39;different&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Copy files and directories recursively from local path to remote path.</span>
 <span class="sd">    Set overwrite to: </span>
 <span class="sd">        &#39;different&#39; to overwrite files with a different size;</span>
 <span class="sd">        &#39;always&#39; to overwrite all files</span>
 <span class="sd">        &#39;never&#39; to never overwrite</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># Create the destination directory</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">local_path</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">local_path</span><span class="p">)</span>
-        <span class="c1"># print(&#39;Local directory created:&#39;, local_path)</span>
-
+        <span class="c1">#print(&#39;Local directory created:&#39;, local_path)</span>
+    
     <span class="c1"># Connect to remote:</span>
-    <span class="n">sftp</span> <span class="o">=</span> <span class="n">connect_sftp</span><span class="p">(</span>
-        <span class="n">hostname</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local_path</span><span class="p">,</span> <span class="s2">&quot;scp.log&quot;</span><span class="p">)</span>
-    <span class="p">)</span>
+    <span class="n">sftp</span> <span class="o">=</span> <span class="n">connect_sftp</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local_path</span><span class="p">,</span> <span class="s1">&#39;scp.log&#39;</span><span class="p">))</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">sftp</span><span class="o">.</span><span class="n">put_path</span><span class="p">(</span><span class="n">local_path</span><span class="p">,</span> <span class="n">remote_path</span><span class="p">,</span> <span class="n">ovewrite</span><span class="p">)</span>
-
-    <span class="k">except</span><span class="p">:</span>
+        <span class="n">sftp</span><span class="o">.</span><span class="n">put_path</span><span class="p">(</span><span class="n">local_path</span><span class="p">,</span> <span class="n">remote_path</span><span class="p">,</span> <span class="n">ovewrite</span><span class="p">)</span>            
+        
+    <span class="k">except</span><span class="p">:</span> 
         <span class="n">sftp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
+        
         <span class="n">info</span> <span class="o">=</span> <span class="n">exc_info</span><span class="p">()</span>
         <span class="n">print_exception</span><span class="p">(</span><span class="o">*</span><span class="n">info</span><span class="p">)</span>
-
+        
     <span class="k">finally</span><span class="p">:</span>
         <span class="n">sftp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
-
-
-<div class="viewcode-block" id="connect_sftp"><a class="viewcode-back" href="../../flexdata.html#flexdata.scp.connect_sftp">[docs]</a><span class="k">def</span> <span class="nf">connect_sftp</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">log_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+        
+<div class="viewcode-block" id="connect_sftp"><a class="viewcode-back" href="../../flexdata.html#flexdata.scp.connect_sftp">[docs]</a><span class="k">def</span> <span class="nf">connect_sftp</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">log_file</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Make an SFTP connection. Set log_file to a valid filename to dump the log file of the connection.</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        sftp = _MySFTPClient_</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># Create log file:</span>
     <span class="k">if</span> <span class="n">log_file</span><span class="p">:</span>
         <span class="n">paramiko</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">log_to_file</span><span class="p">(</span><span class="n">log_file</span><span class="p">)</span>
 
     <span class="c1"># Open a transport:</span>
     <span class="n">transport</span> <span class="o">=</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">Transport</span><span class="p">((</span><span class="n">hostname</span><span class="p">,</span> <span class="mi">22</span><span class="p">))</span>
-
+    
     <span class="c1"># Auth</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Authorizing sftp connection...&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">password</span><span class="p">:</span>
-        <span class="n">transport</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Authorizing sftp connection...&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">password</span><span class="p">:</span>    
+        <span class="n">transport</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">username</span> <span class="o">=</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span> <span class="o">=</span> <span class="n">password</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">transport</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
-
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done!&quot;</span><span class="p">)</span>
-
+        <span class="n">transport</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">username</span> <span class="o">=</span> <span class="n">username</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Done!&#39;</span><span class="p">)</span>
+    
     <span class="n">client</span> <span class="o">=</span> <span class="n">_MySFTPClient_</span><span class="o">.</span><span class="n">from_transport</span><span class="p">(</span><span class="n">transport</span><span class="p">)</span>
-
+    
     <span class="c1"># Go!</span>
-    <span class="k">return</span> <span class="n">client</span></div>
-
+    <span class="k">return</span> <span class="n">client</span> </div>
 
 <div class="viewcode-block" id="delete_local"><a class="viewcode-back" href="../../flexdata.html#flexdata.scp.delete_local">[docs]</a><span class="k">def</span> <span class="nf">delete_local</span><span class="p">(</span><span class="n">local_path</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Often useful to delete a directory recursively. Use with extreme care!</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Deleting:&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
-    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
-
-
+<span class="sd">    &#39;&#39;&#39;</span>    
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Deleting:&#39;</span><span class="p">,</span> <span class="n">local_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">local_path</span><span class="p">):</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">local_path</span><span class="p">)</span></div>
+    
 <span class="k">class</span> <span class="nc">_MySFTPClient_</span><span class="p">(</span><span class="n">paramiko</span><span class="o">.</span><span class="n">SFTPClient</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Class needed for copying recursively through ssh (paramiko.SFTPClient only allows to copy single files).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">_total_file_count_</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">_current_file_count_</span> <span class="o">=</span> <span class="mi">0</span>
-
+    
     <span class="k">def</span> <span class="nf">sftp_walk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remote</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        From https://gist.github.com/johnfink8/2190472</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="n">remote</span>
-        <span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">folders</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">path</span><span class="o">=</span><span class="n">remote</span>
+        <span class="n">files</span><span class="o">=</span><span class="p">[]</span>
+        <span class="n">folders</span><span class="o">=</span><span class="p">[]</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">listdir_attr</span><span class="p">(</span><span class="n">remote</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISDIR</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">st_mode</span><span class="p">):</span>
                 <span class="n">folders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
-
-        <span class="k">yield</span> <span class="n">path</span><span class="p">,</span> <span class="n">folders</span><span class="p">,</span> <span class="n">files</span>
+        
+        <span class="k">yield</span> <span class="n">path</span><span class="p">,</span><span class="n">folders</span><span class="p">,</span><span class="n">files</span>
         <span class="k">for</span> <span class="n">folder</span> <span class="ow">in</span> <span class="n">folders</span><span class="p">:</span>
-            <span class="n">new_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">folder</span><span class="p">)</span>
+            <span class="n">new_path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span><span class="n">folder</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sftp_walk</span><span class="p">(</span><span class="n">new_path</span><span class="p">):</span>
                 <span class="k">yield</span> <span class="n">x</span>
-
-    <span class="k">def</span> <span class="nf">_put_path_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">local</span><span class="p">,</span> <span class="n">remote</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="nf">_put_path_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">local</span><span class="p">,</span> <span class="n">remote</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">,</span> <span class="n">pbar</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Recursive function for uploading directories.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exists_remote_</span><span class="p">(</span><span class="n">remote</span><span class="p">):</span>
-            <span class="c1"># print(&#39;*making:&#39;, remote)</span>
+            <span class="c1">#print(&#39;*making:&#39;, remote)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">ignore_existing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="c1"># Loop with a progress bar:</span>
-        <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_total_file_count_</span><span class="p">)</span>
-
+                
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">local</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">item</span><span class="p">)):</span>
-
+                
                 <span class="c1"># Copy the file:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_current_file_count_</span> <span class="o">+=</span> <span class="mi">1</span>
-
+                
                 <span class="c1"># Overwrite if need to:</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_overwrite_</span><span class="p">(</span>
-                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">item</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">item</span><span class="p">),</span> <span class="n">overwrite</span>
-                <span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">item</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">item</span><span class="p">))</span>
-
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_overwrite_</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">item</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">item</span><span class="p">),</span> <span class="n">overwrite</span><span class="p">):</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">item</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">item</span><span class="p">))</span>
+               
+                    <span class="k">except</span><span class="p">:</span> 
+                        <span class="n">info</span> <span class="o">=</span> <span class="n">exc_info</span><span class="p">()</span>
+                        <span class="n">print_exception</span><span class="p">(</span><span class="o">*</span><span class="n">info</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;SFTP PUT failed @&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">item</span><span class="p">))</span>
+                
                 <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
+                
             <span class="k">else</span><span class="p">:</span>
-
-                <span class="c1"># print(&#39;making:&#39;, os.path.join(remote, item))</span>
-                <span class="c1"># self.mkdir(os.path.join(remote, item), ignore_existing=True)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_put_path_</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">item</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">item</span><span class="p">))</span>
-
-        <span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">put_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">local</span><span class="p">,</span> <span class="n">remote</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="s2">&quot;different&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Uploads the contents of the local directory to the remote path. The</span>
+                
+                <span class="c1">#print(&#39;making:&#39;, os.path.join(remote, item))</span>
+                <span class="c1">#self.mkdir(os.path.join(remote, item), ignore_existing=True)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_put_path_</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">item</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">item</span><span class="p">),</span> <span class="n">overwrite</span><span class="p">,</span> <span class="n">pbar</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">put_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">local</span><span class="p">,</span> <span class="n">remote</span><span class="p">,</span> <span class="n">overwrite</span> <span class="o">=</span> <span class="s1">&#39;different&#39;</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Uploads the contents of the local directory to the remote path. The</span>
 <span class="sd">            target directory needs to exists. All subdirectories in local are </span>
 <span class="sd">            created under remote.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># Count all files:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Counting files...&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Counting files...&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_total_file_count_</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">subdirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">local</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_total_file_count_</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Uploading </span><span class="si">%u</span><span class="s2"> files&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_total_file_count_</span><span class="p">)</span>
-
+        <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">subdirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">local</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">_total_file_count_</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Uploading </span><span class="si">%u</span><span class="s1"> files&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_total_file_count_</span><span class="p">)</span>
+        
         <span class="c1"># Upload files recursively:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_file_count_</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_put_path_</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">remote</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_file_count_</span><span class="o">=</span> <span class="mi">0</span>
+        
+        <span class="c1"># Loop with a progress bar:</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_total_file_count_</span><span class="p">,</span> <span class="n">unit</span> <span class="o">=</span> <span class="s1">&#39;files&#39;</span><span class="p">,</span> <span class="n">ascii</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_put_path_</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">remote</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">,</span> <span class="n">pbar</span><span class="p">)</span>
+        
+        <span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_get_path_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">local</span><span class="p">,</span> <span class="n">remote</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_get_path_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">local</span><span class="p">,</span> <span class="n">remote</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">,</span> <span class="n">pbar</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recursive get method.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
+<span class="sd">        &quot;&quot;&quot;</span>      
+        
         <span class="c1"># Create new dirs:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">local</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">local</span><span class="p">)</span>
-            <span class="c1"># print(&#39;Local directory created:&#39;, local)</span>
-
-        <span class="c1"># Progress bar:</span>
-        <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_total_file_count_</span><span class="p">)</span>
-
+            <span class="c1">#print(&#39;Local directory created:&#39;, local)</span>
+        
         <span class="c1"># Copy files:</span>
         <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">remote</span><span class="p">):</span>
 
             <span class="k">if</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISDIR</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span><span class="o">.</span><span class="n">st_mode</span><span class="p">):</span>
-
+                
                 <span class="c1"># uses &#39;/&#39; path delimiter for remote server</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_get_path_</span><span class="p">(</span>
-                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-                <span class="p">)</span>
-
+                <span class="bp">self</span><span class="o">.</span><span class="n">_get_path_</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="n">overwrite</span><span class="p">,</span> <span class="n">pbar</span><span class="p">)</span>
+                
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_current_file_count_</span> <span class="o">+=</span> <span class="mi">1</span>
-
+                
                 <span class="c1"># Overwrite if need to:</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_overwrite_</span><span class="p">(</span>
-                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span>
-                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span>
-                    <span class="n">overwrite</span><span class="p">,</span>
-                <span class="p">):</span>
-
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_overwrite_</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="n">overwrite</span><span class="p">):</span>
+                    
                     <span class="c1"># Actual get has remote first:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-                    <span class="p">)</span>
-
-                    <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
+               
+                    <span class="k">except</span><span class="p">:</span> 
+                        <span class="n">info</span> <span class="o">=</span> <span class="n">exc_info</span><span class="p">()</span>
+                        <span class="n">print_exception</span><span class="p">(</span><span class="o">*</span><span class="n">info</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;SFTP GET failed @&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
+                    
+                <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                
+    <span class="k">def</span> <span class="nf">get_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">local</span><span class="p">,</span> <span class="n">remote</span><span class="p">,</span> <span class="n">overwrite</span> <span class="o">=</span> <span class="s1">&#39;different&#39;</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Download the content of the remote to the local path.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exists_remote_</span><span class="p">(</span><span class="n">remote</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Remote path doesnt exist :(((&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+        
+        <span class="c1"># Count all files:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Counting files...&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_total_file_count_</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">subdirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sftp_walk</span><span class="p">(</span><span class="n">remote</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">_total_file_count_</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Downloading </span><span class="si">%u</span><span class="s1"> files...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_total_file_count_</span><span class="p">)</span>
+        
+        <span class="c1"># Upload files recursively:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_file_count_</span><span class="o">=</span> <span class="mi">0</span>
+        
+        <span class="c1"># Loop with a progress bar:</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_total_file_count_</span><span class="p">,</span> <span class="n">unit</span> <span class="o">=</span> <span class="s1">&#39;files&#39;</span><span class="p">,</span> <span class="n">ascii</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_path_</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">remote</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">,</span> <span class="n">pbar</span><span class="p">)</span>  
+        
         <span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">get_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">local</span><span class="p">,</span> <span class="n">remote</span><span class="o">=</span><span class="s2">&quot;different&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Download the content of the remote to the local path.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exists_remote_</span><span class="p">(</span><span class="n">remote</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Remote path doesnt exist :(((&quot;</span><span class="p">)</span>
-            <span class="k">return</span>
-
-        <span class="c1"># Count all files:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Counting files...&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_total_file_count_</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">subdirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sftp_walk</span><span class="p">(</span><span class="n">remote</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_total_file_count_</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Downloading </span><span class="si">%u</span><span class="s2"> files...&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_total_file_count_</span><span class="p">)</span>
-
-        <span class="c1"># Upload files recursively:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_file_count_</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_get_path_</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">remote</span><span class="p">)</span>
-
     <span class="k">def</span> <span class="nf">mkdir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="mi">511</span><span class="p">,</span> <span class="n">ignore_existing</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Augments mkdir by adding an option to not fail if the folder exists  &quot;&quot;&quot;</span>
+        <span class="sd">&#39;&#39;&#39; Augments mkdir by adding an option to not fail if the folder exists  &#39;&#39;&#39;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="nb">super</span><span class="p">(</span><span class="n">_MySFTPClient_</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
-
+            
         <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">ignore_existing</span><span class="p">:</span>
                 <span class="k">pass</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span>
-
+                  
     <span class="k">def</span> <span class="nf">_overwrite_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_path</span><span class="p">,</span> <span class="n">to_path</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Check if file should be overwritten.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">overwrite</span> <span class="o">==</span> <span class="s2">&quot;never&quot;</span><span class="p">:</span>
+<span class="sd">        &#39;&#39;&#39;</span>                
+        <span class="k">if</span> <span class="n">overwrite</span> <span class="o">==</span> <span class="s1">&#39;never&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">elif</span> <span class="n">overwrite</span> <span class="o">==</span> <span class="s2">&quot;always&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">overwrite</span> <span class="o">==</span> <span class="s1">&#39;always&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">elif</span> <span class="n">overwrite</span> <span class="o">==</span> <span class="s2">&quot;different&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_size_local_</span><span class="p">(</span><span class="n">from_path</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_size_remote_</span><span class="p">(</span><span class="n">to_path</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">overwrite</span> <span class="o">==</span> <span class="s1">&#39;different&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_size_local_</span><span class="p">(</span><span class="n">from_path</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_size_remote_</span><span class="p">(</span><span class="n">to_path</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Unknown overwrite mode:&quot;</span> <span class="o">+</span> <span class="n">overwrite</span><span class="p">)</span>
-
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Unknown overwrite mode:&#39;</span> <span class="o">+</span> <span class="n">overwrite</span><span class="p">)</span>
+            
     <span class="k">def</span> <span class="nf">_size_local_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">sta</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-
+            
             <span class="k">return</span> <span class="n">sta</span><span class="o">.</span><span class="n">st_size</span>
-
+        
         <span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">errno</span> <span class="o">==</span> <span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">:</span>
                 <span class="k">return</span> <span class="mi">0</span>
             <span class="k">raise</span>
-
+        
     <span class="k">def</span> <span class="nf">_size_remote_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">sta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-
+            
             <span class="k">return</span> <span class="n">sta</span><span class="o">.</span><span class="n">st_size</span>
-
+        
         <span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">errno</span> <span class="o">==</span> <span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">:</span>
                 <span class="k">return</span> <span class="mi">0</span>
             <span class="k">raise</span>
-
+            
     <span class="k">def</span> <span class="nf">_exists_remote_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
@@ -503,11 +497,20 @@
 
     
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'',
+              LANGUAGE:'en',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
         <script type="text/javascript" src="../../_static/jquery.js"></script>
         <script type="text/javascript" src="../../_static/underscore.js"></script>
         <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
 
   

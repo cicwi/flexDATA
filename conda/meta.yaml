@@ -1,6 +1,6 @@
 package:
     name: flexdata
-    version: "0.0.1"
+    version: "0.1.0"
 
 source:
     path: ../
@@ -17,8 +17,10 @@ requirements:
     run:
         - python
         - numpy
+	- scipy
         - astra-toolbox
         - matplotlib
+	- pyqtgraph
         - tqdm
         - imageio
         - tifffile

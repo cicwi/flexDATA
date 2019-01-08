@@ -29,7 +29,8 @@ import transforms3d   # rotation matrices
 from tqdm import tqdm # progress bar
 import time           # pausing
 
-from . import array   # operations witb arrays
+from scipy.io import loadmat # Reading matlab format
+from . import array          # operations with arrays
 
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>> Constants >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -98,6 +99,8 @@ def init_geometry(src2obj = 0, det2obj = 0, det_pixel = 0, unit = 'millimetre', 
                 'img_pixel':img_pixel, 
                 'vol_sample':[1, 1, 1], 
                 'proj_sample':[1, 1, 1],
+                
+                'axs_hrz':0,
                               
                 'vol_rot':[0.,0.,0.], 
                 'vol_tra':[0.,0.,0.]
@@ -114,11 +117,15 @@ def init_geometry(src2obj = 0, det2obj = 0, det_pixel = 0, unit = 'millimetre', 
         geometry['det_vrt'] = 0.
         geometry['det_hrz'] = 0.
         geometry['det_mag'] = 0. # same here
-        geometry['det_rot'] = 0.
+        geometry['det_roll'] = 0.
+        geometry['det_roll'] = 0.
+        geometry['det_pitch'] = 0.
+        geometry['det_yaw'] = 0.
         
         # Axis of rotation position:        
         geometry['axs_hrz'] = 0.
         geometry['axs_mag'] = 0. # same here
+        geometry['axs_rot'] = numpy.zeros(2, dtype = 'float32')
         
         
     if geom_type == GEOM_LINOFF:
@@ -134,14 +141,17 @@ def init_geometry(src2obj = 0, det2obj = 0, det_pixel = 0, unit = 'millimetre', 
         geometry['det_vrt'] = zz
         geometry['det_hrz'] = zz
         geometry['det_mag'] = zz # same here
-        geometry['det_rot'] = zz
+        geometry['det_roll'] = zz
+        geometry['det_pitch'] = zz
+        geometry['det_yaw'] = zz
 
         # Axis of rotation position:        
         geometry['axs_hrz'] = zz
         geometry['axs_mag'] = zz # same here 
+        geometry['axs_rot'] = numpy.zeros((2,2), dtype = 'float32')
         
     return geometry
-         
+
 def read_flexray(path, sample = 1, skip = 1, memmap = None, proj_number = None):
     '''
     Read raw projecitions, dark and flat-field, scan parameters from a typical FlexRay folder.
@@ -174,11 +184,11 @@ def read_flexray(path, sample = 1, skip = 1, memmap = None, proj_number = None):
     proj = read_tiffs(path, 'scan_', skip, sample, [], [], 'float32', memmap, success)
     
     # Try to retrieve metadata:
-    if os.path.exists(os.path.join(path, 'metadata.toml')):
+    try:
         
         meta = read_meta(path, 'metadata', sample)   
         
-    else:
+    except:
         
         meta = read_meta(path, 'flexray', sample)  
         
@@ -186,8 +196,8 @@ def read_flexray(path, sample = 1, skip = 1, memmap = None, proj_number = None):
     proj = _check_success_(proj, meta, success)
     
     return proj, flat, dark, meta
-
-def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype = 'float32', memmap = None, success = None):
+    
+def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype = None, flipdim = False, memmap = None, success = None):
     """
     Read tiff files stack and return a numpy array.
     
@@ -199,6 +209,7 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
         x_roi ([x0, x1]): horizontal range
         y_roi ([y0, y1]): vertical range
         dtype (str or numpy.dtype): data type to return
+        flipdim (bool): apply dimension switch for ASTRA compatibility
         memmap (str): if provided, return a disk mapped array to save RAM
         success(array): map of the files that could be loaded (equals 0 in case of a read failure)
         
@@ -206,18 +217,49 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
         numpy.array : 3D array with the first dimension representing the image index
         
     """  
+    return read_stack(path, name, skip = skip, sample = sample, x_roi = x_roi, y_roi = y_roi, shape = [], 
+               dtype = dtype, format = 'tiff', flipdim = flipdim, memmap = memmap, success = success)
         
+def read_stack(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], shape = None, 
+               dtype = None, format = None, flipdim = False, memmap = None, success = None):    
+    """
+    Read stack of files and return a numpy array.
+    
+    Args:
+        path (str): path to the files location
+        name (str): common part of the files name
+        skip (int): read every so many files
+        sample (int): sampling factor in x/y direction
+        x_roi ([x0, x1]): horizontal range
+        y_roi ([y0, y1]): vertical range
+        shape (array): shape of the files. Use it when the format is 'raw'.
+        dtype (str or numpy.dtype): data type of the files
+        format (str): file format ('tif', 'raw', etc)
+        flipdim (bool): apply dimension switch for ASTRA compatibility
+        memmap (str): if provided, return a disk mapped array to save RAM
+        success(array): map of the files that could be loaded (equals 0 in case of a read failure)
+        
+    Returns:
+        numpy.array : 3D array with the first dimension representing the image index
+        
+    """  
     # Retrieve file names, sorted by name
     files = _get_files_sorted_(path, name)    
+    
     if len(files) == 0: raise IOError('Tiff files not found at:', os.path.join(path, name))
     
     # Apply skip:
     files = files[::skip]
     
-    # Read the first file:
-    image = read_tiff(files[0], sample, x_roi, y_roi)
+    # Confirm the shape and the dtype of the image:
+    image = read_image(files[0], sample, x_roi, y_roi, shape, format, dtype)
+    
+    shape = list(image.shape)
+    shape[0] *= sample
+    shape[1] *= sample
+    
+    dtype = image.dtype
         
-    sz = numpy.shape(image)
     file_n = len(files)
     proj_n = len(files) # may change if projection_number was forced
     
@@ -233,54 +275,60 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
             if len(success) > file_n:
                 warnings.warn('The file number is not equal to the forced projection number! Hopefully everything will be fine...')
                 proj_n = len(success)
-    else:
-        
-        # This is an internal variable:
-        success = numpy.zeros(file_n)
         
     # Create a mapped array if needed:
+    #if shape and sample are used, shape means the shape of the image on disk before subsampling
+    shape_samp = (proj_n, shape[0] // sample, shape[1] // sample)
+    
     if memmap:
-        data = array.memmap(memmap, dtype=dtype, mode='w+', shape = (proj_n, sz[0], sz[1]))
+        data = array.memmap(memmap, dtype=dtype, mode='w+', shape = shape_samp)
         
     else:    
-        data = numpy.zeros((proj_n, sz[0], sz[1]), dtype = dtype)
+        data = numpy.zeros(shape_samp, dtype = dtype)
     
     # In flexbox this function can handle tiff stacks with corrupted files. 
     # Here I removed this functionality to make code simplier.
         
-    time.sleep(0.5) # This is needed to let print message be printed before the next porogress bar is created
-    
+    time.sleep(0.3) # This is needed to let print message be printed before the next porogress bar is created
+            
     # Loop with a progress bar:
     for k in tqdm(range(len(files)), unit = 'files'):
         
-        try:
-            a = read_tiff(files[k], sample, x_roi, y_roi)
-                        
-            # Summ RGB:    
-            if a.ndim > 2:
-                a = a.mean(2)
-         
-            data[k, :, :] = a
-            
-            success[k] = 1
-        
-        except Exception:
-            
-            success[k] = 0
-            
-            warnings.warn('Error reading file:' + files[k])
-            pass
+        # Use try...escept only is success array is provided. Otherwise, crash on errors
+        if success is not None:
+            try:
+                im = read_image(files[k], sample, x_roi, y_roi, shape, format, dtype)
+                data[k, :, :] = im     
+                success[k] = 1
+                
+            except Exception:
+                
+                success[k] = 0            
+                warnings.warn('Error reading file:' + files[k])
+                pass
+        else:
+            im = read_image(files[k], sample, x_roi, y_roi, shape, format, dtype)    
+
+            data[k, :, :] = im
  
     # Get rid of the corrupted data:
-    if sum(success) != file_n:
-        warnings.warn('%u files are CORRUPTED!'%(file_n - sum(success)))
-                
-    print('%u files were loaded. %u%% memory left (%u GB).' % (sum(success), free_memory(True), free_memory(False)))
-    time.sleep(0.5) # This is needed to let print message be printed before the next porogress bar is created
+    if success is not None:                
+        if sum(success) != file_n:
+            warnings.warn('%u files are CORRUPTED!'%(file_n - sum(success)))
+                    
+        print('%u files were loaded. %u%% memory left (%u GB).' % (sum(success), free_memory(True), free_memory(False)))
+    else:
+        print('%u files were loaded. %u%% memory left (%u GB).' % (len(files), free_memory(True), free_memory(False)))
+    
+    # Apply dimension switch:    
+    if flipdim:    
+        data = array.raw2astra(data)    
+        
+    time.sleep(0.3) # This is needed to let print message be printed before the next porogress bar is created
     
     return data
 
-def write_tiffs(path, name, data, dim = 1, skip = 1, dtype = None, compress = None):
+def write_tiffs(path, name, data, dim = 1, skip = 1, dtype = None, zip = False):
     """
     Write a tiff stack.
     
@@ -291,7 +339,23 @@ def write_tiffs(path, name, data, dim = 1, skip = 1, dtype = None, compress = No
         dim (int): dimension along which array is separated into images
         skip (int): how many images to skip in between
         dtype (type): forse this data type   
+        zip (bool): use loseless zip compression or not.
+    """
+    write_stack(path, name, data, dim = dim, skip = skip, dtype = dtype, zip = zip, format = 'tiff')
+                 
+def write_stack(path, name, data, dim = 1, skip = 1, dtype = None, zip = False, format = 'tiff'):
+    """
+    Write an image stack.
+    
+    Args:
+        path (str): destination path
+        name (str): first part of the files name
+        data (numpy.array): data to write
+        dim (int): dimension along which array is separated into images
+        skip (int): how many images to skip in between
+        dtype (type): forse this data type   
         compress (str): use None, 'zip' or 'jp2'.
+        format (str): file extension ('raw', 'tiff', 'jp2', etc)
     """
     
     print('Writing data...')
@@ -325,49 +389,97 @@ def write_tiffs(path, name, data, dim = 1, skip = 1, dtype = None, compress = No
             img = array.cast2type(img, dtype, bounds)
         
         # Write it!!!
-        if (compress == 'zip'):
-            write_tiff(path_name + '.tiff', img, 1)
+        if format == 'raw':
+            img.tofile(os.path.join(path_name, '.raw'))
             
-        elif (not compress):
-            write_tiff(path_name + '.tiff', img, 0)
-            
-        elif compress == 'jp2':  
-            write_tiff(path_name + '.jp2', img, 1)
-            
-            '''
-            To enable JPEG 2000 support, you need to build and install the OpenJPEG library, version 2.0.0 or higher, before building the Python Imaging Library.
-            conda install -c conda-forge openjpeg
-            '''
-            
-        else:
-            raise ValueError('Unknown compression!')
-                
-def write_tiff(filename, image, compress = 0):
+        else:            
+            if zip:
+                write_image(os.path.join(path_name, '.', format), img, 1)
+            else:
+                write_image(os.path.join(path_name, '.', format), img, 0)   
+    
+def write_image(filename, image, compress = 0):
     """
-    Write a single tiff image. Use compression is needed (0-9).
+    Write a single image. Use compression if needed (0-9).
     """     
     with imageio.get_writer(filename) as w:
         w.append_data(image, {'compress': compress})
 
-def read_tiff(file, sample = 1, x_roi = [], y_roi = []):
+def read_image(file, sample = 1, x_roi = [], y_roi = [], shape = None, format = None, dtype = None):
     """
-    Read a single tiff image.
+    Read a single image. Use sampling and roi parameters to reduce the array size. 
+    Use shape, format and dtype to force file reading settings.
+    
     """
-    if os.path.splitext(file)[1] == '':
-        #im = imageio.imread(file, format = 'tif', offset = 0)
-        im = imageio.imread(file, format = 'tif')
+    
+    # File header size:
+    header = 0
+    
+    # File extension:
+    ext = os.path.splitext(file)[1]
+    
+    if (format == 'raw') | (ext == '.raw'):
+        if not dtype:
+            raise Exception('Define a dtype when reading "raw" format.')
+                
+        # First file in the stack:    
+        im = numpy.fromfile(file, dtype)
+        
+        if not shape:
+            sz = numpy.sqrt(im.size)
+            raise Exception('Define a shape when reading "raw" format. Should be ~ (%0.2f, %0.2f)' % (sz,sz))
+        
+        # Size of the intended array:
+        sz = numpy.prod(shape)
+        
+        # In raw formats header may be encountered. We will estimate it automatically:
+        header = (im.size - sz)
+         
+        if header < 0:
+            raise Exception('Image size %u is smaller than the declared size %u' % (im.size, sz))
+            
+        #if header > 0:
+        #    print('WARNING: file size is larger than the given shape. Assuming header length: %u' % header)
+         
+        # 1D -> 2D
+        im = im[header:]    
+        im = im.reshape(shape)
+        
+    elif ext == '':
+        
+        # FIle has no extension = use the one defined by the user.
+        if not format: 
+            raise Exception("Can't find extension of the file. Use format to provide file format.")
+            
+        im = imageio.imread(file, format = format)
+        
+    elif ext == '.mat':
+        
+        # Read matlab file:
+        dic = loadmat(file)
+        
+        # We will assume that there is a single variable in this mat file:
+        var_key = [key for key in dic.keys() if not '__' in key][0]
+        im = dic[var_key]
+        
     else:
-        #im = imageio.imread(file, offset = 0)
+        # Files with normal externsions:
         im = imageio.imread(file)
         
+    if dtype:
+        im = im.astype(dtype)
+        
+    # Sum RGB    
+    if im.ndim > 2:
+       im = im.mean(2)
+         
     # TODO: Use kwags offset and size to apply roi!
     if (y_roi != []):
         im = im[y_roi[0]:y_roi[1], :]
     if (x_roi != []):
         im = im[:, x_roi[0]:x_roi[1]]
 
-    if sample != 1:
-        im = im[::sample, ::sample]
+    im = _sample_image_(im, sample)
     
     return im
 
@@ -380,7 +492,7 @@ def read_meta(path, meta_type = 'flexray', sample = 1):
         meta_type (str): type of the meta file: 'flexray' (read settings file), 'metadata' (meta script output) or 'toml' (raw meta record saved in toml format).
         
     Returns:    
-        geometry : src2obj, det2obj, det_pixel, thetas, det_hrz, det_vrt, det_mag, det_rot, src_hrz, src_vrt, src_mag, axs_hrz, vol_hrz, vol_tra 
+        geometry : src2obj, det2obj, det_pixel, thetas, det_hrz, det_vrt, det_mag, det_roll, src_hrz, src_vrt, src_mag, axs_hrz, vol_hrz, vol_tra 
         settings : physical settings - voltage, current, exposure
         description : lyrical description of the data
     """
@@ -453,7 +565,17 @@ def read_toml(file_path):
     """
     Read a toml file.
     """  
-    meta = toml.load(file_path)
+    # TOML is terrible sometimes... which is why we are doing some fixing of the file that is loaded before parsing
+    file = open(file_path,'r') 
+    
+    s = file.read()
+    file.close()
+    
+    s = s.replace(u'\ufeff', '')
+    s = s.replace('(', '[')
+    s = s.replace(')', ']')
+        
+    meta = toml.loads(s)
     
     # Somehow TOML doesnt support numpy. Here is a workaround:
     for key in meta.keys():
@@ -668,6 +790,22 @@ def _get_files_sorted_(path, name):
 
     return files 
 
+def _get_folders_sorted_(path):
+    '''
+    Get all paths from a path with a star (using glob)
+    '''
+    from glob import glob
+    # Get all folders if a '*' was used:
+    paths = sorted(glob(path))
+	
+    if len(paths) == 0:
+        raise Exception('No folders found at the specified path: ' + path)
+	
+    # Check if all paths are folders:	
+    paths = [p for p in paths if os.path.isdir(p)]
+    
+    return paths
+           
 def _sanity_check_(meta):
     '''
     Simple sanity check of the geometry record.
@@ -728,6 +866,33 @@ def _file_to_dictionary_(path, file_mask, separator = ':'):
         raise Exception('Something went wrong during parsing the log file at:' + path)                    
         
     return records                
+
+def _sample_image_(image, sample):
+    '''
+    Subsample the image or bin it if possible...
+    '''
+    
+    if sample == 1:
+        return image
+    
+    if sample % 2 != 0:
+        warnings.warn('Sampling is not even. Won`t use binning.')
+        image = image[::sample, ::sample]
+        
+    else:
+        while sample > 1:
+            
+            if (image.dtype.kind == 'i') | (image.dtype.kind == 'u'):   
+                image //= 4
+            else:
+                image /= 4
+                
+            image = (image[:-1:2, :] + image[1::2, :])
+            image = (image[:, :-1:2] + image[:, 1::2]) 
+            
+            sample /= 2 
+            
+        return image
 
 def _parse_unit_(string):
     '''
@@ -859,63 +1024,102 @@ def _modify_astra_vector_(proj_geom, geometry):
     Modify ASTRA vector using known offsets from the geometry records.
     """
     # Even if the geometry is of the type 'simple' (GEOM_SYMPLE), we need to generate ASTRA vector to be able to rotate the reconstruction volume if needed.
+    thetas = proj_geom['ProjectionAngles']
+    theta_count = len(thetas)
+    
+    det_pixel = geometry['det_pixel'] * numpy.array(geometry.get('proj_sample'))[::2]
+    
+    # Compute current offsets (for this angle):
+    if geometry.get('type') == GEOM_SIMPLE:
+        
+        src2obj = geometry.get('src2obj')
+        det2obj = geometry.get('det2obj')
+        det_vrt = 0 
+        det_hrz = 0
+        det_mag = 0
+        det_yaw = 0
+        det_roll = 0
+        det_pitch = 0
+        src_vrt = 0
+        src_hrz = 0
+        src_mag = 0
+        axs_hrz = 0
+        axs_mag = 0
+        axs_rot = [0.0, 0.0]
+    
+    # Compute current offsets:
+    elif geometry.get('type') == GEOM_STAOFF:
+        
+        src2obj = geometry['src2obj']
+        det2obj = geometry['det2obj']
+        det_vrt = geometry['det_vrt'] 
+        det_hrz = geometry['det_hrz'] 
+        det_mag = geometry['det_mag'] 
+        det_roll = geometry['det_roll'] 
+        det_yaw = geometry['det_yaw']
+        det_pitch = geometry['det_pitch']
+        src_vrt = geometry['src_vrt'] 
+        src_hrz = geometry['src_hrz'] 
+        src_mag = geometry['src_mag'] 
+        axs_hrz = geometry['axs_hrz'] 
+        axs_mag = geometry['axs_mag'] 
+        axs_rot = geometry['axs_rot'] 
+      
+    # Use linear offsets:    
+    elif geometry.get('type') == GEOM_LINOFF:
+        b = numpy.linspace(0, 1, theta_count)
+        a = 1 - b
+        src2obj = geometry['src2obj']
+        det2obj = geometry['det2obj']
+        det_vrt = geometry['det_vrt'][0] * a + geometry['det_vrt'][1] * b
+        det_hrz = geometry['det_hrz'][0] * a + geometry['det_hrz'][1] * b  
+        det_mag = geometry['det_mag'][0] * a + geometry['det_mag'][1] * b  
+        det_roll = geometry['det_roll'][0] * a + geometry['det_roll'][1] * b  
+        det_yaw = geometry['det_yaw'][0] * a + geometry['det_yaw'][1] * b  
+        det_pitch = geometry['det_pitch'][0] * a + geometry['det_pitch'][1] * b  
+        src_vrt = geometry['src_vrt'][0] * a + geometry['src_vrt'][1] * b 
+        src_hrz = geometry['src_hrz'][0] * a + geometry['src_hrz'][1] * b 
+        src_mag = geometry['src_mag'][0] * a + geometry['src_mag'][1] * b 
+        axs_hrz = geometry['axs_hrz'][0] * a + geometry['axs_hrz'][1] * b 
+        axs_mag = geometry['axs_mag'][0] * a + geometry['axs_mag'][1] * b 
+        axs_rot = geometry['axs_rot'][0] * a + geometry['axs_rot'][1] * b 
+        
+    else: raise ValueError('Wrong geometry type: ' + geometry.get('type'))
+    
+    # We are going to generate vectors instead of taking them from ASTRA
+    axis = numpy.dot(transforms3d.euler.euler2mat(axs_rot[0], axs_rot[1], 0), [0,0,1])
+    
+    src_vect0 = numpy.array([0, -src2obj, 0]) 
+    det_vect0 = numpy.array([0, det2obj, 0])
+    
+    det_axis_hrz0 = numpy.array([det_pixel[1], 0, 0])
+    det_axis_vrt0 = numpy.array([0, 0, det_pixel[0]])
+    
+    src_vect = numpy.zeros([theta_count, 3])
+    det_vect = numpy.zeros([theta_count, 3])
+    det_axis_hrz = numpy.zeros([theta_count, 3])
+    det_axis_vrt = numpy.zeros([theta_count, 3])
+    
     proj_geom = astra.geom_2vec(proj_geom)
-    vectors = proj_geom['Vectors']
     
-    theta_count = vectors.shape[0]
-    det_pixel = geometry['det_pixel'] * numpy.array(geometry.get('proj_sample'))
+    # Genertate initial circular orbit:
+    for ii, theta in enumerate(thetas):
+        
+        # Rotation matrix:
+        Ri = transforms3d.euler.axangle2mat(axis, theta)
+        
+        src_vect = numpy.dot(Ri, src_vect0)
+        det_vect = numpy.dot(Ri, det_vect0)
+        
+        det_axis_hrz = numpy.dot(Ri, det_axis_hrz0)
+        det_axis_vrt = numpy.dot(Ri, det_axis_vrt0)
     
-    # Modify vector and apply it to astra projection geometry:
-    for ii in range(0, theta_count):
-        
-        # Compute current offsets (for this angle):
-        if geometry.get('type') == GEOM_SIMPLE:
-            
-            det_vrt = 0 
-            det_hrz = 0
-            det_mag = 0
-            det_rot = 0
-            src_vrt = 0
-            src_hrz = 0
-            src_mag = 0
-            axs_hrz = 0
-            axs_mag = 0
-        
-        # Compute current offsets:
-        elif geometry.get('type') == GEOM_STAOFF:
-            
-            det_vrt = geometry['det_vrt'] 
-            det_hrz = geometry['det_hrz'] 
-            det_mag = geometry['det_mag'] 
-            det_rot = geometry['det_rot'] 
-            src_vrt = geometry['src_vrt'] 
-            src_hrz = geometry['src_hrz'] 
-            src_mag = geometry['src_mag'] 
-            axs_hrz = geometry['axs_hrz'] 
-            axs_mag = geometry['axs_mag'] 
-          
-        # Use linear offsets:    
-        elif geometry.get('type') == GEOM_LINOFF:
-            b = (ii / (theta_count - 1))
-            a = 1 - b
-            det_vrt = geometry['det_vrt'][0] * a + geometry['det_vrt'][1] * b
-            det_hrz = geometry['det_hrz'][0] * a + geometry['det_hrz'][1] * b  
-            det_mag = geometry['det_mag'][0] * a + geometry['det_mag'][1] * b  
-            det_rot = geometry['det_rot'][0] * a + geometry['det_rot'][1] * b  
-            src_vrt = geometry['src_vrt'][0] * a + geometry['src_vrt'][1] * b 
-            src_hrz = geometry['src_hrz'][0] * a + geometry['src_hrz'][1] * b 
-            src_mag = geometry['src_mag'][0] * a + geometry['src_mag'][1] * b 
-            axs_hrz = geometry['axs_hrz'][0] * a + geometry['axs_hrz'][1] * b 
-            axs_mag = geometry['axs_mag'][0] * a + geometry['axs_mag'][1] * b 
-            
-        else: raise ValueError('Wrong geometry type: ' + geometry.get('type'))
-
         # Define vectors:
-        src_vect = vectors[ii, 0:3]    
-        det_vect = vectors[ii, 3:6]    
-        det_axis_hrz = vectors[ii, 6:9]          
-        det_axis_vrt = vectors[ii, 9:12]
-
+        #src_vect = vectors[ii, 0:3]    
+        #det_vect = vectors[ii, 3:6]    
+        #det_axis_hrz = vectors[ii, 6:9]          
+        #det_axis_vrt = vectors[ii, 9:12]
+            
         #Precalculate vector perpendicular to the detector plane:
         det_normal = numpy.cross(det_axis_hrz, det_axis_vrt)
         det_normal = det_normal / numpy.sqrt(numpy.dot(det_normal, det_normal))
@@ -948,10 +1152,18 @@ def _modify_astra_vector_(proj_geom, geometry):
 
         # Rotation relative to the detector plane:
         # Compute rotation matrix
-    
-        T = transforms3d.axangles.axangle2mat(det_normal, det_rot)
+
+        # Detector roll:    
+        T = transforms3d.axangles.axangle2mat(det_normal, det_roll)
+        det_axis_hrz[:] = numpy.dot(T, det_axis_hrz)
+        det_axis_vrt[:] = numpy.dot(T, det_axis_vrt)
         
-        det_axis_hrz[:] = numpy.dot(T.T, det_axis_hrz)
+        # Detector yaw:    
+        T = transforms3d.axangles.axangle2mat(det_axis_vrt, det_yaw)
+        det_axis_hrz[:] = numpy.dot(T, det_axis_hrz)
+        
+        # Detector pitch:    
+        T = transforms3d.axangles.axangle2mat(det_axis_hrz, det_pitch)
         det_axis_vrt[:] = numpy.dot(T, det_axis_vrt)
     
         # Global transformation:
@@ -959,10 +1171,10 @@ def _modify_astra_vector_(proj_geom, geometry):
         R = transforms3d.euler.euler2mat(geometry['vol_rot'][0], geometry['vol_rot'][1], geometry['vol_rot'][2], 'rzyx')
 
         # Apply transformation:
-        det_axis_hrz[:] = numpy.dot(det_axis_hrz, R)
-        det_axis_vrt[:] = numpy.dot(det_axis_vrt, R)
-        src_vect[:] = numpy.dot(src_vect,R)
-        det_vect[:] = numpy.dot(det_vect,R)            
+        det_axis_hrz = numpy.dot(det_axis_hrz, R)
+        det_axis_vrt = numpy.dot(det_axis_vrt, R)
+        src_vect = numpy.dot(src_vect,R)
+        det_vect = numpy.dot(det_vect,R)            
                 
         # Add translation:
         vect_norm = numpy.sqrt((det_axis_vrt ** 2).sum())
@@ -970,11 +1182,15 @@ def _modify_astra_vector_(proj_geom, geometry):
         # Take into account that the center of rotation should be in the center of reconstruction volume:        
         T = numpy.array([geometry['vol_tra'][1] * vect_norm / det_pixel[1], geometry['vol_tra'][2] * vect_norm / det_pixel[1], geometry['vol_tra'][0] * vect_norm / det_pixel[0]])    
         
-        src_vect[:] -= numpy.dot(T, R)           
-        det_vect[:] -= numpy.dot(T, R)
+        src_vect -= numpy.dot(T, R)           
+        det_vect -= numpy.dot(T, R)
         
-    proj_geom['Vectors'] = vectors
-    
+        # Revrite vectors:
+        proj_geom['Vectors'][ii, 0:3] = src_vect
+        proj_geom['Vectors'][ii, 3:6] = det_vect
+        proj_geom['Vectors'][ii, 6:9] = det_axis_hrz
+        proj_geom['Vectors'][ii, 9:12] = det_axis_vrt
+                    
     return proj_geom
 
 def _metadata_translate_(records):                  
@@ -1036,6 +1252,12 @@ def _metadata_translate_(records):
     roi = re.sub('[] []', '', geometry['roi']).split(sep=',')
     roi = numpy.int32(roi)
     geometry['roi'] = roi.tolist()
+    
+    # Detector pixel is not changed here when binning mode is on...
+    if (settings['mode'] == 'HW2SW1High')|(settings['mode'] == 'HW1SW2High'):
+        geometry['det_pixel'] *= 2    
+    elif (settings['mode'] == 'HW2SW2High'):
+        geometry['det_pixel'] *= 4   
 
     geometry['img_pixel'] = geometry['det_pixel'] / (geometry['src2det'] / geometry['src2obj'])    
 
@@ -1053,7 +1275,14 @@ def _copydict_(destination, source, dictionary):
     for key in dictionary.keys():
         
         if dictionary[key] in source.keys():
-            destination[key] = source[dictionary[key]]
+            #destination[key] = source[dictionary[key]]
+            
+            # Remove spaces:
+            val = source[dictionary[key]]
+            if type(val) is str:
+                val = val.strip()
+                
+            destination[key] = val
             
         else:
             warnings.warn('Record is not found: ' + dictionary[key])

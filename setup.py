@@ -7,15 +7,17 @@ setup(
 
     install_requires=[
         "numpy",
+        "pyqtgraph",
         "astra-toolbox",
         "matplotlib",
         "tqdm",
-        "imageio",
-        "tifffile",
+        "imageio<=2.4",
+        "tifffile<=0.14",
         "psutil",
         "toml",
         "transforms3d",
         "paramiko"],
+
     extras_require={
         'dev': [
             'autopep8',
@@ -33,5 +35,5 @@ setup(
             'recommonmark'
         ]
     },
-    version='0.0.1',
+    version='0.1.0',
 )

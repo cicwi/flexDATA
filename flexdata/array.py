@@ -46,6 +46,7 @@ def free_memory(percent = False):
         return psutil.virtual_memory().available / psutil.virtual_memory().total * 100
     
 def gradient(array, axes = [0,1,2]):
+    
     num_dims = len(array.shape)
     d = []
     for ax in axes:
@@ -54,9 +55,11 @@ def gradient(array, axes = [0,1,2]):
         temp_d = numpy.pad(array, pad_pattern, mode='edge')
         temp_d = numpy.diff(temp_d, n=1, axis=ax)
         d.append(temp_d)
+        
     return d
 
 def divergence(array, axes = [0, 1, 2]):
+    
     num_dims = len(array.shape)-1
     for ii, ax in enumerate(axes):
         pad_pattern = [(0, 0)] * num_dims
@@ -67,6 +70,7 @@ def divergence(array, axes = [0, 1, 2]):
             final_d = temp_d
         else:
             final_d += temp_d
+
     return final_d
     
 def cast2type(array, dtype, bounds = None):
@@ -190,6 +194,9 @@ def pad(array, dim, width, mode = 'edge'):
     
     numpy.pad seems to be very memory hungry! Don't use it for large arrays.
     """
+    if min(width) < 0:
+        raise Exception('Negative pad width found!')
+    
     print('Padding data...')
     
     if numpy.size(width) > 1:
@@ -231,15 +238,15 @@ def bin(array, dim = None):
             
         if dim == 0:
              array[:-1:2, :, :] += array[1::2, :, :]
-             return rewrite_memmap(array, array[:-1:2, :, :])
+             return array[:-1:2, :, :]
              
         elif dim == 1:
              array[:, :-1:2, :] += array[:, 1::2, :]
-             return rewrite_memmap(array, array[:, :-1:2, :])
+             return array[:, :-1:2, :]
              
         elif dim == 2:
              array[:, :, :-1:2] += array[:, :, 1::2]
-             return rewrite_memmap(array, array[:, :, :-1:2])
+             return array[:, :, :-1:2]
              
     else:        
     
@@ -251,19 +258,15 @@ def bin(array, dim = None):
         
         # Try to avoid memory overflow here:
         for ii in range(array.shape[0]):
-            sl = anyslice(array, ii, 0)
+            array[ii, :-1:2, :] += array[ii, 1::2,:]
+            array[ii, :, :-1:2] += array[ii, :,1::2]
             
-            x = array[sl]
-            array[sl][:-1:2,:] += x[1::2,:]
-            array[sl][:,:-1:2] += x[:,1::2]
+        array = array[:, :-1:2, :-1:2]     
             
         for ii in range(array.shape[2]):
-            sl = anyslice(array, ii, 2)
-            
-            array[sl][:-1:2,:-1:2] += array[sl][1::2,:-1:2]   
+            array[:-1:2, :, ii] += array[1::2, :, ii]
         
-        new = array[:-1:2, :-1:2, :-1:2]
-        return rewrite_memmap(array, new)
+        return array[:-1:2, :, :]
     
 def crop(array, dim, width, geometry = None):
     """
@@ -289,23 +292,45 @@ def crop(array, dim, width, geometry = None):
         v = (widthl + widthr)
         
         if widthr == 0: widthr = None
-        new = array[widthl:widthr, :,:].copy()
+        new = array[widthl:widthr, :,:]
         
     elif dim == 1:
         h = (widthl + widthr)
         
         if widthr == 0: widthr = None
-        new = array[:,widthl:widthr,:].copy()
+        new = array[:,widthl:widthr,:]
         
     elif dim == 2:
         h = (widthl + widthr)
         
         if widthr == 0: widthr = None
-        new = array[:,:,widthl:widthr].copy()  
+        new = array[:,:,widthl:widthr]  
     
     if geometry: shift_geometry(geometry, h/2, v/2)
         
-    return rewrite_memmap(array, new)
+    # Its better to leave the memmap file as it is. Return a view to it:
+    return new
+
+def cast2shape(array, shape):
+    '''
+    Make the array to conform with the given shape.
+    '''
+    if array.ndim != len(shape):
+        raise Exception('Wrong array shape!')
+    
+    for ii in range(array.ndim):
+        dif = array.shape[ii] - shape[ii]
+        if dif > 0:
+            wl = dif // 2
+            wr = dif - wl
+            array = crop(array, ii, [wl, wr])
+            
+        elif dif < 0:
+            wl = -dif // 2
+            wr = -dif - wl
+            array = pad(array, ii, [wl, wr], mode = 'zero')
+            
+    return array
 
 def shift_geometry(geometry, hrz, vrt, update_volume_pos = True):
     """
@@ -469,14 +494,25 @@ def volume_bounds(proj_shape, geometry):
     
     # Detector bounds:
     det_bounds = detector_bounds(proj_shape, geometry)
-    
+    if geometry['type'] == 'simple':
+        src_vrt = 0
+        src_hrz = 0
+	
+    else:
+        src_vrt = geometry['src_vrt']
+        src_hrz = geometry['src_hrz']
+	
     # Demagnify detector bounds:
     fact = geometry['src2obj'] / (geometry['src2obj'] + geometry['det2obj'])
     vrt = numpy.array(det_bounds['vrt'])
-    vrt_bounds = (vrt * fact + geometry['src_vrt'] * (1 - fact))
+
+    vrt_bounds = (vrt * fact + src_vrt * (1 - fact))
     
     hrz = numpy.array(det_bounds['hrz'])
-    max_x = max(hrz - geometry['axs_hrz'])
+    hrz_bounds = (hrz * fact + src_hrz * (1 - fact))
+
+    #hrz = max(hrz_bounds)
+    max_x = max(hrz_bounds - geometry['axs_hrz'])
     
     hrz_bounds = [geometry['vol_tra'][2] - max_x, geometry['vol_tra'][2] + max_x]
     mag_bounds = [geometry['vol_tra'][1] - max_x, geometry['vol_tra'][1] + max_x]
@@ -493,9 +529,11 @@ def volume_shape(proj_shape, geometry):
     '''
     bounds = volume_bounds(proj_shape, geometry)
 
-    range_vrt = numpy.ceil(bounds['vrt'] / geometry['img_pixel'])
-    range_hrz = numpy.ceil(bounds['hrz'] / geometry['img_pixel'])
-    range_mag = numpy.ceil(bounds['mag'] / geometry['img_pixel'])
+    img_pixel = geometry['img_pixel'] * numpy.array(geometry['vol_sample'])
+    
+    range_vrt = numpy.ceil(bounds['vrt'] / img_pixel[0])
+    range_hrz = numpy.ceil(bounds['hrz'] / img_pixel[1])
+    range_mag = numpy.ceil(bounds['mag'] / img_pixel[2])
     
     range_vrt = range_vrt[1] - range_vrt[0]
     range_hrz = range_hrz[1] - range_hrz[0]
@@ -508,12 +546,19 @@ def detector_bounds(shape, geometry):
     Get the boundaries of the detector in mm
     '''   
     bounds = {}
+	
+    if geometry['type'] == 'simple':
+        det_vrt = 0
+        det_hrz = 0
+    else:
+        det_vrt = geometry['det_vrt']
+        det_hrz = geometry['det_hrz']
 
-    xmin = geometry['det_hrz'] - geometry['det_pixel'] * shape[2] / 2
-    xmax = geometry['det_hrz'] + geometry['det_pixel'] * shape[2] / 2
+    xmin = det_hrz - geometry['det_pixel'] * shape[2] / 2
+    xmax = det_hrz + geometry['det_pixel'] * shape[2] / 2
 
-    ymin = geometry['det_vrt'] - geometry['det_pixel'] * shape[0] / 2
-    ymax = geometry['det_vrt'] + geometry['det_pixel'] * shape[0] / 2
+    ymin = det_vrt - geometry['det_pixel'] * shape[0] / 2
+    ymax = det_vrt + geometry['det_pixel'] * shape[0] / 2
 
     bounds['hrz'] = [xmin, xmax]
     bounds['vrt'] = [ymin, ymax]
@@ -546,7 +591,7 @@ def tiles_shape(shape, geometry_list):
         
     # Big slice:
     new_shape = numpy.array([(max_y - min_y) / det_pixel, shape[1], (max_x - min_x) / det_pixel])                     
-    new_shape = numpy.int32(numpy.ceil(new_shape))  
+    new_shape = numpy.round(new_shape).astype('int')
     
     # Copy one of the geometry records and sett the correct translation:
     geometry = geometry_list[0].copy()

@@ -13,6 +13,8 @@ Few simple reoutines for displaying 3D data (memmap-compatible).
 import numpy
 import matplotlib.pyplot as plt
 from matplotlib import ticker
+import pyqtgraph as pq
+
 from . import array
 
 """ * Methods * """
@@ -41,9 +43,18 @@ def plot(x, y=None, semilogy=False, title=None, legend=None):
 
     plt.show()
 
+def pyqt_graph(data, dim = 0, title=None):
+    '''
+    Create a PYQT window to display a 3D dataset.
+    '''
+    # create pyqtgraph app:
+    app = pq.mkQApp()
+    
+    pq.image(numpy.rot90(numpy.rollaxis(data, dim), axes = (1,2)), title = title)
 
-def display_slice(
-    data, index=None, dim=0, bounds=None, title=None, cmap="gray", file=None
+    app.exec_()
+
+def slice(data, index=None, dim=0, bounds=None, title=None, cmap="gray", file=None
 ):
 
     # Just in case squeeze:
@@ -87,7 +98,7 @@ def display_slice(
         plt.savefig(file, dpi=300, bbox_inches="tight")
 
 
-def display_mesh(stl_mesh):
+def mesh(stl_mesh):
     """
     Display an stl mesh. Use flexCompute.generate_stl(volume) to generate mesh.
     """
@@ -105,7 +116,7 @@ def display_mesh(stl_mesh):
     plt.show()
 
 
-def display_projection(data, dim=1, bounds=None, title=None, cmap="gray", file=None):
+def projection(data, dim=1, bounds=None, title=None, cmap="gray", file=None):
 
     img = data.sum(dim)
 
@@ -131,7 +142,7 @@ def display_projection(data, dim=1, bounds=None, title=None, cmap="gray", file=N
         plt.savefig(file, dpi=300, bbox_inches="tight")
 
 
-def display_max_projection(
+def max_projection(
     data, dim=0, bounds=None, title=None, cmap="gray", file=None
 ):
 
@@ -159,7 +170,7 @@ def display_max_projection(
         plt.savefig(file, dpi=300, bbox_inches="tight")
 
 
-def display_min_projection(data, dim=0, title=None, cmap="gray", file=None):
+def min_projection(data, dim=0, title=None, cmap="gray", file=None):
 
     img = data.min(dim)
 

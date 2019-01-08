@@ -158,6 +158,8 @@
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">ticker</span>
+<span class="kn">import</span> <span class="nn">pyqtgraph</span> <span class="k">as</span> <span class="nn">pq</span>
+
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">array</span>
 
 <span class="sd">&quot;&quot;&quot; * Methods * &quot;&quot;&quot;</span>
@@ -186,9 +188,18 @@
 
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
+<div class="viewcode-block" id="pyqt_graph"><a class="viewcode-back" href="../../flexdata.html#flexdata.display.pyqt_graph">[docs]</a><span class="k">def</span> <span class="nf">pyqt_graph</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Create a PYQT window to display a 3D dataset.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># create pyqtgraph app:</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">pq</span><span class="o">.</span><span class="n">mkQApp</span><span class="p">()</span>
+    
+    <span class="n">pq</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">rollaxis</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dim</span><span class="p">),</span> <span class="n">axes</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)),</span> <span class="n">title</span> <span class="o">=</span> <span class="n">title</span><span class="p">)</span>
 
-<div class="viewcode-block" id="display_slice"><a class="viewcode-back" href="../../flexdata.html#flexdata.display.display_slice">[docs]</a><span class="k">def</span> <span class="nf">display_slice</span><span class="p">(</span>
-    <span class="n">data</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="slice"><a class="viewcode-back" href="../../flexdata.html#flexdata.display.slice">[docs]</a><span class="k">def</span> <span class="nf">slice</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">):</span>
 
     <span class="c1"># Just in case squeeze:</span>
@@ -232,7 +243,7 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="display_mesh"><a class="viewcode-back" href="../../flexdata.html#flexdata.display.display_mesh">[docs]</a><span class="k">def</span> <span class="nf">display_mesh</span><span class="p">(</span><span class="n">stl_mesh</span><span class="p">):</span>
+<div class="viewcode-block" id="mesh"><a class="viewcode-back" href="../../flexdata.html#flexdata.display.mesh">[docs]</a><span class="k">def</span> <span class="nf">mesh</span><span class="p">(</span><span class="n">stl_mesh</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Display an stl mesh. Use flexCompute.generate_stl(volume) to generate mesh.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -250,7 +261,7 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="display_projection"><a class="viewcode-back" href="../../flexdata.html#flexdata.display.display_projection">[docs]</a><span class="k">def</span> <span class="nf">display_projection</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="projection"><a class="viewcode-back" href="../../flexdata.html#flexdata.display.projection">[docs]</a><span class="k">def</span> <span class="nf">projection</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="n">img</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
 
@@ -276,7 +287,7 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="display_max_projection"><a class="viewcode-back" href="../../flexdata.html#flexdata.display.display_max_projection">[docs]</a><span class="k">def</span> <span class="nf">display_max_projection</span><span class="p">(</span>
+<div class="viewcode-block" id="max_projection"><a class="viewcode-back" href="../../flexdata.html#flexdata.display.max_projection">[docs]</a><span class="k">def</span> <span class="nf">max_projection</span><span class="p">(</span>
     <span class="n">data</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">):</span>
 
@@ -304,7 +315,7 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="display_min_projection"><a class="viewcode-back" href="../../flexdata.html#flexdata.display.display_min_projection">[docs]</a><span class="k">def</span> <span class="nf">display_min_projection</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="min_projection"><a class="viewcode-back" href="../../flexdata.html#flexdata.display.min_projection">[docs]</a><span class="k">def</span> <span class="nf">min_projection</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="n">img</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
 
@@ -357,11 +368,20 @@
 
     
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'',
+              LANGUAGE:'en',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
         <script type="text/javascript" src="../../_static/jquery.js"></script>
         <script type="text/javascript" src="../../_static/underscore.js"></script>
         <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
 
   
