@@ -13,6 +13,8 @@ Few simple reoutines for displaying 3D data (memmap-compatible).
 import numpy
 import matplotlib.pyplot as plt
 from matplotlib import ticker
+import pyqtgraph as pq
+
 from . import array
 
 """ * Methods * """
@@ -41,9 +43,18 @@ def plot(x, y=None, semilogy=False, title=None, legend=None):
 
     plt.show()
 
+def pyqt_graph(data, dim = 0, title=None):
+    '''
+    Create a PYQT window to display a 3D dataset.
+    '''
+    # create pyqtgraph app:
+    app = pq.mkQApp()
+    
+    pq.image(numpy.rot90(numpy.rollaxis(data, dim), axes = (1,2)), title = title)
 
-def slice(
-    data, index=None, dim=0, bounds=None, title=None, cmap="gray", file=None
+    app.exec_()
+
+def slice(data, index=None, dim=0, bounds=None, title=None, cmap="gray", file=None
 ):
 
     # Just in case squeeze:

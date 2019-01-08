@@ -29,7 +29,8 @@ import transforms3d   # rotation matrices
 from tqdm import tqdm # progress bar
 import time           # pausing
 
-from . import array   # operations witb arrays
+from scipy.io import loadmat # Reading matlab format
+from . import array          # operations with arrays
 
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>> Constants >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -116,7 +117,10 @@ def init_geometry(src2obj = 0, det2obj = 0, det_pixel = 0, unit = 'millimetre', 
         geometry['det_vrt'] = 0.
         geometry['det_hrz'] = 0.
         geometry['det_mag'] = 0. # same here
-        geometry['det_rot'] = 0.
+        geometry['det_roll'] = 0.
+        geometry['det_roll'] = 0.
+        geometry['det_pitch'] = 0.
+        geometry['det_yaw'] = 0.
         
         # Axis of rotation position:        
         geometry['axs_hrz'] = 0.
@@ -137,7 +141,9 @@ def init_geometry(src2obj = 0, det2obj = 0, det_pixel = 0, unit = 'millimetre', 
         geometry['det_vrt'] = zz
         geometry['det_hrz'] = zz
         geometry['det_mag'] = zz # same here
-        geometry['det_rot'] = zz
+        geometry['det_roll'] = zz
+        geometry['det_pitch'] = zz
+        geometry['det_yaw'] = zz
 
         # Axis of rotation position:        
         geometry['axs_hrz'] = zz
@@ -211,7 +217,7 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
         numpy.array : 3D array with the first dimension representing the image index
         
     """  
-    read_stack(path, name, skip = skip, sample = sample, x_roi = x_roi, y_roi = y_roi, shape = [], 
+    return read_stack(path, name, skip = skip, sample = sample, x_roi = x_roi, y_roi = y_roi, shape = [], 
                dtype = dtype, format = 'tiff', flipdim = flipdim, memmap = memmap, success = success)
         
 def read_stack(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], shape = None, 
@@ -428,6 +434,9 @@ def read_image(file, sample = 1, x_roi = [], y_roi = [], shape = None, format = 
         
         # In raw formats header may be encountered. We will estimate it automatically:
         header = (im.size - sz)
+         
+        if header < 0:
+            raise Exception('Image size %u is smaller than the declared size %u' % (im.size, sz))
             
         #if header > 0:
         #    print('WARNING: file size is larger than the given shape. Assuming header length: %u' % header)
@@ -437,10 +446,21 @@ def read_image(file, sample = 1, x_roi = [], y_roi = [], shape = None, format = 
         im = im.reshape(shape)
         
     elif ext == '':
+        
+        # FIle has no extension = use the one defined by the user.
         if not format: 
             raise Exception("Can't find extension of the file. Use format to provide file format.")
             
         im = imageio.imread(file, format = format)
+        
+    elif ext == '.mat':
+        
+        # Read matlab file:
+        dic = loadmat(file)
+        
+        # We will assume that there is a single variable in this mat file:
+        var_key = [key for key in dic.keys() if not '__' in key][0]
+        im = dic[var_key]
         
     else:
         # Files with normal externsions:
@@ -472,7 +492,7 @@ def read_meta(path, meta_type = 'flexray', sample = 1):
         meta_type (str): type of the meta file: 'flexray' (read settings file), 'metadata' (meta script output) or 'toml' (raw meta record saved in toml format).
         
     Returns:    
-        geometry : src2obj, det2obj, det_pixel, thetas, det_hrz, det_vrt, det_mag, det_rot, src_hrz, src_vrt, src_mag, axs_hrz, vol_hrz, vol_tra 
+        geometry : src2obj, det2obj, det_pixel, thetas, det_hrz, det_vrt, det_mag, det_roll, src_hrz, src_vrt, src_mag, axs_hrz, vol_hrz, vol_tra 
         settings : physical settings - voltage, current, exposure
         description : lyrical description of the data
     """
@@ -1017,7 +1037,9 @@ def _modify_astra_vector_(proj_geom, geometry):
         det_vrt = 0 
         det_hrz = 0
         det_mag = 0
-        det_rot = 0
+        det_yaw = 0
+        det_roll = 0
+        det_pitch = 0
         src_vrt = 0
         src_hrz = 0
         src_mag = 0
@@ -1033,7 +1055,9 @@ def _modify_astra_vector_(proj_geom, geometry):
         det_vrt = geometry['det_vrt'] 
         det_hrz = geometry['det_hrz'] 
         det_mag = geometry['det_mag'] 
-        det_rot = geometry['det_rot'] 
+        det_roll = geometry['det_roll'] 
+        det_yaw = geometry['det_yaw']
+        det_pitch = geometry['det_pitch']
         src_vrt = geometry['src_vrt'] 
         src_hrz = geometry['src_hrz'] 
         src_mag = geometry['src_mag'] 
@@ -1050,7 +1074,9 @@ def _modify_astra_vector_(proj_geom, geometry):
         det_vrt = geometry['det_vrt'][0] * a + geometry['det_vrt'][1] * b
         det_hrz = geometry['det_hrz'][0] * a + geometry['det_hrz'][1] * b  
         det_mag = geometry['det_mag'][0] * a + geometry['det_mag'][1] * b  
-        det_rot = geometry['det_rot'][0] * a + geometry['det_rot'][1] * b  
+        det_roll = geometry['det_roll'][0] * a + geometry['det_roll'][1] * b  
+        det_yaw = geometry['det_yaw'][0] * a + geometry['det_yaw'][1] * b  
+        det_pitch = geometry['det_pitch'][0] * a + geometry['det_pitch'][1] * b  
         src_vrt = geometry['src_vrt'][0] * a + geometry['src_vrt'][1] * b 
         src_hrz = geometry['src_hrz'][0] * a + geometry['src_hrz'][1] * b 
         src_mag = geometry['src_mag'][0] * a + geometry['src_mag'][1] * b 
@@ -1126,11 +1152,18 @@ def _modify_astra_vector_(proj_geom, geometry):
 
         # Rotation relative to the detector plane:
         # Compute rotation matrix
-    
-        T = transforms3d.axangles.axangle2mat(det_normal, det_rot)
+
+        # Detector roll:    
+        T = transforms3d.axangles.axangle2mat(det_normal, det_roll)
+        det_axis_hrz[:] = numpy.dot(T, det_axis_hrz)
+        det_axis_vrt[:] = numpy.dot(T, det_axis_vrt)
         
-        # TODO: why it is T.T???
-        det_axis_hrz[:] = numpy.dot(T.T, det_axis_hrz)
+        # Detector yaw:    
+        T = transforms3d.axangles.axangle2mat(det_axis_vrt, det_yaw)
+        det_axis_hrz[:] = numpy.dot(T, det_axis_hrz)
+        
+        # Detector pitch:    
+        T = transforms3d.axangles.axangle2mat(det_axis_hrz, det_pitch)
         det_axis_vrt[:] = numpy.dot(T, det_axis_vrt)
     
         # Global transformation:

@@ -41,7 +41,7 @@ flexDATA is comprised of the following modules:
 
 * io:     read / write raw projection stacks (tiffs), parse settings file of the scanner to produce meta data.
 * array:  some utility functions compatible with large arrays mapped on disk (numpy.memmap)
-* scp:    wrapper around an SCP client that allows to recursevily copy folders across the network
+* scp:    wrapper around an SCP client that allows to recursively copy folders across the network
 * display:simple display routines for 3D arrays
 
 Typical code:
@@ -67,6 +67,8 @@ proj_geom = io.astra_proj_geom(meta['geometry'], proj.shape)
 ## Authors and contributors
 
 * **Alexander Kostenko** - *Initial work*
+* **Allard Handriksen** - *Packaging and installation*
+* **Jan-Willem Buurlage** - *Packaging and installation*
 
 See also the list of [contributors](https://github.com/cicwi/flexdata/contributors) who participated in this project.
 
