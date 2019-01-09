@@ -181,7 +181,7 @@ def read_flexray(path, sample = 1, skip = 1, memmap = None, proj_number = None):
     else:
         success = []
         
-    proj = read_tiffs(path, 'scan_', skip, sample, [], [], 'float32', memmap, success)
+    proj = read_tiffs(path, 'scan_', skip, sample, [], [], 'float32', memmap = memmap, success = success)
     
     # Try to retrieve metadata:
     try:
@@ -394,9 +394,11 @@ def write_stack(path, name, data, dim = 1, skip = 1, dtype = None, zip = False, 
             
         else:            
             if zip:
-                write_image(os.path.join(path_name, '.', format), img, 1)
+                write_image(path_name + '.' + format, img, 1)
+                
             else:
-                write_image(os.path.join(path_name, '.', format), img, 0)   
+                write_image(path_name + '.' + format, img, 0)   
+                
     
 def write_image(filename, image, compress = 0):
     """
