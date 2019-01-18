@@ -244,7 +244,7 @@ def read_stack(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], shape =
         
     """  
     # Retrieve file names, sorted by name
-    files = _get_files_sorted_(path, name)    
+    files = get_files_sorted(path, name)    
     
     if len(files) == 0: raise IOError('Tiff files not found at:', os.path.join(path, name))
     
@@ -771,10 +771,8 @@ def mm2pixel(value, geometry):
     img_pixel = geometry['det_pixel'] / m
 
     return value / img_pixel
-           
-# >>>>>>>>>>>>>>>>>>>>>>>>>>>> Utility functions >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-def _get_files_sorted_(path, name):
+def get_files_sorted(path, name):
     """
     Sort file entries using the natural (human) sorting
     """
@@ -792,7 +790,7 @@ def _get_files_sorted_(path, name):
 
     return files 
 
-def _get_folders_sorted_(path):
+def get_folders_sorted(path):
     '''
     Get all paths from a path with a star (using glob)
     '''
@@ -807,6 +805,8 @@ def _get_folders_sorted_(path):
     paths = [p for p in paths if os.path.isdir(p)]
     
     return paths
+           
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>> Utility functions >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
            
 def _sanity_check_(meta):
     '''

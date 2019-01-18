@@ -34,7 +34,7 @@ class memmap(numpy.memmap):
        
 def free_memory(percent = False):
     '''
-    Return amount of free memory in GB.
+    Return amount of free RAM memory in GB.
     Args:
         percent (bool): percentage of the total or in GB.
         
@@ -44,6 +44,16 @@ def free_memory(percent = False):
     
     else:
         return psutil.virtual_memory().available / psutil.virtual_memory().total * 100
+    
+def free_disk(path):
+    '''
+    Return amount of free memory on disk in GB.
+    Args:
+        percent (bool): percentage of the total or in GB.
+        
+    '''
+    statvfs = os.statvfs(path)
+    return statvfs.f_frsize * statvfs.f_bavail/1e9
     
 def gradient(array, axes = [0,1,2]):
     
@@ -56,7 +66,7 @@ def gradient(array, axes = [0,1,2]):
         temp_d = numpy.diff(temp_d, n=1, axis=ax)
         d.append(temp_d)
         
-    return d
+    return numpy.stack(d)
 
 def divergence(array, axes = [0, 1, 2]):
     
