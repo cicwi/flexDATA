@@ -54,8 +54,7 @@ def pyqt_graph(data, dim = 0, title=None):
 
     app.exec_()
 
-def slice(data, index=None, dim=0, bounds=None, title=None, cmap="gray", file=None
-):
+def slice(data, index=None, dim=0, bounds=None, title=None, cmap="gray", file=None):
 
     # Just in case squeeze:
     data = numpy.squeeze(data)

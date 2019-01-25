@@ -118,7 +118,6 @@ def init_geometry(src2obj = 0, det2obj = 0, det_pixel = 0, unit = 'millimetre', 
         geometry['det_hrz'] = 0.
         geometry['det_mag'] = 0. # same here
         geometry['det_roll'] = 0.
-        geometry['det_roll'] = 0.
         geometry['det_pitch'] = 0.
         geometry['det_yaw'] = 0.
         
@@ -219,7 +218,49 @@ def read_tiffs(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], dtype =
     """  
     return read_stack(path, name, skip = skip, sample = sample, x_roi = x_roi, y_roi = y_roi, shape = [], 
                dtype = dtype, format = 'tiff', flipdim = flipdim, memmap = memmap, success = success)
+     
+def stack_shape(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], shape = None, 
+               dtype = None, format = None, success = None):
+    """
+    Determine the shape of stack on disk.
+    
+    Args:
+        path (str): path to the files location
+        name (str): common part of the files name
+        skip (int): read every so many files
+        sample (int): sampling factor in x/y direction
+        x_roi ([x0, x1]): horizontal range
+        y_roi ([y0, y1]): vertical range
+        shape (array): shape of the files. Use it when the format is 'raw'.
+        dtype (str or numpy.dtype): data type of the files
+        format (str): file format ('tif', 'raw', etc)
+    """  
+    # Retrieve file names, sorted by name
+    files = get_files_sorted(path, name)    
+    
+    if len(files) == 0: raise IOError('Tiff files not found at:', os.path.join(path, name))
+    
+    # Apply skip:
+    files = files[::skip]
+    
+    # Confirm the shape and the dtype of the image:
+    image = read_image(files[0], sample, x_roi, y_roi, shape, format, dtype)
+    
+    shape = list(image.shape)
+    shape[0] *= sample
+    shape[1] *= sample
+    
+    proj_n = len(files) # may change if projection_number was forced
+    
+    # Initialize sucess index:
+    if success is not None:
+        if len(success) > proj_n:
+            proj_n = len(success)
         
+    # Create a mapped array if needed:
+    #if shape and sample are used, shape means the shape of the image on disk before subsampling
+    return (proj_n, shape[0] // sample, shape[1] // sample)
+    
 def read_stack(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], shape = None, 
                dtype = None, format = None, flipdim = False, memmap = None, success = None):    
     """
@@ -244,41 +285,13 @@ def read_stack(path, name, skip = 1, sample = 1, x_roi = [], y_roi = [], shape =
         
     """  
     # Retrieve file names, sorted by name
-    files = get_files_sorted(path, name)    
-    
-    if len(files) == 0: raise IOError('Tiff files not found at:', os.path.join(path, name))
-    
-    # Apply skip:
+    files = get_files_sorted(path, name)  
     files = files[::skip]
-    
-    # Confirm the shape and the dtype of the image:
-    image = read_image(files[0], sample, x_roi, y_roi, shape, format, dtype)
-    
-    shape = list(image.shape)
-    shape[0] *= sample
-    shape[1] *= sample
-    
-    dtype = image.dtype
-        
     file_n = len(files)
-    proj_n = len(files) # may change if projection_number was forced
-    
-    # Initialize sucess index:
-    if success is not None:
-        if len(success) == 0:
-            # this will be visible outside:
-            success[:] = numpy.zeros(file_n)
-        else:
-            
-            success *= 0
-            
-            if len(success) > file_n:
-                warnings.warn('The file number is not equal to the forced projection number! Hopefully everything will be fine...')
-                proj_n = len(success)
-        
+                    
     # Create a mapped array if needed:
     #if shape and sample are used, shape means the shape of the image on disk before subsampling
-    shape_samp = (proj_n, shape[0] // sample, shape[1] // sample)
+    shape_samp = stack_shape(path, name, skip, sample, x_roi, y_roi, shape, dtype, format, success)
     
     if memmap:
         data = array.memmap(memmap, dtype=dtype, mode='w+', shape = shape_samp)
@@ -420,56 +433,60 @@ def read_image(file, sample = 1, x_roi = [], y_roi = [], shape = None, format = 
     # File extension:
     ext = os.path.splitext(file)[1]
     
-    if (format == 'raw') | (ext == '.raw'):
-        if not dtype:
-            raise Exception('Define a dtype when reading "raw" format.')
+    try:
+        if (format == 'raw') | (ext == '.raw'):
+            if not dtype:
+                raise Exception('Define a dtype when reading "raw" format.')
+                    
+            # First file in the stack:    
+            im = numpy.fromfile(file, dtype)
+            
+            if not shape:
+                sz = numpy.sqrt(im.size)
+                raise Exception('Define a shape when reading "raw" format. Should be ~ (%0.2f, %0.2f)' % (sz,sz))
+            
+            # Size of the intended array:
+            sz = numpy.prod(shape)
+            
+            # In raw formats header may be encountered. We will estimate it automatically:
+            header = (im.size - sz)
+             
+            if header < 0:
+                raise Exception('Image size %u is smaller than the declared size %u' % (im.size, sz))
                 
-        # First file in the stack:    
-        im = numpy.fromfile(file, dtype)
-        
-        if not shape:
-            sz = numpy.sqrt(im.size)
-            raise Exception('Define a shape when reading "raw" format. Should be ~ (%0.2f, %0.2f)' % (sz,sz))
-        
-        # Size of the intended array:
-        sz = numpy.prod(shape)
-        
-        # In raw formats header may be encountered. We will estimate it automatically:
-        header = (im.size - sz)
-         
-        if header < 0:
-            raise Exception('Image size %u is smaller than the declared size %u' % (im.size, sz))
+            #if header > 0:
+            #    print('WARNING: file size is larger than the given shape. Assuming header length: %u' % header)
+             
+            # 1D -> 2D
+            im = im[header:]    
+            im = im.reshape(shape)
             
-        #if header > 0:
-        #    print('WARNING: file size is larger than the given shape. Assuming header length: %u' % header)
-         
-        # 1D -> 2D
-        im = im[header:]    
-        im = im.reshape(shape)
-        
-    elif ext == '':
-        
-        # FIle has no extension = use the one defined by the user.
-        if not format: 
-            raise Exception("Can't find extension of the file. Use format to provide file format.")
+        elif ext == '':
             
-        im = imageio.imread(file, format = format)
-        
-    elif ext == '.mat':
-        
-        # Read matlab file:
-        dic = loadmat(file)
-        
-        # We will assume that there is a single variable in this mat file:
-        var_key = [key for key in dic.keys() if not '__' in key][0]
-        im = dic[var_key]
-        
-    else:
-        # Files with normal externsions:
-        im = imageio.imread(file)
-        
-    if dtype:
-        im = im.astype(dtype)
+            # FIle has no extension = use the one defined by the user.
+            if not format: 
+                raise Exception("Can't find extension of the file. Use format to provide file format.")
+                
+            im = imageio.imread(file, format = format)
+            
+        elif ext == '.mat':
+            
+            # Read matlab file:
+            dic = loadmat(file)
+            
+            # We will assume that there is a single variable in this mat file:
+            var_key = [key for key in dic.keys() if not '__' in key][0]
+            im = dic[var_key]
+            
+        else:
+            # Files with normal externsions:
+            im = imageio.imread(file)
+            
+        if dtype:
+            im = im.astype(dtype)
+    
+    except Exception:
+        warnings.warn('Failed to read: '+ file)
         
     # Sum RGB    
     if im.ndim > 2:

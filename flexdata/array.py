@@ -198,7 +198,7 @@ def ramp(array, dim, width, mode = 'linear'):
         
     return array
 
-def pad(array, dim, width, mode = 'edge'):
+def pad(array, dim, width, mode = 'edge', geometry = None):
     """
     Pad an array along a given dimension.
     
@@ -228,6 +228,14 @@ def pad(array, dim, width, mode = 'edge'):
     new[sl] = array
     
     new = ramp(new, dim, width, mode)
+    
+    # Correct geometry if needed:
+    if geometry:
+        
+        dicti = ['det_vrt', 'det_hrz', 'det_hrz']
+        offset = (padr - padl) / 2
+        
+        geometry[dicti[dim]] += offset * geometry['det_pixel']
     
     # If input is memmap - update it's size, release RAM memory.
     return rewrite_memmap(array, new)
