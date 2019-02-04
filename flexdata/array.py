@@ -157,7 +157,11 @@ def ramp(array, dim, width, mode = 'linear'):
     
     # Index of the left and right ramp:
     left_sl = anyslice(array, slice(0, rampl), dim)
-    right_sl = anyslice(array, slice(-rampr, None), dim)
+    
+    if rampr > 0:
+        right_sl = anyslice(array, slice(-rampr, None), dim)
+    else:
+        right_sl = anyslice(array, slice(None, None), dim)
     
     if mode == 'zero':
         if rampl > 0:
@@ -223,7 +227,10 @@ def pad(array, dim, width, mode = 'edge', geometry = None):
     # Initialize bigger array (it's RAM-based array - need enough memory here!):
     new = numpy.zeros(sz1, dtype = array.dtype)    
     
-    sl = anyslice(new, slice(padl,-padr), dim)
+    if padr == 0:
+        sl = anyslice(new, slice(padl, None), dim)
+    else:
+        sl = anyslice(new, slice(padl,-padr), dim)
     
     new[sl] = array
     
@@ -597,6 +604,8 @@ def tiles_shape(shape, geometry_list):
     
     det_pixel = geometry_list[0]['det_pixel']
     
+    axs_hrz = 0
+    
     # Find out the size required for the final dataset
     for geo in geometry_list:
         
@@ -607,12 +616,16 @@ def tiles_shape(shape, geometry_list):
         max_x = max([max_x, bounds['hrz'][1]])
         max_y = max([max_y, bounds['vrt'][1]])
         
+        axs_hrz += geo['axs_hrz'] / len(geometry_list)
+        
     # Big slice:
     new_shape = numpy.array([(max_y - min_y) / det_pixel, shape[1], (max_x - min_x) / det_pixel])                     
     new_shape = numpy.round(new_shape).astype('int')
     
     # Copy one of the geometry records and sett the correct translation:
     geometry = geometry_list[0].copy()
+    
+    geometry['axs_hrz'] = axs_hrz
     
     geometry['det_hrz'] = (max_x + min_x) / 2
     geometry['det_vrt'] = (max_y + min_y) / 2
@@ -622,6 +635,6 @@ def tiles_shape(shape, geometry_list):
     #geometry['vol_hrz'] = (geometry['det_hrz'] + geometry['src_hrz']) / 2
     geometry['vol_tra'][0] = (geometry['det_vrt'] * geometry['src2obj'] + geometry['src_vrt'] * geometry['det2obj']) / geometry.get('src2det')
     #geometry['vol_tra'][2] = (geometry['det_hrz'] + geometry['src_hrz']) / 2
-    geometry['vol_tra'][2] = geometry['axs_hrz']
+    geometry['vol_tra'][2] = axs_hrz
 
     return new_shape, geometry
