@@ -247,7 +247,7 @@ def pad(array, dim, width, mode = 'edge', geometry = None):
     # If input is memmap - update it's size, release RAM memory.
     return rewrite_memmap(array, new)
  
-def bin(array, dim = None):
+def bin(array, dim = None, geometry = None):
     """
     Simple binning of the data along the chosen direction.
     """ 
@@ -261,7 +261,7 @@ def bin(array, dim = None):
         else:
             array /= 2
             
-        if dim == 0:
+        if dim == 0:            
              array[:-1:2, :, :] += array[1::2, :, :]
              return array[:-1:2, :, :]
              
@@ -270,6 +270,10 @@ def bin(array, dim = None):
              return array[:, :-1:2, :]
              
         elif dim == 2:
+             if geometry:
+                 geometry.properties['img_pixel'] *= 2 
+                 geometry.properties['det_pixel'] *= 2
+                 
              array[:, :, :-1:2] += array[:, :, 1::2]
              return array[:, :, :-1:2]
              
@@ -290,6 +294,10 @@ def bin(array, dim = None):
             
         for ii in range(array.shape[2]):
             array[:-1:2, :, ii] += array[1::2, :, ii]
+        
+        if geometry:
+            geometry.properties['img_pixel'] *= 2 
+            geometry.properties['det_pixel'] *= 2
         
         return array[:-1:2, :, :]
     
@@ -331,7 +339,9 @@ def crop(array, dim, width, geometry = None):
         if widthr == 0: widthr = None
         new = array[:,:,widthl:widthr]  
     
-    if geometry: shift_geometry(geometry, h/2, v/2)
+    if geometry:
+        geometry['det_tan'] = geometry['det_tan']+ geometry.pixel[2] * h / 2
+        geometry['det_ort'] = geometry['det_ort']+ geometry.pixel[0] * v / 2
         
     # Its better to leave the memmap file as it is. Return a view to it:
     return new
@@ -357,22 +367,6 @@ def cast2shape(array, shape):
             
     return array
 
-def shift_geometry(geometry, hrz, vrt, update_volume_pos = True):
-    """
-    Apply geometry shift in pixels.
-    """    
-    hrz = hrz * geometry['det_pixel']
-    vrt = vrt * geometry['det_pixel']
-    
-    geometry['det_hrz'] += hrz
-    geometry['det_vrt'] += vrt
-    
-    if update_volume_pos:        
-        # Here we are computing magnification without taking into account vol_tra[1], det_mag
-        m = (geometry['src2obj'] + geometry['det2obj']) / geometry['src2obj']
-        geometry['vol_tra'][2] += hrz / m
-        geometry['vol_tra'][0] += vrt / m    
-
 def raw2astra(array):
     """
     Convert a given numpy array (sorted: index, hor, vert) to ASTRA-compatible projections stack
@@ -381,7 +375,7 @@ def raw2astra(array):
     array = numpy.transpose(array, [1,0,2])
     array = numpy.flipud(array)
         
-    return array
+    return array.astype('float32')
 
 def medipix2astra(array):
     """
@@ -504,137 +498,3 @@ def anyslice(array, index, dim):
     sl = tuple(sl)
       
     return sl   
-
-def detector_size(shape, geometry):
-    '''
-    Get the size of detector in mm.
-    '''       
-    return geometry['det_pixel'] * numpy.array(shape)
-
-def volume_bounds(proj_shape, geometry):
-    '''
-    A very simplified version of volume bounds...
-    '''
-    # TODO: Compute this propoerly.... Dont trust the horizontal bounds!!!
-    
-    # Detector bounds:
-    det_bounds = detector_bounds(proj_shape, geometry)
-    if geometry['type'] == 'simple':
-        src_vrt = 0
-        src_hrz = 0
-	
-    else:
-        src_vrt = geometry['src_vrt']
-        src_hrz = geometry['src_hrz']
-	
-    # Demagnify detector bounds:
-    fact = geometry['src2obj'] / (geometry['src2obj'] + geometry['det2obj'])
-    vrt = numpy.array(det_bounds['vrt'])
-
-    vrt_bounds = (vrt * fact + src_vrt * (1 - fact))
-    
-    hrz = numpy.array(det_bounds['hrz'])
-    hrz_bounds = (hrz * fact + src_hrz * (1 - fact))
-
-    #hrz = max(hrz_bounds)
-    max_x = max(hrz_bounds - geometry['axs_hrz'])
-    
-    hrz_bounds = [geometry['vol_tra'][2] - max_x, geometry['vol_tra'][2] + max_x]
-    mag_bounds = [geometry['vol_tra'][1] - max_x, geometry['vol_tra'][1] + max_x]
-            
-    vol_bounds = {'vrt':numpy.array(vrt_bounds), 
-                  'mag': numpy.array(mag_bounds), 
-                  'hrz': numpy.array(hrz_bounds)}
-    
-    return vol_bounds
-
-def volume_shape(proj_shape, geometry):
-    '''
-    Based on physical volume bnounds compute shape in pixels:
-    '''
-    bounds = volume_bounds(proj_shape, geometry)
-
-    img_pixel = geometry['img_pixel'] * numpy.array(geometry['vol_sample'])
-    
-    range_vrt = numpy.ceil(bounds['vrt'] / img_pixel[0])
-    range_hrz = numpy.ceil(bounds['hrz'] / img_pixel[1])
-    range_mag = numpy.ceil(bounds['mag'] / img_pixel[2])
-    
-    range_vrt = range_vrt[1] - range_vrt[0]
-    range_hrz = range_hrz[1] - range_hrz[0]
-    range_mag = range_mag[1] - range_mag[0]
-    
-    return numpy.int32([range_vrt, range_mag, range_hrz])
-    
-def detector_bounds(shape, geometry):
-    '''
-    Get the boundaries of the detector in mm
-    '''   
-    bounds = {}
-	
-    if geometry['type'] == 'simple':
-        det_vrt = 0
-        det_hrz = 0
-    else:
-        det_vrt = geometry['det_vrt']
-        det_hrz = geometry['det_hrz']
-
-    xmin = det_hrz - geometry['det_pixel'] * shape[2] / 2
-    xmax = det_hrz + geometry['det_pixel'] * shape[2] / 2
-
-    ymin = det_vrt - geometry['det_pixel'] * shape[0] / 2
-    ymax = det_vrt + geometry['det_pixel'] * shape[0] / 2
-
-    bounds['hrz'] = [xmin, xmax]
-    bounds['vrt'] = [ymin, ymax]
-    
-    return bounds
-    
-def tiles_shape(shape, geometry_list):
-    """
-    Compute the size of the stiched dataset.
-    Args:
-        shape: shape of a single projection stack.
-        geometry_list: list of geometries.
-        
-    """
-    # Phisical detector size:
-    min_x, min_y = numpy.inf, numpy.inf
-    max_x, max_y = -numpy.inf, -numpy.inf
-    
-    det_pixel = geometry_list[0]['det_pixel']
-    
-    axs_hrz = 0
-    
-    # Find out the size required for the final dataset
-    for geo in geometry_list:
-        
-        bounds = detector_bounds(shape, geo)
-        
-        min_x = min([min_x, bounds['hrz'][0]])
-        min_y = min([min_y, bounds['vrt'][0]])
-        max_x = max([max_x, bounds['hrz'][1]])
-        max_y = max([max_y, bounds['vrt'][1]])
-        
-        axs_hrz += geo['axs_hrz'] / len(geometry_list)
-        
-    # Big slice:
-    new_shape = numpy.array([(max_y - min_y) / det_pixel, shape[1], (max_x - min_x) / det_pixel])                     
-    new_shape = numpy.round(new_shape).astype('int')
-    
-    # Copy one of the geometry records and sett the correct translation:
-    geometry = geometry_list[0].copy()
-    
-    geometry['axs_hrz'] = axs_hrz
-    
-    geometry['det_hrz'] = (max_x + min_x) / 2
-    geometry['det_vrt'] = (max_y + min_y) / 2
-    
-    # Update volume center:
-    #geometry['vol_vrt'] = (geometry['det_vrt'] * geometry['src2obj'] + geometry['src_vrt'] * geometry['det2obj']) / geometry.get('src2det')
-    #geometry['vol_hrz'] = (geometry['det_hrz'] + geometry['src_hrz']) / 2
-    geometry['vol_tra'][0] = (geometry['det_vrt'] * geometry['src2obj'] + geometry['src_vrt'] * geometry['det2obj']) / geometry.get('src2det')
-    #geometry['vol_tra'][2] = (geometry['det_hrz'] + geometry['src_hrz']) / 2
-    geometry['vol_tra'][2] = axs_hrz
-
-    return new_shape, geometry

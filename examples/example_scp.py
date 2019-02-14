@@ -8,8 +8,8 @@ from flexdata import scp
 from flexdata import io
 
 #%% Data copy:
-local = 'C:/test/temp1'
-remote = 'C:/test/temp2'
+local = '/ufs/ciacc/flexbox/test1'
+remote = '/ufs/ciacc/flexbox/test2'
 host = 'localhost'
 user = 'anonymous'
 

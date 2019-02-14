@@ -16,11 +16,11 @@ import astra
     
 path = '/ufs/ciacc/flexbox/al_test/90KV_no_filt/'
 
-dark = io.read_tiffs(path, 'di00')
-flat = io.read_tiffs(path, 'io00')    
-proj = io.read_tiffs(path, 'scan_')
+dark = io.read_stack(path, 'di00')
+flat = io.read_stack(path, 'io00')    
+proj = io.read_stack(path, 'scan_')
 
-meta = io.read_meta(path, 'flexray')   
+geom = io.read_flexraylog(path)   
  
 #%% Prepro:
    
@@ -37,8 +37,8 @@ display.slice(proj, title = 'Sinogram. What else?')
 vol = numpy.zeros([50, 2000, 2000], dtype = 'float32')
 
 # Initialize ASTRA geometries:
-vol_geom = io.astra_vol_geom(meta['geometry'], vol.shape)
-proj_geom = io.astra_proj_geom(meta['geometry'], proj.shape)
+vol_geom = geom.astra_volume_geom(vol.shape)
+proj_geom = geom.astra_projection_geom(proj.shape)
         
 # This is ASTRAAA!!!
 sin_id = astra.data3d.link('-sino', proj_geom, proj)
