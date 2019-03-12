@@ -17,7 +17,7 @@ from matplotlib import ticker
 
 import pyqtgraph as pq
 
-from . import array
+from . import data
 
 """ * Methods * """
 def plot3d(x, y, z, connected = False, title = None):
@@ -58,33 +58,33 @@ def plot2d(x, y=None, semilogy=False, title=None, legend=None):
 
     plt.show()
 
-def pyqt_graph(data, dim = 0, title=None):
+def pyqt_graph(array, dim = 0, title=None):
     '''
-    Create a PYQT window to display a 3D dataset.
+    Create a PYQT window to display a 3D arrayset.
     '''
     # create pyqtgraph app:
     app = pq.mkQApp()
     
-    pq.image(numpy.rot90(numpy.rollaxis(data, dim), axes = (1,2)), title = title)
+    pq.image(numpy.rot90(numpy.rollaxis(array, dim), axes = (1,2)), title = title)
 
     app.exec_()
 
-def slice(data, index=None, dim=0, bounds=None, title=None, cmap="gray", file=None):
+def slice(array, index=None, dim=0, bounds=None, title=None, cmap="gray", file=None):
 
     # Just in case squeeze:
-    data = numpy.squeeze(data)
+    array = numpy.squeeze(array)
 
     # If the image is 2D:
-    if data.ndim == 2:
-        img = data
+    if array.ndim == 2:
+        img = array
 
     else:
         if index is None:
-            index = data.shape[dim] // 2
+            index = array.shape[dim] // 2
 
-        sl = array.anyslice(data, index, dim)
+        sl = data.anyslice(array, index, dim)
 
-        img = numpy.squeeze(data[sl])
+        img = numpy.squeeze(array[sl])
 
         # There is a bug in plt. It doesn't like float16
         if img.dtype == "float16":
@@ -133,9 +133,9 @@ def mesh(stl_mesh):
     plt.show()
 
 
-def projection(data, dim=1, bounds=None, title=None, cmap="gray", file=None):
+def projection(array, dim=1, bounds=None, title=None, cmap="gray", file=None):
 
-    img = data.sum(dim)
+    img = array.sum(dim)
 
     # There is a bug in plt. It doesn't like float16
     img = numpy.float32(img)
@@ -152,16 +152,16 @@ def projection(data, dim=1, bounds=None, title=None, cmap="gray", file=None):
     _after_plot_(title, file)
 
 
-def color_project(data, dim=1, sample = 2, bounds=[0.01, 0.1], title=None, cmap='nipy_spectral', file=None):
+def color_project(array, dim=1, sample = 2, bounds=[0.01, 0.1], title=None, cmap='nipy_spectral', file=None):
 
-    # Sample data:
-    data = data[::sample,::sample,::sample]
+    # Sample array:
+    array = array[::sample,::sample,::sample]
     
     # Initialize colormap:
     cmap_ = plt.get_cmap(cmap)
     
     # Shape of the final image:
-    shape = list(data.shape)
+    shape = list(array.shape)
     shape.remove(shape[dim])
     shape.append(3)
 
@@ -170,10 +170,10 @@ def color_project(data, dim=1, sample = 2, bounds=[0.01, 0.1], title=None, cmap=
     
     print('Applying colormap...')
     
-    for ii in range(data.shape[dim]):
+    for ii in range(array.shape[dim]):
         
-        sl = array.anyslice(data, ii, dim)
-        img = numpy.squeeze(data[sl].copy())
+        sl = data.anyslice(array, ii, dim)
+        img = numpy.squeeze(array[sl].copy())
         
         img[img > bounds[1]] = bounds[1]
         img[img < bounds[0]] = bounds[0]
@@ -183,7 +183,7 @@ def color_project(data, dim=1, sample = 2, bounds=[0.01, 0.1], title=None, cmap=
         rgba_img = cmap_(img)
         rgb_img = numpy.delete(rgba_img, 3, 2)
         
-        rgb_total += rgb_img# / data.shape[dim]
+        rgb_total += rgb_img# / array.shape[dim]
         #rgb_total = numpy.max([rgb_img, rgb_total], axis = 0)
         
     #rgb_total /= rgb_total.max()
@@ -198,9 +198,9 @@ def color_project(data, dim=1, sample = 2, bounds=[0.01, 0.1], title=None, cmap=
     
     _after_plot_(title, file)
 
-def max_projection(data, dim=0, bounds=None, title=None, cmap="gray", file=None):
+def max_projection(array, dim=0, bounds=None, title=None, cmap="gray", file=None):
 
-    img = data.max(dim)
+    img = array.max(dim)
 
     # There is a bug in plt. It doesn't like float16
     img = numpy.float32(img)
@@ -216,9 +216,9 @@ def max_projection(data, dim=0, bounds=None, title=None, cmap="gray", file=None)
     _after_plot_(title, file)
 
 
-def min_projection(data, dim=0, title=None, cmap="gray", file=None):
+def min_projection(array, dim=0, title=None, cmap="gray", file=None):
 
-    img = data.min(dim)
+    img = array.min(dim)
 
     # There is a bug in plt. It doesn't like float16
     img = numpy.float32(img)

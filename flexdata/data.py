@@ -26,16 +26,30 @@ import psutil         # RAM tester
 import toml           # TOML format parcer
 from tqdm import tqdm # Progress barring
 import time           # Pausing
-
 from scipy.io import loadmat # Reading matlab format
-from . import array          # operations with arrays
 from . import geometry       # geometry classes
 
 # >>>>>>>>>>>>>>>>>>>> LOGGER CLASS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 class logger:
    """
    A class for logging and printing messages.
-   """  
+   """ 
+   # Save messages to a log file:
+   file = ''
+   
+   @staticmethod
+   def _write_(message):
+       """
+       Dump message into a file if it is available.
+       """
+       # Add timestamp:
+       message = '[%s]: %s' % (time.asctime(), message)
+       
+       # Write:
+       if logger.file:
+           with open(logger.file, 'w') as file:
+               file.write(message)
+   
    @staticmethod
    def print(message):
       """
@@ -100,7 +114,8 @@ def stack_shape(path, name, skip = 1, sample = 1, shape = None, dtype = None, fo
     
     return shape, dtype
     
-def read_stack(path, name, skip = 1, sample = 1, shape = None, dtype = None, format = None, flipdim = False, memmap = None, success = None):    
+def read_stack(path, name, skip = 1, sample = 1, shape = None, dtype = None, 
+               format = None, transpose = [1, 0, 2], updown = True, memmap = None, success = None):    
     """
     Read stack of files and return a numpy array.
     
@@ -130,7 +145,7 @@ def read_stack(path, name, skip = 1, sample = 1, shape = None, dtype = None, for
     shape_samp, dtype = stack_shape(path, name, skip, sample, shape, dtype, format)
     
     if memmap:
-        data = array.memmap(memmap, dtype=dtype, mode='w+', shape = shape_samp)
+        data = numpy.memmap(memmap, dtype=dtype, mode='w+', shape = shape_samp)
         
     else:    
         data = numpy.zeros(shape_samp, dtype = dtype)
@@ -172,8 +187,7 @@ def read_stack(path, name, skip = 1, sample = 1, shape = None, dtype = None, for
         print(f'%u files were loaded. %u%% memory left (%u GB).' % (len(files), free_memory(True), free_memory(False)))
     
     # Apply dimension switch:    
-    if flipdim:    
-        data = array.raw2astra(data)    
+    data = flipdim(data, transpose, updown)    
     
     return data
                  
@@ -215,12 +229,12 @@ def write_stack(path, name, data, dim = 1, skip = 1, dtype = None, zip = False, 
         path_name = os.path.join(path, name + '%06u'% (ii*skip))
         
         # Extract one slice from the big array
-        sl = array.anyslice(data, ii * skip, dim)
+        sl = anyslice(data, ii * skip, dim)
         img = data[sl]
           
         # Cast data to another type if needed
         if dtype is not None:
-            img = array.cast2type(img, dtype, bounds)
+            img = cast2type(img, dtype, bounds)
         
         # Write it!!!
         if format == 'raw':
@@ -682,18 +696,6 @@ def write_astra(filename, data_shape, geom):
     
     numpy.savetxt(filename, geom.astra_projection_geom(data_shape)['Vectors']) 
         
-def free_memory(percent = False):
-    '''
-    Return amount of free memory in GB.
-    Args:
-        percent (bool): percentage of the total or in GB.       
-    '''
-    if not percent:
-        return psutil.virtual_memory().available/1e9
-    
-    else:
-        return psutil.virtual_memory().available / psutil.virtual_memory().total * 100
-
 def get_files_sorted(path, name):
     """
     Sort file entries using the natural (human) sorting
@@ -1054,7 +1056,7 @@ def pad(array, dim, width, mode = 'edge', geometry = None):
     # Correct geometry if needed:
     if geometry:
         
-        dicti = ['det_vrt', 'det_hrz', 'det_hrz']
+        dicti = ['det_ort', 'det_tan', 'det_tan']
         offset = (padr - padl) / 2
         
         geometry[dicti[dim]] += offset * geometry['det_pixel']
@@ -1155,7 +1157,7 @@ def crop(array, dim, width, geometry = None):
         new = array[:,:,widthl:widthr]  
     
     if geometry:
-        geometry['det_tan'] = geometry['det_tan']+ geometry.pixel[2] * h / 2
+        geometry['det_tan'] = geometry['det_tan']+ geometry.pixel[1] * h / 2
         geometry['det_ort'] = geometry['det_ort']+ geometry.pixel[0] * v / 2
         
     # Its better to leave the memmap file as it is. Return a view to it:
@@ -1192,7 +1194,7 @@ def flipdim(array, transpose = [1, 0, 2], updown = True):
     if updown:
         array = numpy.flipud(array)
         
-    return array.astype('float32')
+    return array
 
 def raw2astra(array):
     """
@@ -1382,7 +1384,7 @@ def _flex_motor_correct_(geom):
     
     # Horizontal offsets:
     geom.parameters['det_tan'] += 24    
-    geom.parameters['src_ort'] -= 5
+    geom.parameters['src_ort'] -= 7
 
     # Rotation axis:
     geom.parameters['axs_tan'] -= 0.5
