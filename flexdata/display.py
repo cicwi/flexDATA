@@ -1,26 +1,41 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+@author: A. Kostenko
 Created on Oct 2018
-@author: kostenko
 
-Few simple reoutines for displaying 3D data (memmap-compatible).
-
+This module contains a few simple routines for displaying data.
 """
 
 """ * Imports * """
 
 import numpy
+
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import ticker
+
 import pyqtgraph as pq
 
 from . import array
 
 """ * Methods * """
+def plot3d(x, y, z, connected = False, title = None):
+    '''
+    Plot a 3D line or a scatter plot.
+    '''
+    fig = plt.figure()
+    ax = fig.gca(projection='3d')
+    #ax = fig.add_subplot(111, projection='3d')
 
-
-def plot(x, y=None, semilogy=False, title=None, legend=None):
+    ax.scatter(x, y, z)
+    
+    if connected:
+        ax.plot(x, y, z)
+        
+    _after_plot_(title, None)
+    
+def plot2d(x, y=None, semilogy=False, title=None, legend=None):
 
     if y is None:
         y = x
@@ -78,15 +93,19 @@ def slice(data, index=None, dim=0, bounds=None, title=None, cmap="gray", file=No
     fig = plt.figure()
 
     if bounds:
-        imsh = plt.imshow(img, vmin=bounds[0], vmax=bounds[1], cmap=cmap)
+        imsh = plt.imshow(img[::-1, :], vmin=bounds[0], vmax=bounds[1], cmap=cmap)
     else:
-        imsh = plt.imshow(img, cmap=cmap)
+        imsh = plt.imshow(img[::-1, :], cmap=cmap)
 
     # plt.colorbar()
     cbar = fig.colorbar(imsh, ticks=ticker.MaxNLocator(nbins=6))
     cbar.ax.tick_params(labelsize=15)
 
-    plt.axis("off")
+    _after_plot_(title, file)
+    
+def _after_plot_(title, file):
+    
+    #plt.axis("off")
 
     if title:
         plt.title(title)
@@ -95,7 +114,6 @@ def slice(data, index=None, dim=0, bounds=None, title=None, cmap="gray", file=No
 
     if file:
         plt.savefig(file, dpi=300, bbox_inches="tight")
-
 
 def mesh(stl_mesh):
     """
@@ -125,25 +143,62 @@ def projection(data, dim=1, bounds=None, title=None, cmap="gray", file=None):
     plt.figure()
 
     if bounds:
-        plt.imshow(img, vmin=bounds[0], vmax=bounds[1], cmap=cmap)
+        plt.imshow(img[::-1, :], vmin=bounds[0], vmax=bounds[1], cmap=cmap)
     else:
-        plt.imshow(img, cmap=cmap)
+        plt.imshow(img[::-1, :], cmap=cmap)
 
     plt.colorbar()
-    plt.axis("off")
-
-    if title:
-        plt.title(title)
-
-    plt.show()
-
-    if file:
-        plt.savefig(file, dpi=300, bbox_inches="tight")
+    
+    _after_plot_(title, file)
 
 
-def max_projection(
-    data, dim=0, bounds=None, title=None, cmap="gray", file=None
-):
+def color_project(data, dim=1, sample = 2, bounds=[0.01, 0.1], title=None, cmap='nipy_spectral', file=None):
+
+    # Sample data:
+    data = data[::sample,::sample,::sample]
+    
+    # Initialize colormap:
+    cmap_ = plt.get_cmap(cmap)
+    
+    # Shape of the final image:
+    shape = list(data.shape)
+    shape.remove(shape[dim])
+    shape.append(3)
+
+    # Output image:    
+    rgb_total = numpy.zeros(shape, dtype = 'float32')
+    
+    print('Applying colormap...')
+    
+    for ii in range(data.shape[dim]):
+        
+        sl = array.anyslice(data, ii, dim)
+        img = numpy.squeeze(data[sl].copy())
+        
+        img[img > bounds[1]] = bounds[1]
+        img[img < bounds[0]] = bounds[0]
+        img -= bounds[0]
+        img /= bounds[1] - bounds[0]
+        
+        rgba_img = cmap_(img)
+        rgb_img = numpy.delete(rgba_img, 3, 2)
+        
+        rgb_total += rgb_img# / data.shape[dim]
+        #rgb_total = numpy.max([rgb_img, rgb_total], axis = 0)
+        
+    #rgb_total /= rgb_total.max()
+    #rgb_total = numpy.log(rgb_total)
+    rgb_total = numpy.sqrt(rgb_total)
+    
+    plt.figure()
+    
+    plt.imshow(rgb_total[::-1, :] / rgb_total.max(), cmap = cmap)
+    
+    plt.colorbar()
+    
+    _after_plot_(title, file)
+
+def max_projection(data, dim=0, bounds=None, title=None, cmap="gray", file=None):
 
     img = data.max(dim)
 
@@ -153,20 +208,12 @@ def max_projection(
     plt.figure()
 
     if bounds:
-        plt.imshow(img, vmin=bounds[0], vmax=bounds[1], cmap=cmap)
+        plt.imshow(img[::-1, :], vmin=bounds[0], vmax=bounds[1], cmap=cmap)
     else:
-        plt.imshow(img, cmap=cmap)
+        plt.imshow(img[::-1, :], cmap=cmap)
 
     plt.colorbar()
-    plt.axis("off")
-
-    if title:
-        plt.title(title)
-
-    plt.show()
-
-    if file:
-        plt.savefig(file, dpi=300, bbox_inches="tight")
+    _after_plot_(title, file)
 
 
 def min_projection(data, dim=0, title=None, cmap="gray", file=None):
@@ -178,14 +225,6 @@ def min_projection(data, dim=0, title=None, cmap="gray", file=None):
 
     plt.figure()
 
-    plt.imshow(img, cmap=cmap)
+    plt.imshow(img[::-1, :], cmap=cmap)
     plt.colorbar()
-    plt.axis("off")
-
-    if title:
-        plt.title(title)
-
-    plt.show()
-
-    if file:
-        plt.savefig(file, dpi=300, bbox_inches="tight")
+    _after_plot_(title, file)

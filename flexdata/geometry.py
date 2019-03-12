@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-@author: kostenko
+@author: A. Kostenko
 Created on Feb 2019
 
-This module contains acquisition geometry classes.
+This module contains acquisition geometry classes. 
+The base class corresponds to the simplest case of circular orbit cone-beam CT with minimal number of parameters.
+The derived calsses (circular, helix, linear) have additional parameters to help their definition.
 """
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>> Imports >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -13,6 +15,653 @@ import astra
 import numpy
 from transforms3d import euler
 
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>> Classes >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+class basic():
+    '''
+    Base geometry class. Needs only SDD, ODD and pixel size to initialize.
+    Use 'parameters' to store parameters and 'description' to store relevant metadata.
+    '''
+    
+    def __init__(self, src2obj = None, det2obj = None, det_pixel = None, img_pixel = None, unit = 'mm'):
+        '''
+        Constructor for the base geometry class.
+        
+        Args:
+            src2obj  : source to detector distance
+            det2obj  : object to detector distance
+            det_pixel: detector pixel size
+            img_pixel: reconstruction volume voxel size (optional)
+            unit     : unit length (default = 'mm')
+        '''
+        # Default voxel size:
+        if (not img_pixel) and (det_pixel): img_pixel = det_pixel / (src2obj + det2obj) * src2obj
+        
+        # Parameters:
+        self.parameters = {'src2obj':src2obj,
+                           'det2obj':det2obj,
+                
+                           'det_pixel':det_pixel,
+                           'img_pixel':img_pixel,
+                           'unit':unit,
+                           
+                           'axs_tan':0,                 # rotation axis translation
+                           'vol_rot':[0.0, 0.0, 0.0],   # volume rotations and translation vectors
+                           'vol_tra':[0.0, 0.0, 0.0],
+                           
+                           'det_sample':[1,1],          # detector and volume sampling (use to indicate that pixels were binned)
+                           'vol_sample':[1,1,1]
+                           }
+        
+        self.description = {}
+        
+    def __str__(self):
+        '''
+        Show my description.
+        '''
+        return 'Geometry class: ' + str(type(self)) + '\n Parameters: \n' + str(self.parameters)
+    
+    def __repr__(self):
+        '''
+        Show my description.
+        '''
+        return 'Geometry class: ' + str(type(self)) + '\n Parameters: \n' + str(self.parameters)
+    
+    def __getitem__(self, key):
+        '''
+        Retrieve one of the geometry parameters.
+        '''
+        return self.parameters.get(key)
+    
+    def __setitem__(self, key, val):
+        '''
+        Set one of the geometry parameters.
+        '''
+        if not key in self.parameters.keys():
+            print('WARNING! A property with an unknown key is added to geometry: ' + key)
+            
+        self.parameters[key] = val
+        
+    def copy(self):
+        
+        geom = type(self)()
+        geom.parameters = self.parameters.copy()
+        geom.description = self.description.copy()
+        
+        return geom
+    
+    def to_dictionary(self):
+        '''
+        Return a dictionary describing this geometry.
+        '''
+        records = self.parameters.copy()
+        records.update(self.description)
+        
+        return records
+        
+    def from_dictionary(self, dictionary):
+        '''
+        Use dictionary records to initialize this geometry.
+        '''
+        # Fill gaps if needed:
+        if not dictionary.get('src2obj'):
+            if (not dictionary.get('src2det')):
+                raise Exception('Filed missing in geometry record: src2det')
+                
+            elif (not dictionary.get('det2obj')):
+                raise Exception('Filed missing in geometry record: det2obj')
+                
+            dictionary['src2obj'] = dictionary['src2det'] - dictionary['det2obj']
+        
+        if (not dictionary.get('det2obj')):
+            if (not dictionary.get('src2det')):
+                raise Exception('Filed missing in geometry record: src2det')
+            else:
+                dictionary['det2obj'] = dictionary['src2det'] - dictionary['src2obj']    
+            
+        # Copy records:
+        for key in dictionary.keys():
+            
+            value = dictionary[key]
+            
+            if key in self.parameters.keys():
+                self.parameters[key] = value
+                
+            else:    
+                self.description[key] = value
+            
+        # After-check:    
+        if not self.parameters.get('img_pixel'):
+            self.parameters['img_pixel'] = self.parameters['det_pixel'] / self.magnification    
+            
+        if not self.parameters.get('det_pixel'):
+            self.parameters['det_pixel'] = self.parameters['img_pixel'] * self.magnification        
+            
+        # Check if all necessary keys are there:
+        min_set = ['src2obj', 'det2obj', 'det_pixel']
+        for key in min_set:
+            if not key in self.parameters:
+                raise Exception('Geometry parameter missing after parcing: ' + key)    
+            
+    @property    
+    def vol_sample(self):
+        return self.parameters.get('vol_sample')
+    
+    @vol_sample.setter
+    def vol_sample(self, sample):
+        self.parameters['vol_sample'] = sample
+    
+    @property    
+    def det_sample(self):
+        return self.parameters.get('det_sample')
+    
+    @det_sample.setter    
+    def det_sample(self, sample):
+        self.parameters['det_sample'] = sample
+    
+    @property    
+    def pixel(self):
+        return self.parameters.get('det_pixel') * numpy.array(self.parameters.get('det_sample'))
+    
+    @property    
+    def voxel(self):
+        return self.parameters.get('img_pixel') * numpy.array(self.parameters.get('vol_sample'))
+        
+    @property    
+    def src2obj(self):
+        return self.parameters.get('src2obj')
+    
+    @property    
+    def det2obj(self):
+        return self.parameters.get('det2obj')
+    
+    @property    
+    def src2det(self):
+        return self.parameters.get('src2obj') + self.parameters.get('det2obj')
+
+    @property    
+    def magnification(self):
+        return self.src2det / self.src2obj
+    
+    def volume_xyz(self, shape, offset = [0.,0.,0.]):
+        """
+        Coordinate space in units of the geometry.
+        Args:
+            shape : volume shape
+            offset: offset in length units
+        """    
+        xx = (numpy.arange(0, shape[0]) - shape[0] / 2) * self.voxel[0] - offset[0] 
+        yy = (numpy.arange(0, shape[1]) - shape[1] / 2) * self.voxel[1] - offset[1]
+        zz = (numpy.arange(0, shape[2]) - shape[2] / 2) * self.voxel[2] - offset[2]
+        
+        return xx, yy, zz
+        
+    def astra_projection_geom(self, data_shape, index = None):
+        '''
+        Get ASTRA projection geometry.        
+        
+        Args:
+            data_shape: [detector_count_z, theta_count, detector_count_x]
+            index     : if provided - sequence of the rotation angles
+            
+        Returns:
+            geometry : ASTRA cone-beam geometry.
+        '''  
+        # Get vectors: 
+        vectors = self.get_vectors(data_shape[1], index)
+                
+        # Get ASTRA geometry:
+        det_count_x = data_shape[2]
+        det_count_z = data_shape[0]
+        return astra.create_proj_geom('cone_vec', det_count_z, det_count_x, vectors)
+    
+    
+    def astra_volume_geom(self, vol_shape, slice_first = None, slice_last = None):
+        '''
+        Initialize ASTRA volume geometry.  
+        Args:
+            vol_shape  : volume array shape
+            slice_first: first slice of an ROI to update
+            slice_last : last slice of an ROI to update
+        '''
+        
+        # Shape and size (mm) of the volume
+        vol_shape = numpy.array(vol_shape)
+        vol_size = vol_shape * self.voxel
+    
+        if (slice_first is not None) & (slice_last is not None):
+            # Generate volume geometry for one chunk of data:
+                       
+            length = vol_shape[0]
+            
+            # Compute offset from the centre:
+            centre = (length - 1) / 2
+            offset = (slice_first + slice_last) / 2 - centre
+            offset = offset * self.voxel[0]
+            
+            shape = [slice_last - slice_first + 1, vol_shape[1], vol_shape[2]]
+            vol_size = numpy.array(shape) * self.voxel[0]
+    
+        else:
+            shape = vol_shape
+            offset = 0     
+            
+        #vol_geom = astra.creators.create_vol_geom(shape[1], shape[2], shape[0], 
+        vol_geom = astra.create_vol_geom(shape[1], shape[2], shape[0], 
+                  -vol_size[2]/2, vol_size[2]/2, -vol_size[1]/2, vol_size[1]/2, 
+                  -vol_size[0]/2 + offset, vol_size[0]/2 + offset)
+            
+        return vol_geom  
+    
+    def get_vectors(self, proj_count, index = None):
+        '''
+        Get source, detector and detector orientation vectors.
+        
+        Args:
+            angle_count : number of rotation angles
+            index       : index of angles that should be used
+        '''        
+        # Create source orbit:
+        src_vect = self.get_source_orbit(proj_count, index)
+        
+        # Create detector orbit (same as source but 180 degrees offset):
+        det_vect, det_tan, det_rad, det_orth = self.get_detector_orbit(proj_count, index)
+             
+        # Apply global rotations and translations:                      
+        self._transform_vectors_(src_vect, det_vect, det_tan, det_rad, det_orth)
+        
+        # Append all vectors together:
+        vectors = numpy.concatenate([src_vect, det_vect, det_tan * self.pixel[1], det_orth * self.pixel[0]], axis = 1)        
+        return vectors 
+        
+    def get_source_orbit(self, proj_count = None, index = None):    
+        '''
+        Get the source orbit. In the base class it is a circular orbit. 
+        Args:
+            proj_count: number of projections
+            index           : index of the projection subset
+            
+        Returns:
+            src_pos : array of the source positions. Can be generated by circular_orbit(...), for instance.
+        '''
+        raise Exception('Override this method in a geometry class derived from the base class!')
+            
+    def get_detector_orbit(self, proj_count = None, index = None):    
+        '''
+        Get the detector orbit. In the base class it is a circular orbit.
+        Args:
+            proj_count: number of projections
+            index           : index of the projection subset
+        Returns:
+            src_pos : array of the source positions. Can be generated by circular_orbit(...), for instance.
+        '''                
+        raise Exception('Override this method in a geometry class derived from the base class!')
+        
+    def _transform_vectors_(self, src_vect, det_vect, det_tan, det_rad, det_orth):
+        '''
+        Rotate and translate vectors depending on the volume orientation.
+        '''
+        vol_rot = self.parameters['vol_rot']
+        vol_tra = self.parameters['vol_tra']
+        
+        # Rotate everything relative to the reconstruction volume:
+        R = _euler2mat_(vol_rot[0], vol_rot[1], vol_rot[2], 'rzyx')
+        det_tan[:] = numpy.dot(det_tan, R)
+        det_rad[:] = numpy.dot(det_rad, R)
+        src_vect[:] = numpy.dot(src_vect,R)
+        det_vect[:] = numpy.dot(det_vect,R)            
+                
+        # Add translation:
+        T = numpy.array([vol_tra[1], vol_tra[2], vol_tra[0]])    
+        src_vect -= numpy.dot(T, R)          
+        det_vect -= numpy.dot(T, R)         
+        
+    def detector_size(self, proj_shape):
+        '''
+        Get the size of detector in length units.
+        '''  
+        return numpy.array(proj_shape[::2]) * self.pixel
+    
+    def detector_bounds(self, proj_shape):
+        '''
+        Get the boundaries of the detector at the start of the scan in length units.
+        '''      	
+        
+        det_pos, det_tan, det_rad, det_orth = self.get_detector_orbit(proj_count = 2)
+        
+        sz = self.detector_size(proj_shape) / 2
+        
+        vrt = [-sz[0], sz[0]]
+        hrz = [-sz[1], sz[1]]
+        
+        return numpy.array([vrt, hrz]) + [det_pos[0][0], det_pos[0][2]]
+
+    def volume_size(self, vol_shape):
+        '''
+        Return volume size in length units.
+        '''
+        return numpy.array(vol_shape) * self.voxel
+        
+    def volume_bounds(self, vol_shape):
+        '''
+        Return volume bounds:
+        '''        
+        sz = self.volume_size(vol_shape) / 2
+        
+        vrt = [-sz[0], sz[0]]
+        mag = [-sz[1], sz[1]]
+        hrz = [-sz[2], sz[2]]
+        
+        return numpy.array([vrt, mag, hrz]) + numpy.array(self.parameters['vol_tra'])[:, None]
+                            
+class circular(basic):
+    '''
+    Circular orbit geometry class. Includes additional parameters such as detector and source shifts and rotations.
+    '''
+    
+    def __init__(self, src2obj = None, det2obj = None, det_pixel = None, img_pixel = None, rot_range = (0, 360), unit = 'mm'):
+        '''
+        Constructor for the circular geometry class.
+        
+        Args:
+            src2obj  : source to detector distance
+            det2obj  : object to detector distance
+            det_pixel: detector pixel size
+            img_pixel: reconstruction volume voxel size (optional)
+            rot_range: range of rotation (default = 0..360)
+            unit     : unit length (default = 'mm')
+        '''
+        # Parent init:
+        basic.__init__(self, src2obj, det2obj, det_pixel, img_pixel, unit)
+
+        # Additional parameters:
+        self.parameters.update({   
+                           'rot_range': rot_range,                  
+                           'src_ort':0,   # source vertical, tangential shifts
+                           'src_tan':0,
+                           
+                           'det_ort':0,   # detector shifts and rotations (in degrees)
+                           'det_tan':0,
+                           'det_roll':0,
+                           'det_pitch':0,
+                           'det_yaw':0,
+                           
+                           'axs_roll':0,  # rotation axis roll and pitch (in degrees)
+                           'axs_pitch':0,                           
+                           })   
+            
+    def get_thetas(self, proj_count = None, index = None):
+        '''
+        Get rotation angles. Either returns an equidistant array or self.thetas if that is defined.
+        
+        Args:
+            proj_count : number of angles in equidistant case. Not used if 'thetas' are defined explicitly in parameters.
+            
+        Returns:
+            thetas : angle array in degrees
+        '''
+        thetas = self.parameters.get('thetas')
+        
+        # Initialize thetas:
+        if thetas is None:
+            thetas = numpy.linspace(self['rot_range'][0], self['rot_range'][1], proj_count)
+            
+        if not index is None: thetas = thetas[index]    
+        
+        return thetas
+                
+    def get_source_orbit(self, proj_count = None, index = None):    
+        '''
+        Get the source orbit. In the base class it is a circular orbit.
+        '''
+        src2obj = self.src2obj
+        
+        src_ort = self.parameters['src_ort']
+        src_tan = self.parameters['src_tan']
+        
+        axs_tan = self.parameters['axs_tan']
+        
+        axs_roll = self.parameters['axs_roll']
+        axs_pitch = self.parameters['axs_pitch']
+        
+        # Create source orbit:
+        thetas = self.get_thetas(proj_count, index)
+        src_vect, src_tan, src_rad, serc_orth = circular_orbit(src2obj, thetas, roll = axs_roll, pitch = axs_pitch, yaw = 0, 
+                                                         origin = [0, 0, src_ort], tan_shift = src_tan - axs_tan, index = index)
+        
+        return src_vect
+    
+    def get_detector_orbit(self, proj_count = None, index = None):    
+        '''
+        Get the detector orbit. In the base class it is a circular orbit.
+        '''
+        det2obj = self.det2obj
+        
+        # Detector translations:
+        det_ort = self.parameters['det_ort']
+        det_tan = self.parameters['det_tan']
+    
+        # Rotation axis translations and rotations:
+        axs_tan = self.parameters['axs_tan']
+        
+        axs_roll = self.parameters['axs_roll']
+        axs_pitch = self.parameters['axs_pitch']
+        
+        # Detector rotations:               
+        det_roll = self.parameters['det_roll']
+        det_yaw = self.parameters['det_yaw']
+        det_pitch = self.parameters['det_pitch']
+                
+        # Create detector orbit:
+        thetas = self.get_thetas(proj_count, index)
+        det_pos, det_tan, det_rad, det_orth = circular_orbit(det2obj, thetas, roll = axs_roll, pitch = axs_pitch, yaw = 180, 
+                                                         origin = [0, 0, det_ort], tan_shift = -det_tan + axs_tan, index = index)
+        
+        # Invert vectors to keep them alligned with the source vectors:
+        det_tan, det_rad, det_orth = -det_tan, -det_rad, -det_orth
+        
+        # Apply detector rotations:    
+        for ii in range(det_pos.shape[0]):
+            
+            T = _axangle2mat_(det_rad[ii, :], det_roll)
+            det_tan[ii, :] = T.dot(det_tan[ii, :])
+            det_orth[ii, :] = T.dot(det_orth[ii, :])
+        
+            T = _axangle2mat_(det_orth[ii, :], det_yaw)
+            det_tan[ii, :] = T.dot(det_tan[ii, :])
+            det_rad[ii, :] = T.dot(det_rad[ii, :])
+            
+            T = _axangle2mat_(det_tan[ii, :], det_pitch)
+            det_rad[ii, :] = T.dot(det_rad[ii, :])
+            det_orth[ii, :] = T.dot(det_orth[ii, :])
+        
+        return det_pos, det_tan, det_rad, det_orth    
+
+class helical(circular):
+    '''
+    Helical orbit geometry class. Similar to the 'circular' class with additional parameter of helix
+    '''
+    
+    def __init__(self, src2obj = None, det2obj = None, det_pixel = None, img_pixel = None, axis_range = (0, 100),  rot_range = (0, 720), unit = 'mm'):
+        '''
+        Constructor for the helical geometry class.
+        
+        Args:
+            src2obj  : source to detector distance
+            det2obj  : object to detector distance
+            det_pixel: detector pixel size
+            img_pixel: reconstruction volume voxel size (optional)
+            axis_range: range of the movement along the axis of rotation
+            rot_range: range of angles (default = 0..360)
+            unit     : unit length (default = 'mm')
+        '''
+        # Parent init:
+        circular.__init__(self, src2obj, det2obj, det_pixel, img_pixel, rot_range, unit)
+
+        # Additional parameters:
+        self.parameters['axs_rng'] = axis_range
+            
+    def get_source_orbit(self, proj_count = None, index = None):    
+        '''
+        Get the source orbit. In the base class it is a circular orbit.
+        '''
+        src2obj = self.src2obj
+        
+        src_ort = self.parameters['src_ort']
+        src_tan = self.parameters['src_tan']
+        
+        axs_tan = self.parameters['axs_tan']
+        
+        axs_roll = self.parameters['axs_roll']
+        axs_pitch = self.parameters['axs_pitch']
+        
+        # Create source orbit:
+        thetas = self.get_thetas(proj_count, index)
+        src_vect, src_tan, src_rad, src_orth = circular_orbit(src2obj, thetas, roll = axs_roll, pitch = axs_pitch, yaw = 0, 
+                                                         origin = [0, 0, src_ort], tan_shift = src_tan - axs_tan, index = index)
+        
+        # Add axial motion:
+        vrt = numpy.linspace(self.parameters['axs_rng'][0], self.parameters['axs_rng'][1], proj_count)
+        if index: vrt = vrt[index]
+        src_vect = src_vect + src_orth * vrt[:, None]
+        
+        return src_vect
+    
+    def get_detector_orbit(self, proj_count = None, index = None):    
+        '''
+        Get the detector orbit. In the base class it is a circular orbit.
+        '''
+        det2obj = self.det2obj
+        
+        # Detector translations:
+        det_ort = self.parameters['det_ort']
+        det_tan = self.parameters['det_tan']
+    
+        # Rotation axis translations and rotations:
+        axs_tan = self.parameters['axs_tan']
+        
+        axs_roll = self.parameters['axs_roll']
+        axs_pitch = self.parameters['axs_pitch']
+        
+        # Detector rotations:               
+        det_roll = self.parameters['det_roll']
+        det_yaw = self.parameters['det_yaw']
+        det_pitch = self.parameters['det_pitch']
+                
+        # Create detector orbit:
+        thetas = self.get_thetas(proj_count, index)
+        det_pos, det_tan, det_rad, det_orth = circular_orbit(det2obj, thetas, roll = axs_roll, pitch = axs_pitch, yaw = 180, 
+                                                         origin = [0, 0, det_ort], tan_shift = -det_tan + axs_tan, index = index)
+        
+        # Add axial motion:
+        vrt = numpy.linspace(self.parameters['axs_rng'][0], self.parameters['axs_rng'][1], proj_count)
+        if index: vrt = vrt[index]
+        det_pos = det_pos + det_orth * vrt[:, None]
+        
+        # Invert vectors to keep them alligned with the source vectors:
+        det_tan, det_rad, det_orth = -det_tan, -det_rad, -det_orth
+        
+        # Apply detector rotations:    
+        for ii in range(det_pos.shape[0]):
+            
+            T = _axangle2mat_(det_rad[ii, :], det_roll)
+            det_tan[ii, :] = T.dot(det_tan[ii, :])
+            det_orth[ii, :] = T.dot(det_orth[ii, :])
+        
+            T = _axangle2mat_(det_orth[ii, :], det_yaw)
+            det_tan[ii, :] = T.dot(det_tan[ii, :])
+            det_rad[ii, :] = T.dot(det_rad[ii, :])
+            
+            T = _axangle2mat_(det_tan[ii, :], det_pitch)
+            det_rad[ii, :] = T.dot(det_rad[ii, :])
+            det_orth[ii, :] = T.dot(det_orth[ii, :])
+        
+        return det_pos, det_tan, det_rad, det_orth      
+
+class linear(basic):
+    '''
+    A simple linear orbit geometry class. 
+    '''
+    
+    def __init__(self, src2obj = None, det2obj = None, det_pixel = None, img_pixel = None, 
+                 src_hrz_rng = (0, 1), src_vrt_rng = (0, 1), det_hrz_rng = (1, 0), det_vrt_rng = (1, 0), unit = 'mm'):
+        '''
+        Constructor for the linear geometry class.
+        
+        Args:
+            src2obj  : source to detector distance
+            det2obj  : object to detector distance
+            det_pixel: detector pixel size
+            img_pixel: reconstruction volume voxel size (optional)
+            src_hrz_rng: source horizlontal movement range
+            src_vrt_rng: source vertical movement range
+            det_hrz_rng: detector horizlontal movement range
+            det_vrt_rng: detector vertical movement range
+            unit     : unit length (default = 'mm')
+        '''
+        # Parent init:
+        basic.__init__(self, src2obj, det2obj, det_pixel, img_pixel, unit)
+
+        # Additional parameters:
+        self.parameters.update({                    
+                           'src_hrz_rng':src_hrz_rng,   # source vertical, horizlontal motion range
+                           'src_vrt_rng':src_vrt_rng,
+                           
+                           'det_hrz_rng':det_hrz_rng,   # source vertical, horizlontal motion range
+                           'det_vrt_rng':det_vrt_rng,
+                           
+                           'det_roll':0,               # detector rotations (in degrees)
+                           'det_pitch':0,
+                           'det_yaw':0,
+                           })    
+            
+    def get_source_orbit(self, proj_count = None, index = None):    
+        '''
+        Get the source orbit. In the base class it is a circular orbit.
+        '''
+        src2obj = self.src2obj
+        
+        src_hrz_rng = self.parameters['src_hrz_rng']
+        src_vrt_rng = self.parameters['src_vrt_rng']
+        
+        # Create source orbit:
+        src_vect, src_tan, src_rad, serc_ort = linear_orbit(src_hrz_rng, (-src2obj, -src2obj), src_vrt_rng, proj_count) 
+        
+        return src_vect
+    
+    def get_detector_orbit(self, proj_count = None, index = None):    
+        '''
+        Get the detector orbit. In the base class it is a circular orbit.
+        '''
+        det2obj = self.det2obj
+        
+        det_hrz_rng = self.parameters['det_hrz_rng']
+        det_vrt_rng = self.parameters['det_vrt_rng']
+        
+        # Detector rotations:               
+        det_roll = self.parameters['det_roll']
+        det_yaw = self.parameters['det_yaw']
+        det_pitch = self.parameters['det_pitch']
+        
+        # Create detector orbit:
+        det_pos, det_tan, det_rad, det_orth = linear_orbit(det_hrz_rng, (det2obj, det2obj), det_vrt_rng, proj_count) 
+        
+        # Apply detector rotations:    
+        for ii in range(det_pos.shape[0]):
+            
+            T = _axangle2mat_(det_rad[ii, :], det_roll)
+            det_tan[ii, :] = T.dot(det_tan[ii, :])
+            det_orth[ii, :] = T.dot(det_orth[ii, :])
+        
+            T = _axangle2mat_(det_orth[ii, :], det_yaw)
+            det_tan[ii, :] = T.dot(det_tan[ii, :])
+            det_rad[ii, :] = T.dot(det_rad[ii, :])
+            
+            T = _axangle2mat_(det_tan[ii, :], det_pitch)
+            det_rad[ii, :] = T.dot(det_rad[ii, :])
+            det_orth[ii, :] = T.dot(det_orth[ii, :])
+        
+        return det_pos, det_tan, det_rad, det_orth    
+    
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>> Static methods >>>>>>>>>>>>>>>>>>>>>>>    
 def tiles_shape(shape, geometry_list):
     """
@@ -60,622 +709,154 @@ def tiles_shape(shape, geometry_list):
 
     return new_shape, geometry   
 
-    def astra_projection_geom(geom, data_shape, index = None):
-        '''
-        Initialize ASTRA projection geometry.        
-        
-        Args:
-            geom      : geometry class
-            data_shape: [detector_count_z, theta_count, detector_count_x]
-            index     : if provided - sequence of the rotation angles
-        '''  
-        
-        return geom.astra_projection_geom(data_shape, index)
-    
-    
-    def astra_volume_geom(geom, vol_shape, slice_first = None, slice_last = None):
-        '''
-        Initialize ASTRA volume geometry.        
-        '''
-        return geom.astra_volume_geom(vol_shape, slice_first = None, slice_last = None)
-    
-    def get_vectors(geom, angle_count, index = None):
-        '''
-        Get source, detector and detector orientation vectors.
-        
-        Args:
-            geom       : geometry class
-            angle_count : number of rotation angles
-            index       : index of angles that should be used
-        '''        
-        return geom.get_vectors(angle_count, index)
-    
-    def detector_size(geom, proj_shape):
-        '''
-        Get the size of detector in length units.
-        '''  
-        return geom.detector_size(proj_shape)
-    
-    def detector_bounds(geom, proj_shape):
-        '''
-        Get the boundaries of the detector in length units.
-        '''      	
-        return geom.detector_bounds(proj_shape)
-
-    def volume_bounds(geom, proj_shape):
-        '''
-        A very simplified version of volume bounds...
-        '''
-        return geom.volume_bounds(proj_shape)
-    
-    def volume_shape(geom, proj_shape):
-        '''
-        Based on physical volume bnounds compute shape in pixels:
-        '''
-        return geom.volume_shape(proj_shape)
-
-# >>>>>>>>>>>>>>>>>>>>>>>>>>>> Classes >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-class basic():
+def astra_projection_geom(geom, data_shape, index = None):
     '''
-    Basic geometry class. Needs only SDD, ODD and pixel size to initialize.
-    '''
+    Initialize ASTRA projection geometry.        
     
-    def __init__(self, src2obj = None, det2obj = None, det_pixel = None, img_pixel = None, ang_range = (0, 360), unit = 'mm'):
-        '''
-        Constructor for the basic geometry class.
-        
-        Args:
-            src2obj  : source to detector distance
-            det2obj  : object to detector distance
-            det_pixel: detector pixel size
-            img_pixel: reconstruction volume voxel size (optional)
-            ang_range: range of angles (default = 0..360)
-            unit     : unit length (default = 'mm')
-        '''
-        # Default voxel size:
-        if (not img_pixel) and (det_pixel): img_pixel = det_pixel / (src2obj + det2obj) * src2obj
-        
-        # Parameters:
-        self.parameters = {'src2obj':src2obj, # basic parameters:
-                           'det2obj':det2obj,
-                           'det_pixel':det_pixel,
-                           'img_pixel':img_pixel,
-                           'unit':unit,
-                           'range':ang_range,
-                           
-                           'vol_rot':[0.0, 0.0, 0.0],   # volume rotations and translation vectors
-                           'vol_tra':[0.0, 0.0, 0.0],
-                           
-                           'det_sample':[1,1,1],  # detector and volume sampling
-                           'vol_sample':[1,1,1]
-                           }
-        
-        self.description = {}
-        
-    def __str__(self):
-        '''
-        Show my description.
-        '''
-        return 'Geometry class: ' + str(type(self)) + '\n Parameters: \n' + str(self.parameters)
+    Args:
+        geom      : geometry class
+        data_shape: [detector_count_z, theta_count, detector_count_x]
+        index     : if provided - sequence of the rotation angles
+    '''  
     
-    def __repr__(self):
-        '''
-        Show my description.
-        '''
-        return 'Geometry class: ' + str(type(self)) + '\n Parameters: \n' + str(self.parameters)
-    
-    def __getitem__(self, key):
-        '''
-        Retrieve one of the geometry parameters.
-        '''
-        return self.parameters.get(key)
-    
-    def __setitem__(self, key, val):
-        '''
-        Set one of the geometry parameters.
-        '''
-        if not key in self.parameters.keys():
-            print('WARNING! A propert with an unknown key is added to geometry: ' + key)
-            
-        self.parameters[key] = val
-        
-    def copy(self):
-        
-        geom = type(self)()
-        geom.parameters = self.parameters.copy()
-        geom.description = self.description.copy()
-        
-        return geom
-    
-    def to_dictionary(self):
-        '''
-        Return a dictionary describing the geometry.
-        '''
-        records = self.parameters.copy()
-        records.update(self.description)
-        
-        return records
-        
-        
-    def from_dictionary(self, dictionary):
-        '''
-        Use dictionary records to initialize.
-        '''
-        
-        # Fill gaps if needed:
-        if not dictionary.get('src2obj'):
-            if (not dictionary.get('src2det')):
-                raise Exception('Filed missing in geometry record: src2det')
-                
-            elif (not dictionary.get('det2obj')):
-                raise Exception('Filed missing in geometry record: det2obj')
-                
-            dictionary['src2obj'] = dictionary['src2det'] - dictionary['det2obj']
-        
-        if (not dictionary.get('det2obj')):
-            if (not dictionary.get('src2det')):
-                raise Exception('Filed missing in geometry record: src2det')
-            else:
-                dictionary['det2obj'] = dictionary['src2det'] - dictionary['src2obj']    
-            
-        # Copy records:
-        for key in dictionary.keys():
-            
-            value = dictionary[key]
-            
-            if key in self.parameters.keys():
-                self.parameters[key] = value
-                
-            else:    
-                self.description[key] = value
-            
-        # After-check:    
-        if not self.parameters.get('img_pixel'):
-            self.parameters['img_pixel'] = self.parameters['det_pixel'] / self.magnification    
-            
-        if not self.parameters.get('det_pixel'):
-            self.parameters['det_pixel'] = self.parameters['img_pixel'] * self.magnification        
-            
-        # Check if all necessary keys are there:
-        min_set = ['src2obj', 'det2obj', 'det_pixel', 'range']
-        for key in min_set:
-            if not key in self.parameters:
-                raise Exception('Geometry parameter missing after parcing: ' + key)    
-            
-    @property    
-    def vol_sample(self):
-        return self.parameters.get('vol_sample')
-    
-    @property    
-    def det_sample(self):
-        return self.parameters.get('det_sample')
-    
-    @property    
-    def pixel(self):
-        return self.parameters.get('det_pixel') * numpy.array(self.parameters.get('det_sample'))
-    
-    @property    
-    def voxel(self):
-        return self.parameters.get('img_pixel') * numpy.array(self.parameters.get('vol_sample'))
-    
-    @property    
-    def range(self):
-        return self.parameters.get('range')
-    
-    @property    
-    def src2obj(self):
-        return self.parameters.get('src2obj')
-    
-    @property    
-    def det2obj(self):
-        return self.parameters.get('det2obj')
-    
-    @property    
-    def src2det(self):
-        return self.parameters.get('src2obj') + self.parameters.get('det2obj')
+    return geom.astra_projection_geom(data_shape, index)
 
-    @property    
-    def magnification(self):
-        return self.src2det / self.src2obj
-    
-    def volume_xyz(self, shape, offset = [0.,0.,0.]):
-        """
-        Coordinate space in units of the geometry.
-        """    
-        xx = (numpy.arange(0, shape[0]) - shape[0] / 2) * self.voxel[0] - offset[0] 
-        yy = (numpy.arange(0, shape[1]) - shape[1] / 2) * self.voxel[1] - offset[1]
-        zz = (numpy.arange(0, shape[2]) - shape[2] / 2) * self.voxel[2] - offset[2]
-        
-        return xx, yy, zz
-    
-    def get_thetas(self, angle_count = None, index = None):
-        '''
-        Get rotation angles. Either returns an equidistant array or self.thetas if that is defined.
-        
-        Args:
-            angle_count : number of angles. Not used if 'thetas' are defined explicitly in parameters.
-        '''
-        
-        thetas = self.parameters.get('thetas')
-        
-        # Initialize thetas:
-        if thetas is None:
-            thetas = numpy.linspace(self.range[0], self.range[1], angle_count)
-            
-        if not index is None: thetas = thetas[index]    
-        
-        return thetas
-    
-    def astra_projection_geom(self, data_shape, index = None):
-        '''
-        Initialize ASTRA projection geometry.        
-        
-        Args:
-            data_shape: [detector_count_z, theta_count, detector_count_x]
-            index     : if provided - sequence of the rotation angles
-        '''  
-        # Get vectors: 
-        ang_count = data_shape[1]                
-        vectors = self.get_vectors(ang_count, index)
-                
-        # Get ASTRA geometry:
-        det_count_x = data_shape[2]
-        det_count_z = data_shape[0]
-        return astra.create_proj_geom('cone_vec', det_count_z, det_count_x, vectors)
-    
-    
-    def astra_volume_geom(self, vol_shape, slice_first = None, slice_last = None):
-        '''
-        Initialize ASTRA volume geometry.        
-        '''
-        
-        # Shape and size (mm) of the volume
-        vol_shape = numpy.array(vol_shape)
-        vol_size = vol_shape * self.voxel
-    
-        if (slice_first is not None) & (slice_last is not None):
-            # Generate volume geometry for one chunk of data:
-                       
-            length = vol_shape[0]
-            
-            # Compute offset from the centre:
-            centre = (length - 1) / 2
-            offset = (slice_first + slice_last) / 2 - centre
-            offset = offset * self.voxel[0]
-            
-            shape = [slice_last - slice_first + 1, vol_shape[1], vol_shape[2]]
-            vol_size = shape * self.voxel[0]
-    
-        else:
-            shape = vol_shape
-            offset = 0     
-            
-        #vol_geom = astra.creators.create_vol_geom(shape[1], shape[2], shape[0], 
-        vol_geom = astra.create_vol_geom(shape[1], shape[2], shape[0], 
-                  -vol_size[2]/2, vol_size[2]/2, -vol_size[1]/2, vol_size[1]/2, 
-                  -vol_size[0]/2 + offset, vol_size[0]/2 + offset)
-            
-        return vol_geom              
-    
-    def get_vectors(self, angle_count, index = None):
-        '''
-        Get source, detector and detector orientation vectors.
-        
-        Args:
-            angle_count : number of rotation angles
-            index       : index of angles that should be used
-        '''        
-        # Create source orbit:
-        src_vect = self._get_source_orbit_(angle_count, index)
-        
-        # Create detector orbit (same as source but 180 degrees offset):
-        det_vect, det_tan, det_rad, det_orth = self._get_detector_orbit_(angle_count, index)
-             
-        # Apply global rotations and translations:                      
-        self._global_transform_(src_vect, det_vect, det_tan, det_rad, det_orth)
-        
-        # Append all vectors together:
-        vectors = numpy.concatenate([src_vect, det_vect, det_tan * self.pixel[2], det_orth * self.pixel[0]], axis = 1)        
-        return vectors  
-    
-    def detector_size(self, proj_shape):
-        '''
-        Get the size of detector in length units.
-        '''  
-        return numpy.array(proj_shape) * self['det_pixel']
-    
-    def detector_bounds(self, proj_shape):
-        '''
-        Get the boundaries of the detector in length units.
-        '''      	
-        sz = self.detector_size(proj_shape) / 2
-        
-        vrt = [-sz[0], sz[0]]
-        hrz = [-sz[2], sz[2]]
-        
-        return numpy.array([vrt, hrz])
 
-    def volume_bounds(self, proj_shape):
-        '''
-        A very simplified version of volume bounds...
-        '''
-        # TODO: Compute this propoerly.... Dont trust the horizontal bounds!!!
-        
-        # Detector bounds:
-        det_bounds = self.detector_bounds(proj_shape)
-        
-        vrt = det_bounds[0]
-        hrz = det_bounds[1]
-        
-        vrt_bounds = vrt
-        hrz_bounds = [self['vol_tra'][2] + hrz[0], self['vol_tra'][2] + hrz[1]]
-        mag_bounds = [self['vol_tra'][1] + hrz[0], self['vol_tra'][1] + hrz[1]]
-                        
-        return numpy.array([vrt_bounds, mag_bounds, hrz_bounds])
-    
-    def volume_shape(self, proj_shape):
-        '''
-        Based on physical volume bnounds compute shape in pixels:
-        '''
-        bounds = self.volume_bounds(proj_shape)
-            
-        range_vrt = numpy.ceil(bounds[0] / self.voxel[0])
-        range_hrz = numpy.ceil(bounds[2] / self.voxel[2])
-        range_mag = numpy.ceil(bounds[1] / self.voxel[1])
-        
-        range_vrt = range_vrt[1] - range_vrt[0]
-        range_hrz = range_hrz[1] - range_hrz[0]
-        range_mag = range_mag[1] - range_mag[0]
-        
-        return numpy.int32([range_vrt, range_mag, range_hrz])
-    
-    def _global_transform_(self, src_vect, det_vect, det_tan, det_rad, det_orth):
-        '''
-        Rotate and translate vectors depending on the volume orientation.
-        '''
-        vol_rot = self.parameters['vol_rot']
-        vol_tra = self.parameters['vol_tra']
-        
-        # Rotate everything relative to the reconstruction volume:
-        R = self._euler2mat_(vol_rot[0], vol_rot[1], vol_rot[2], 'rzyx')
-        det_tan[:] = numpy.dot(det_tan, R)
-        det_rad[:] = numpy.dot(det_rad, R)
-        src_vect[:] = numpy.dot(src_vect,R)
-        det_vect[:] = numpy.dot(det_vect,R)            
-                
-        # Add translation:
-        T = numpy.array([vol_tra[1], vol_tra[2], vol_tra[0]])    
-        src_vect -= numpy.dot(T, R)          
-        det_vect -= numpy.dot(T, R)
-        
-    def _get_source_orbit_(self, angle_count = None, index = None):    
-        '''
-        Get the source orbit. In the base class it is a circular orbit.
-        '''
-        src2obj = self.src2obj
-                        
-        # Create source orbit:
-        src_vect, src_tan, src_rad, serc_orth = self._circular_orbit_(src2obj, angle_count, roll = 0, pitch = 0, yaw = 0, 
-                                                         origin = [0, 0, 0], tan_shift = 0, index = index)
-        
-        return src_vect
-    
-    def _get_detector_orbit_(self, angle_count = None, index = None):    
-        '''
-        Get the detector orbit. In the base class it is a circular orbit.
-        '''
-        det2obj = self.det2obj
-                       
-        # Create detector orbit:
-        det_pos, det_tan, det_rad, det_orth = self._circular_orbit_(det2obj, angle_count, roll = 0, pitch = 0, yaw = 180, 
-                                                         origin = [0, 0, 0], tan_shift =  0, index = index)
-        
-        # Invert vectors to keep them alligned with the source vectors:
-        det_tan, det_rad, det_orth = -det_tan, -det_rad, -det_orth
-                
-        return det_pos, det_tan, det_rad, det_orth
-    
-    def _circular_orbit_(self, radius, angle_count, roll = 0, pitch = 0, yaw = 0,
-                         origin = [0, 0, 0], tan_shift = 0, index = None):
-        '''
-        Generate a circular orbit vector.
-        
-        Args:
-            radius     : orbit radius
-            angle_count: number of rotation angles
-            roll, pitch: define orientation of the rotation axis
-            yaw        : initial angular position
-            origin     : xyz vector of the orbit centre
-            tan_shift  : tangential shift from the default position
-            index      : index of the subset of total rotation angles
-            
-        Returns:
-            position   : position vector
-            tangent    : tangent direction
-            radius     : radal direction
-            orthogonal : orthogonal direction
-        '''
-        # THeta vector:
-        thetas = self.get_thetas(angle_count, index)
-        
-        # Generate axis and orthogonals:
-        axis = self._euler2mat_(roll, pitch, 0).dot([0, 0, 1])
-        tan0 = self._euler2mat_(roll, pitch, 0).dot([1, 0, 0])
-        rad0 = self._euler2mat_(roll, pitch, 0).dot([0, 1, 0])
-        
-        # Genertate initial circular orbit:
-        v0 = self._axangle2mat_(axis, yaw).dot([0, -radius, 0])
-        tan0 = self._axangle2mat_(axis, yaw).dot(tan0)
-        rad0 = self._axangle2mat_(axis, yaw).dot(rad0)
-        
-        position = numpy.zeros([len(thetas), 3])
-        tangent = numpy.zeros([len(thetas), 3])
-        radius = numpy.zeros([len(thetas), 3])
-        
-        for ii, theta in enumerate(thetas):
-            Rt = self._axangle2mat_(axis, theta)
-            position[ii, :] = Rt.dot(v0)
-            tangent[ii, :] = Rt.dot(tan0)
-            radius[ii, :] = Rt.dot(rad0)
-            
-        # Apply origin shift:
-        position += numpy.array(origin)[None, :]
-        
-        # Apply other shifts:
-        position += tangent * tan_shift
-        
-        # Orthogonal to tangent and radius:
-        orthogonal = numpy.cross(radius, tangent)
-        
-        return position, tangent, radius, orthogonal
-    
-    
-    def _euler2mat_(self, a, b, c, axes='sxyz'):
-        a = numpy.deg2rad(a)
-        b = numpy.deg2rad(b)
-        c = numpy.deg2rad(c)
-        
-        return euler.euler2mat(a, b, c, axes)
-    
-    def _axangle2mat_(self, ax, a):
-        a = numpy.deg2rad(a)
-        
-        return euler.axangle2mat(ax, a)
-    
-class circular(basic):
+def astra_volume_geom(geom, vol_shape, slice_first = None, slice_last = None):
     '''
-    Circular orbit geometry class. Includes additional parameters such as detector and source shifts and rotations.
+    Initialize ASTRA volume geometry.        
+    '''
+    return geom.astra_volume_geom(vol_shape, slice_first = None, slice_last = None)
+
+def get_vectors(geom, angle_count, index = None):
+    '''
+    Get source, detector and detector orientation vectors.
+    
+    Args:
+        geom       : geometry class
+        angle_count : number of rotation angles
+        index       : index of angles that should be used
+    '''        
+    return geom.get_vectors(angle_count, index)
+
+def detector_size(geom, proj_shape):
+    '''
+    Get the size of detector in length units.
+    '''  
+    return geom.detector_size(proj_shape)
+
+def detector_bounds(geom, proj_shape):
+    '''
+    Get the boundaries of the detector in length units.
+    '''      	
+    return geom.detector_bounds(proj_shape)
+
+def volume_bounds(geom, proj_shape):
+    '''
+    A very simplified version of volume bounds...
+    '''
+    return geom.volume_bounds(proj_shape)
+
+def volume_shape(geom, proj_shape):
+    '''
+    Based on physical volume bnounds compute shape in pixels:
+    '''
+    return geom.volume_shape(proj_shape)
+
+
+def linear_orbit(hrz_rng, rad_rng, vrt_rng, proj_count):
+    '''
+    Generate a linear orbit vector.
+    Args:
+        hrz_rng: horizontal range of motion
+        rad_rng: radial range of motion
+        vrt_rng: vertical range of motion
+        
+    Returns:
+        position   : position vector
+        tangent    : tangent direction
+        radius     : radal direction
+        orthogonal : orthogonal direction        
     '''
     
-    def __init__(self, src2obj = None, det2obj = None, det_pixel = None, img_pixel = None, ang_range = (0, 360), unit = 'mm'):
-        '''
-        Constructor for the circular geometry class.
-        
-        Args:
-            src2obj  : source to detector distance
-            det2obj  : object to detector distance
-            det_pixel: detector pixel size
-            img_pixel: reconstruction volume voxel size (optional)
-            ang_range: range of angles (default = 0..360)
-            unit     : unit length (default = 'mm')
-        '''
-        # Parent init:
-        basic.__init__(self, src2obj, det2obj, det_pixel, img_pixel, ang_range, unit)
+    h = numpy.linspace(hrz_rng[0], hrz_rng[1], proj_count)
+    r = numpy.linspace(rad_rng[0], rad_rng[1], proj_count)
+    v = numpy.linspace(vrt_rng[0], vrt_rng[1], proj_count)
+    
+    position = numpy.stack((h, r, v)).transpose((1,0))
+    
+    radius = numpy.zeros([proj_count, 3])
+    radius[:, 1] = 1
+    
+    tangent = numpy.zeros([proj_count, 3])
+    tangent[:, 0] = 1
+    
+    # Orthogonal to tangent and radius:
+    orthogonal = numpy.cross(radius, tangent)
+    
+    return position, tangent, radius, orthogonal
 
-        # Parameters:
-        self.parameters.update({                    
-                           'src_ort':0,   # source vertical, tangential and radial shifts
-                           'src_tan':0,
-                           
-                           'det_ort':0,   # detector shifts and rotations
-                           'det_tan':0,
-                           'det_roll':0,
-                           'det_pitch':0,
-                           'det_yaw':0,
-                           
-                           'axs_tan':0,   # rotation axis shifts and rotations
-                           'axs_roll':0,
-                           'axs_pitch':0,                           
-                           })    
-            
-    def detector_bounds(self, proj_shape):
-        '''
-        Get the boundaries of the detector in length units.
-        '''   
+def circular_orbit(radius, thetas, roll = 0, pitch = 0, yaw = 0,
+                     origin = [0, 0, 0], tan_shift = 0, index = None):
+    '''
+    Generate a circular orbit vector.
+    
+    Args: 
+        radius     : orbit radius
+        angle_count: number of rotation angles
+        roll, pitch: define orientation of the rotation axis
+        yaw        : initial angular position
+        origin     : xyz vector of the orbit centre
+        tan_shift  : tangential shift from the default position
+        index      : index of the subset of total rotation angles
         
-        bounds = basic.detector_bounds(self, proj_shape)
+    Returns:
+        position   : position vector
+        tangent    : tangent direction
+        radius     : radal direction
+        orthogonal : orthogonal direction
+    '''
+    # Generate axis and orthogonals:
+    M = _euler2mat_(pitch, roll, 0)
+    axis = M.dot([0, 0, 1])
+    tan0 = M.dot([1, 0, 0])
+    rad0 = M.dot([0, 1, 0])
+    
+    # Genertate initial circular orbit:
+    M = _axangle2mat_(axis, yaw)
+    v0 = M.dot([0, -radius, 0])
+    tan0 = M.dot(tan0)
+    rad0 = M.dot(rad0)
+    
+    position = numpy.zeros([len(thetas), 3])
+    tangent = numpy.zeros([len(thetas), 3])
+    radius = numpy.zeros([len(thetas), 3])
+    
+    for ii, theta in enumerate(thetas):
+        Rt = _axangle2mat_(axis, theta)
+        position[ii, :] = Rt.dot(v0)
+        tangent[ii, :] = Rt.dot(tan0)
+        radius[ii, :] = Rt.dot(rad0)
         
-        bounds[0] += self.parameters['det_ort']
-        bounds[1] += self.parameters['det_tan']
-    	
-        return bounds    
+    # Apply origin shift:
+    position += numpy.array(origin)[None, :]
+    
+    # Apply other shifts:
+    position += tangent * tan_shift
+    
+    # Orthogonal to tangent and radius:
+    orthogonal = numpy.cross(radius, tangent)
+    
+    return position, tangent, radius, orthogonal
 
-    def volume_bounds(self, proj_shape):
-        '''
-        A very simplified version of volume bounds...
-        '''
-        # TODO: Compute this propoerly.... Dont trust the horizontal bounds!!!
-        
-        # Detector bounds:
-        det_bounds = self.detector_bounds(proj_shape)
-        
-        vrt = det_bounds[0]
-        hrz = det_bounds[1]
-        
-        # Demagnify detector bounds:
-        fact = 1 / self.magnification
-        vrt_bounds = (vrt * fact + self['src_ort'] * (1 - fact))
-        hrz_bounds = (hrz * fact + self['src_tan'] * (1 - fact))
+def _euler2mat_(a, b, c, axes='sxyz'):
+    a = numpy.deg2rad(a)
+    b = numpy.deg2rad(b)
+    c = numpy.deg2rad(c)
     
-        max_x = max(abs(hrz_bounds - self['axs_tan']))
-        
-        hrz_bounds = [self['vol_tra'][2] - max_x, self['vol_tra'][2] + max_x]
-        mag_bounds = [self['vol_tra'][1] - max_x, self['vol_tra'][1] + max_x]
-                
-        return numpy.array([vrt_bounds, mag_bounds, hrz_bounds]) 
+    return euler.euler2mat(a, b, c, axes)
+
+def _axangle2mat_(ax, a):
+    a = numpy.deg2rad(a)
     
-    def _get_source_orbit_(self, angle_count = None, index = None):    
-        '''
-        Get the source orbit. In the base class it is a circular orbit.
-        '''
-        src2obj = self.src2obj
-        
-        src_ort = self.parameters['src_ort']
-        src_tan = self.parameters['src_tan']
-        
-        axs_tan = self.parameters['axs_tan']
-        
-        axs_roll = self.parameters['axs_roll']
-        axs_pitch = self.parameters['axs_pitch']
-        
-        # Create source orbit:
-        src_vect, src_tan, src_rad, serc_orth = self._circular_orbit_(src2obj, angle_count, roll = axs_roll, pitch = axs_pitch, yaw = 0, 
-                                                         origin = [0, 0, src_ort], tan_shift = src_tan - axs_tan, index = index)
-        
-        return src_vect
-    
-    def _get_detector_orbit_(self, angle_count = None, index = None):    
-        '''
-        Get the detector orbit. In the base class it is a circular orbit.
-        '''
-        det2obj = self.det2obj
-        
-        # Detector translations:
-        det_ort = self.parameters['det_ort']
-        det_tan = self.parameters['det_tan']
-    
-        # Rotation axis translations and rotations:
-        axs_tan = self.parameters['axs_tan']
-        
-        axs_roll = self.parameters['axs_roll']
-        axs_pitch = self.parameters['axs_pitch']
-        
-        # Detector rotations:               
-        det_roll = self.parameters['det_roll']
-        det_yaw = self.parameters['det_yaw']
-        det_pitch = self.parameters['det_pitch']
-                
-        # Create detector orbit:
-        det_pos, det_tan, det_rad, det_orth = self._circular_orbit_(det2obj, angle_count, roll = axs_roll, pitch = axs_pitch, yaw = 180, 
-                                                         origin = [0, 0, det_ort], tan_shift = -det_tan + axs_tan, index = index)
-        
-        # Invert vectors to keep them alligned with the source vectors:
-        det_tan, det_rad, det_orth = -det_tan, -det_rad, -det_orth
-        
-        # Apply detector rotations:    
-        for ii in range(det_pos.shape[0]):
-            
-            T = self._axangle2mat_(det_rad[ii, :], det_roll)
-            det_tan[ii, :] = T.dot(det_tan[ii, :])
-            det_orth[ii, :] = T.dot(det_orth[ii, :])
-        
-            T = self._axangle2mat_(det_orth[ii, :], det_yaw)
-            det_tan[ii, :] = T.dot(det_tan[ii, :])
-            det_rad[ii, :] = T.dot(det_rad[ii, :])
-            
-            T = self._axangle2mat_(det_tan[ii, :], det_pitch)
-            det_rad[ii, :] = T.dot(det_rad[ii, :])
-            det_orth[ii, :] = T.dot(det_orth[ii, :])
-        
-        return det_pos, det_tan, det_rad, det_orth        
-    
+    return euler.axangle2mat(ax, a)    
