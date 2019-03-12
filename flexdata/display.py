@@ -36,7 +36,9 @@ def plot3d(x, y, z, connected = False, title = None):
     _after_plot_(title, None)
     
 def plot2d(x, y=None, semilogy=False, title=None, legend=None):
-
+    '''
+    A standard 2D plot.
+    '''
     if y is None:
         y = x
         x = numpy.arange(numpy.size(x))
@@ -57,6 +59,12 @@ def plot2d(x, y=None, semilogy=False, title=None, legend=None):
         plt.legend(legend)
 
     plt.show()
+
+def plot(x, y=None, semilogy=False, title=None, legend=None):
+    '''
+    A standard 2D plot.
+    '''
+    plot2d(x, y, semilogy, title, legend)
 
 def pyqt_graph(array, dim = 0, title=None):
     '''
