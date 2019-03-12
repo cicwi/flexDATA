@@ -195,6 +195,12 @@ class basic():
         
         return xx, yy, zz
         
+    def from_astra_cone_vec(self, vectors):
+        '''
+        Take vectors from ASTRA 'cone_vec' geometry. This will override any other parameters.
+        '''
+        self._vectors_ = vectors
+        
     def astra_projection_geom(self, data_shape, index = None):
         '''
         Get ASTRA projection geometry.        
@@ -206,8 +212,12 @@ class basic():
         Returns:
             geometry : ASTRA cone-beam geometry.
         '''  
-        # Get vectors: 
-        vectors = self.get_vectors(data_shape[1], index)
+        # Get vectors:
+        if hasattr(self, '_vectors_'):
+            vectors = self._vectors_
+            
+        else:
+            vectors = self.get_vectors(data_shape[1], index)
                 
         # Get ASTRA geometry:
         det_count_x = data_shape[2]
@@ -358,7 +368,7 @@ class circular(basic):
     Circular orbit geometry class. Includes additional parameters such as detector and source shifts and rotations.
     '''
     
-    def __init__(self, src2obj = None, det2obj = None, det_pixel = None, img_pixel = None, rot_range = (0, 360), unit = 'mm'):
+    def __init__(self, src2obj = None, det2obj = None, det_pixel = None, img_pixel = None, ang_range = (0, 360), unit = 'mm'):
         '''
         Constructor for the circular geometry class.
         
@@ -367,7 +377,7 @@ class circular(basic):
             det2obj  : object to detector distance
             det_pixel: detector pixel size
             img_pixel: reconstruction volume voxel size (optional)
-            rot_range: range of rotation (default = 0..360)
+            ang_range: range of rotation (default = 0..360)
             unit     : unit length (default = 'mm')
         '''
         # Parent init:
@@ -375,7 +385,7 @@ class circular(basic):
 
         # Additional parameters:
         self.parameters.update({   
-                           'rot_range': rot_range,                  
+                           'ang_range': ang_range,                  
                            'src_ort':0,   # source vertical, tangential shifts
                            'src_tan':0,
                            
@@ -403,7 +413,7 @@ class circular(basic):
         
         # Initialize thetas:
         if thetas is None:
-            thetas = numpy.linspace(self['rot_range'][0], self['rot_range'][1], proj_count)
+            thetas = numpy.linspace(self['ang_range'][0], self['ang_range'][1], proj_count)
             
         if not index is None: thetas = thetas[index]    
         
@@ -481,7 +491,7 @@ class helical(circular):
     Helical orbit geometry class. Similar to the 'circular' class with additional parameter of helix
     '''
     
-    def __init__(self, src2obj = None, det2obj = None, det_pixel = None, img_pixel = None, axis_range = (0, 100),  rot_range = (0, 720), unit = 'mm'):
+    def __init__(self, src2obj = None, det2obj = None, det_pixel = None, img_pixel = None, axis_range = (0, 100),  ang_range = (0, 720), unit = 'mm'):
         '''
         Constructor for the helical geometry class.
         
@@ -491,11 +501,11 @@ class helical(circular):
             det_pixel: detector pixel size
             img_pixel: reconstruction volume voxel size (optional)
             axis_range: range of the movement along the axis of rotation
-            rot_range: range of angles (default = 0..360)
+            ang_range: range of angles (default = 0..360)
             unit     : unit length (default = 'mm')
         '''
         # Parent init:
-        circular.__init__(self, src2obj, det2obj, det_pixel, img_pixel, rot_range, unit)
+        circular.__init__(self, src2obj, det2obj, det_pixel, img_pixel, ang_range, unit)
 
         # Additional parameters:
         self.parameters['axs_rng'] = axis_range
