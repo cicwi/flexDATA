@@ -14,11 +14,11 @@ import astra
 
 #%% Read data:
     
-path = '/ufs/ciacc/flexbox/al_test/90KV_no_filt/'
+path = 'D:\data\skull'
 
-dark = io.read_stack(path, 'di00')
-flat = io.read_stack(path, 'io00')    
-proj = io.read_stack(path, 'scan_')
+dark = io.read_stack(path, 'di00', sample= 4)
+flat = io.read_stack(path, 'io00', sample= 4)    
+proj = io.read_stack(path, 'scan_', skip = 4, sample= 4)
 
 geom = io.read_flexraylog(path)   
  
@@ -34,7 +34,7 @@ display.slice(proj, title = 'Sinogram. What else?')
 
 #%% Recon:
 
-vol = numpy.zeros([50, 2000, 2000], dtype = 'float32')
+vol = numpy.zeros([50, 200, 200], dtype = 'float32') + 100
 
 # Initialize ASTRA geometries:
 vol_geom = geom.astra_volume_geom(vol.shape)
