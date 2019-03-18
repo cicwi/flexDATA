@@ -98,6 +98,17 @@ class basic():
         
         return records
         
+    def from_matrix(self, R, T):
+        """
+        Rotates and translates the reconstruction volume.
+        Args:
+            R (3x3 array): rotation matrix
+            T (1x3 array): translation vector
+        """    
+        # Translate to flex geometry:
+        self.parameters['vol_rot'] = numpy.rad2deg(euler.mat2euler(R.T, axes = 'sxyz'))
+        self.parameters['vol_tra'] = numpy.array(self.parameters['vol_tra']) - numpy.dot(T, R.T)[[0,2,1]] * self.voxel
+    
     def from_dictionary(self, dictionary):
         '''
         Use dictionary records to initialize this geometry.
@@ -224,7 +235,6 @@ class basic():
         det_count_z = data_shape[0]
         return astra.create_proj_geom('cone_vec', det_count_z, det_count_x, vectors)
     
-    
     def astra_volume_geom(self, vol_shape, slice_first = None, slice_last = None):
         '''
         Initialize ASTRA volume geometry.  
@@ -317,6 +327,7 @@ class basic():
         R = _euler2mat_(vol_rot[0], vol_rot[1], vol_rot[2], 'rzyx')
         det_tan[:] = numpy.dot(det_tan, R)
         det_rad[:] = numpy.dot(det_rad, R)
+        det_orth[:] = numpy.dot(det_orth, R)
         src_vect[:] = numpy.dot(src_vect,R)
         det_vect[:] = numpy.dot(det_vect,R)            
                 
@@ -421,7 +432,13 @@ class circular(basic):
                 
     def get_source_orbit(self, proj_count = None, index = None):    
         '''
-        Get the source orbit. In the base class it is a circular orbit.
+        Get the source orbit. 
+        Args:
+            proj_count: number of projections
+            index     : index of the projection subset
+            
+        Returns:
+            src_pos : array of the source positions.
         '''
         src2obj = self.src2obj
         
@@ -442,7 +459,16 @@ class circular(basic):
     
     def get_detector_orbit(self, proj_count = None, index = None):    
         '''
-        Get the detector orbit. In the base class it is a circular orbit.
+        Get the detector orbit. 
+        Args:
+            proj_count: number of projections
+            index           : index of the projection subset
+            
+        Returns:
+            det_pos : array of the detector positions.
+            det_tan : array of detector tangential directional vector
+            det_rad : array of detector radial directional vector
+            det_orth: array of detector orthogonal directional vector
         '''
         det2obj = self.det2obj
         
