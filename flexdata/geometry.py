@@ -434,7 +434,7 @@ class circular(basic):
         axs_pitch = self.parameters['axs_pitch']
         
         # Create source orbit:
-        thetas = self.get_thetas(proj_count, index)
+        thetas = self.get_thetas(proj_count)
         src_vect, src_tan, src_rad, serc_orth = circular_orbit(src2obj, thetas, roll = axs_roll, pitch = axs_pitch, yaw = 0, 
                                                          origin = [0, 0, src_ort], tan_shift = src_tan - axs_tan, index = index)
         
@@ -443,6 +443,8 @@ class circular(basic):
     def get_detector_orbit(self, proj_count = None, index = None):    
         '''
         Get the detector orbit. In the base class it is a circular orbit.
+        Returns:
+            det_pos, det_tan, det_rad, det_orth
         '''
         det2obj = self.det2obj
         
@@ -462,7 +464,7 @@ class circular(basic):
         det_pitch = self.parameters['det_pitch']
                 
         # Create detector orbit:
-        thetas = self.get_thetas(proj_count, index)
+        thetas = self.get_thetas(proj_count)
         det_pos, det_tan, det_rad, det_orth = circular_orbit(det2obj, thetas, roll = axs_roll, pitch = axs_pitch, yaw = 180, 
                                                          origin = [0, 0, det_ort], tan_shift = -det_tan + axs_tan, index = index)
         
@@ -525,7 +527,7 @@ class helical(circular):
         axs_pitch = self.parameters['axs_pitch']
         
         # Create source orbit:
-        thetas = self.get_thetas(proj_count, index)
+        thetas = self.get_thetas(proj_count)
         src_vect, src_tan, src_rad, src_orth = circular_orbit(src2obj, thetas, roll = axs_roll, pitch = axs_pitch, yaw = 0, 
                                                          origin = [0, 0, src_ort], tan_shift = src_tan - axs_tan, index = index)
         
@@ -558,7 +560,7 @@ class helical(circular):
         det_pitch = self.parameters['det_pitch']
                 
         # Create detector orbit:
-        thetas = self.get_thetas(proj_count, index)
+        thetas = self.get_thetas(proj_count)
         det_pos, det_tan, det_rad, det_orth = circular_orbit(det2obj, thetas, roll = axs_roll, pitch = axs_pitch, yaw = 180, 
                                                          origin = [0, 0, det_ort], tan_shift = -det_tan + axs_tan, index = index)
         
@@ -634,7 +636,7 @@ class linear(basic):
         src_vrt_rng = self.parameters['src_vrt_rng']
         
         # Create source orbit:
-        src_vect, src_tan, src_rad, serc_ort = linear_orbit(src_hrz_rng, (-src2obj, -src2obj), src_vrt_rng, proj_count) 
+        src_vect, src_tan, src_rad, serc_ort = linear_orbit(src_hrz_rng, (-src2obj, -src2obj), src_vrt_rng, proj_count, index) 
         
         return src_vect
     
@@ -653,7 +655,7 @@ class linear(basic):
         det_pitch = self.parameters['det_pitch']
         
         # Create detector orbit:
-        det_pos, det_tan, det_rad, det_orth = linear_orbit(det_hrz_rng, (det2obj, det2obj), det_vrt_rng, proj_count) 
+        det_pos, det_tan, det_rad, det_orth = linear_orbit(det_hrz_rng, (det2obj, det2obj), det_vrt_rng, proj_count, index) 
         
         # Apply detector rotations:    
         for ii in range(det_pos.shape[0]):
@@ -774,7 +776,7 @@ def volume_shape(geom, proj_shape):
     return geom.volume_shape(proj_shape)
 
 
-def linear_orbit(hrz_rng, rad_rng, vrt_rng, proj_count):
+def linear_orbit(hrz_rng, rad_rng, vrt_rng, proj_count, index = None):
     '''
     Generate a linear orbit vector.
     Args:
@@ -804,8 +806,11 @@ def linear_orbit(hrz_rng, rad_rng, vrt_rng, proj_count):
     # Orthogonal to tangent and radius:
     orthogonal = numpy.cross(radius, tangent)
     
-    return position, tangent, radius, orthogonal
-
+    if index is not None:
+        return position[index], tangent[index], radius[index], orthogonal[index]
+    else:
+        return position, tangent, radius, orthogonal
+    
 def circular_orbit(radius, thetas, roll = 0, pitch = 0, yaw = 0,
                      origin = [0, 0, 0], tan_shift = 0, index = None):
     '''
@@ -857,7 +862,10 @@ def circular_orbit(radius, thetas, roll = 0, pitch = 0, yaw = 0,
     # Orthogonal to tangent and radius:
     orthogonal = numpy.cross(radius, tangent)
     
-    return position, tangent, radius, orthogonal
+    if index is not None:
+        return position[index], tangent[index], radius[index], orthogonal[index]
+    else:
+        return position, tangent, radius, orthogonal
 
 def _euler2mat_(a, b, c, axes='sxyz'):
     a = numpy.deg2rad(a)

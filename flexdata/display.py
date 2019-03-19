@@ -77,7 +77,7 @@ def pyqt_graph(array, dim = 0, title=None):
 
     app.exec_()
 
-def slice(array, index=None, dim=0, bounds=None, title=None, cmap="gray", file=None):
+def slice(array, index=None, dim=0, bounds=None, title=None, cmap="gray", file=None, cbar = True):
 
     # Just in case squeeze:
     array = numpy.squeeze(array)
@@ -106,8 +106,9 @@ def slice(array, index=None, dim=0, bounds=None, title=None, cmap="gray", file=N
         imsh = plt.imshow(img[::-1, :], cmap=cmap)
 
     # plt.colorbar()
-    cbar = fig.colorbar(imsh, ticks=ticker.MaxNLocator(nbins=6))
-    cbar.ax.tick_params(labelsize=15)
+    if cbar:
+        cbar = fig.colorbar(imsh, ticks=ticker.MaxNLocator(nbins=6))
+        cbar.ax.tick_params(labelsize=15)
 
     _after_plot_(title, file)
     

@@ -11,7 +11,7 @@ from flexdata import display
 #%% Initialize a geometry record:
 
 # Initialization:
-geo = geometry.circular(src2obj = 100, det2obj = 50, det_pixel = 0.1, img_pixel = 0.05, rot_range = (0, 180), unit = 'mm')
+geo = geometry.circular(src2obj = 100, det2obj = 50, det_pixel = 0.1, img_pixel = 0.05, ang_range = (0, 180), unit = 'mm')
 
 # Print geometry parameters:
 print('\n', geo)
@@ -42,7 +42,7 @@ print(geo.astra_volume_geom(vol_shape))
 #%% Alternative orbit shapes:
 
 # Helix with a tilted axis:
-geo = geometry.helical(src2obj = 100, det2obj =50, det_pixel = 0.1, img_pixel = 0.05, axis_range = (-50, 50), rot_range = (0, 360*3), unit = 'mm')
+geo = geometry.helical(src2obj = 100, det2obj =50, det_pixel = 0.1, img_pixel = 0.05, axis_range = (-50, 50), ang_range = (0, 360*3), unit = 'mm')
 geo['axs_roll'] = 30
 
 orbit = geo.get_source_orbit(50)
