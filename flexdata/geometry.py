@@ -98,6 +98,17 @@ class basic():
         
         return records
         
+    def from_matrix(self, R, T):
+        """
+        Rotates and translates the reconstruction volume.
+        Args:
+            R (3x3 array): rotation matrix
+            T (1x3 array): translation vector
+        """    
+        # Translate to flex geometry:
+        self.parameters['vol_rot'] = numpy.rad2deg(euler.mat2euler(R.T, axes = 'sxyz'))
+        self.parameters['vol_tra'] = numpy.array(self.parameters['vol_tra']) - numpy.dot(T, R.T)[[0,2,1]] * self.voxel
+    
     def from_dictionary(self, dictionary):
         '''
         Use dictionary records to initialize this geometry.
@@ -224,7 +235,6 @@ class basic():
         det_count_z = data_shape[0]
         return astra.create_proj_geom('cone_vec', det_count_z, det_count_x, vectors)
     
-    
     def astra_volume_geom(self, vol_shape, slice_first = None, slice_last = None):
         '''
         Initialize ASTRA volume geometry.  
@@ -317,6 +327,7 @@ class basic():
         R = _euler2mat_(vol_rot[0], vol_rot[1], vol_rot[2], 'rzyx')
         det_tan[:] = numpy.dot(det_tan, R)
         det_rad[:] = numpy.dot(det_rad, R)
+        det_orth[:] = numpy.dot(det_orth, R)
         src_vect[:] = numpy.dot(src_vect,R)
         det_vect[:] = numpy.dot(det_vect,R)            
                 
@@ -328,22 +339,34 @@ class basic():
     def detector_size(self, proj_shape):
         '''
         Get the size of detector in length units.
-        '''  
-        return numpy.array(proj_shape[::2]) * self.pixel
+        '''
+        if len(proj_shape) == 3:
+            return numpy.array(proj_shape[::2]) * self.pixel
+        else:
+            return numpy.array(proj_shape) * self.pixel
     
+    def detector_centre(self):
+        '''
+        Get the centre coordinate of the first position of the detector.
+        '''
+        det_pos, det_tan, det_rad, det_orth = self.get_detector_orbit(proj_count = 3)
+        
+        return [det_pos[0][2], det_pos[0][0]]
+        
     def detector_bounds(self, proj_shape):
         '''
         Get the boundaries of the detector at the start of the scan in length units.
         '''      	
         
-        det_pos, det_tan, det_rad, det_orth = self.get_detector_orbit(proj_count = 2)
+        det_pos, det_tan, det_rad, det_orth = self.get_detector_orbit(proj_count = 3)
         
         sz = self.detector_size(proj_shape) / 2
+        cntr = self.detector_centre()
         
         vrt = [-sz[0], sz[0]]
         hrz = [-sz[1], sz[1]]
         
-        return numpy.array([vrt, hrz]) + [det_pos[0][0], det_pos[0][2]]
+        return numpy.array([vrt, hrz]) + numpy.array(cntr)[:, None]
 
     def volume_size(self, vol_shape):
         '''
@@ -421,7 +444,13 @@ class circular(basic):
                 
     def get_source_orbit(self, proj_count = None, index = None):    
         '''
-        Get the source orbit. In the base class it is a circular orbit.
+        Get the source orbit. 
+        Args:
+            proj_count: number of projections
+            index     : index of the projection subset
+            
+        Returns:
+            src_pos : array of the source positions.
         '''
         src2obj = self.src2obj
         
@@ -442,9 +471,16 @@ class circular(basic):
     
     def get_detector_orbit(self, proj_count = None, index = None):    
         '''
-        Get the detector orbit. In the base class it is a circular orbit.
+        Get the detector orbit. 
+        Args:
+            proj_count: number of projections
+            index           : index of the projection subset
+            
         Returns:
-            det_pos, det_tan, det_rad, det_orth
+            det_pos : array of the detector positions.
+            det_tan : array of detector tangential directional vector
+            det_rad : array of detector radial directional vector
+            det_orth: array of detector orthogonal directional vector
         '''
         det2obj = self.det2obj
         
@@ -687,7 +723,7 @@ def tiles_shape(shape, geometry_list):
     min_x, min_y = numpy.inf, numpy.inf
     max_x, max_y = -numpy.inf, -numpy.inf
     
-    det_pixel = geometry_list[0]['det_pixel']
+    det_pixel = geometry_list[0].pixel
     
     axs_hrz = 0
     
@@ -704,15 +740,15 @@ def tiles_shape(shape, geometry_list):
         axs_hrz += geo['axs_tan'] / len(geometry_list)
         
     # Big slice:
-    new_shape = numpy.array([(max_y - min_y) / det_pixel, shape[1], (max_x - min_x) / det_pixel])                     
-    new_shape = numpy.round(new_shape).astype('int')
+    new_shape = numpy.array([(max_y - min_y) / det_pixel[0], shape[1], (max_x - min_x) / det_pixel[1]])                     
+    new_shape = numpy.ceil(new_shape).astype('int') # safety margin..
     
     # Copy one of the geometry records and sett the correct translation:
     geometry = geometry_list[0].copy()
     
     geometry['axs_tan'] = axs_hrz
     
-    geometry['det_tan'] = (max_x + min_x) / 2
+    geometry['det_tan'] = (max_x + min_x) / 2 + axs_hrz
     geometry['det_ort'] = (max_y + min_y) / 2
     
     # Update volume center:

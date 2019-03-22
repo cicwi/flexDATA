@@ -1240,7 +1240,7 @@ def rewrite_memmap(old_array, new_array):
     return old_array
 
 
-def add_dim(array_1, array_2):
+def add_dim(array_1, array_2, dim = None):
     """
     Add two arrays with arbitrary dimensions. We assume that one or two dimensions match.
     """
@@ -1255,7 +1255,8 @@ def add_dim(array_1, array_2):
     if dim1 - dim2 == 1:
         
         # Find dimension that is missing in array_2:
-        dim = [ii not in shp2 for ii in shp1].index(True)
+        if dim is None:
+            dim = [ii not in shp2 for ii in shp1].index(True)
         
         if dim == 0:
             array_1 += array_2[None, :, :]
@@ -1266,7 +1267,8 @@ def add_dim(array_1, array_2):
         
     elif dim1 - dim2 == 2:
         # Find dimension that is matching in array_2:
-        dim = [ii in shp2 for ii in shp1].index(True)
+        if dim is None:
+            dim = [ii in shp2 for ii in shp1].index(True)
         
         if dim == 0:
             array_1 += array_2[:, None, None]
@@ -1278,7 +1280,7 @@ def add_dim(array_1, array_2):
     else:
         raise Exception('ERROR! array_1.ndim - array_2.ndim should be 1 or 2')
            
-def mult_dim(array_1, array_2):    
+def mult_dim(array_1, array_2, dim = None):    
     """
     Multiply a 3D array by a 1D or a 2D vector along one of the dimensions.
     """
@@ -1292,7 +1294,8 @@ def mult_dim(array_1, array_2):
     if dim1 - dim2 == 1:
         
         # Find dimension that is missing in array_2:
-        dim = [ii not in shp2 for ii in shp1].index(True)
+        if dim is None:
+            dim = [ii not in shp2 for ii in shp1].index(True)
         
         if dim == 0:
             array_1 *= array_2[None, :, :]
@@ -1304,7 +1307,8 @@ def mult_dim(array_1, array_2):
     elif dim1 - dim2 == 2:
         
         # Find dimension that is matching in array_2:
-        dim = [ii in shp2 for ii in shp1].index(True)
+        if dim is None:
+            dim = [ii in shp2 for ii in shp1].index(True)
         
         if dim == 0:
             array_1 *= array_2[:, None, None]
