@@ -191,7 +191,7 @@ def read_stack(path, name, skip = 1, sample = 1, shape = None, dtype = None,
     
     return data
                  
-def write_stack(path, name, data, dim = 1, skip = 1, dtype = None, zip = False, format = 'tiff'):
+def write_stack(path, name, data, dim = 1, skip = 1, dtype = None, zip = False, format = 'tiff', updown = False):
     """
     Write an image stack.
     
@@ -231,6 +231,9 @@ def write_stack(path, name, data, dim = 1, skip = 1, dtype = None, zip = False, 
         # Extract one slice from the big array
         sl = anyslice(data, ii * skip, dim)
         img = data[sl]
+        
+        if updown:
+            img = img[::-1, :]    
           
         # Cast data to another type if needed
         if dtype is not None:
@@ -1252,7 +1255,10 @@ def add_dim(array_1, array_2, dim = None):
     dim1 = numpy.ndim(array_1)
     dim2 = numpy.ndim(array_2)
     
-    if dim1 - dim2 == 1:
+    if dim1 - dim2 == 0:
+        array_1 += array_2
+        
+    elif dim1 - dim2 == 1:
         
         # Find dimension that is missing in array_2:
         if dim is None:
@@ -1278,7 +1284,7 @@ def add_dim(array_1, array_2, dim = None):
             array_1 += array_2[None, None, :]
             
     else:
-        raise Exception('ERROR! array_1.ndim - array_2.ndim should be 1 or 2')
+        raise Exception('ERROR! array_1.ndim - array_2.ndim should be 0, 1 or 2')
            
 def mult_dim(array_1, array_2, dim = None):    
     """
@@ -1291,7 +1297,10 @@ def mult_dim(array_1, array_2, dim = None):
     dim1 = numpy.ndim(array_1)
     dim2 = numpy.ndim(array_2)
     
-    if dim1 - dim2 == 1:
+    if dim1 - dim2 == 0:
+        array_1 *= array_2
+        
+    elif dim1 - dim2 == 1:
         
         # Find dimension that is missing in array_2:
         if dim is None:

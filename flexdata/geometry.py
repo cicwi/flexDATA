@@ -70,7 +70,12 @@ class basic():
         '''
         Retrieve one of the geometry parameters.
         '''
-        return self.parameters.get(key)
+        val = self.parameters.get(key)
+        
+        if val is None:
+            print('WARNING! A property with an unknown key is requested: ' + key)
+            
+        return val
     
     def __setitem__(self, key, val):
         '''

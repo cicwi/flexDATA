@@ -87,7 +87,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#flexdata-array-module">flexdata.array module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-flexdata.display">flexdata.display module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#flexdata-io-module">flexdata.io module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-flexdata.scp">flexdata.scp module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#flexdata-scp-module">flexdata.scp module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-flexdata">Module contents</a></li>
 </ul>
 </li>
@@ -221,62 +221,15 @@ Created on Oct 2018</p>
 
 <dl class="function">
 <dt id="flexdata.display.slice">
-<code class="descclassname">flexdata.display.</code><code class="descname">slice</code><span class="sig-paren">(</span><em>array</em>, <em>index=None</em>, <em>dim=0</em>, <em>bounds=None</em>, <em>title=None</em>, <em>cmap='gray'</em>, <em>file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flexdata/display.html#slice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flexdata.display.slice" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">flexdata.display.</code><code class="descname">slice</code><span class="sig-paren">(</span><em>array</em>, <em>index=None</em>, <em>dim=0</em>, <em>bounds=None</em>, <em>title=None</em>, <em>cmap='gray'</em>, <em>file=None</em>, <em>cbar=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flexdata/display.html#slice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flexdata.display.slice" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
 <div class="section" id="flexdata-io-module">
 <h2>flexdata.io module<a class="headerlink" href="#flexdata-io-module" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-flexdata.scp">
-<span id="flexdata-scp-module"></span><h2>flexdata.scp module<a class="headerlink" href="#module-flexdata.scp" title="Permalink to this headline">¶</a></h2>
-<p>&#64;author: kostenko
-Created on Oct 2018</p>
-<p>This module will contain read / write routines to convert FlexRay scanner data into ASTRA compatible data</p>
-<dl class="docutils">
-<dt>We can now read/write:</dt>
-<dd>image files (tiff stacks)
-log files from Flex ray (settings.txt)
-toml geometry files (metadata.toml)</dd>
-</dl>
-<p>We can also copy data over SCP!</p>
-<dl class="function">
-<dt id="flexdata.scp.connect_sftp">
-<code class="descclassname">flexdata.scp.</code><code class="descname">connect_sftp</code><span class="sig-paren">(</span><em>hostname</em>, <em>username</em>, <em>password=None</em>, <em>log_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flexdata/scp.html#connect_sftp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flexdata.scp.connect_sftp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Make an SFTP connection. Set log_file to a valid filename to dump the log file of the connection.
-Returns:</p>
-<blockquote>
-<div>sftp = _MySFTPClient_</div></blockquote>
-</dd></dl>
-
-<dl class="function">
-<dt id="flexdata.scp.delete_local">
-<code class="descclassname">flexdata.scp.</code><code class="descname">delete_local</code><span class="sig-paren">(</span><em>local_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flexdata/scp.html#delete_local"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flexdata.scp.delete_local" title="Permalink to this definition">¶</a></dt>
-<dd><p>Often useful to delete a directory recursively. Use with extreme care!</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="flexdata.scp.ssh_get_path">
-<code class="descclassname">flexdata.scp.</code><code class="descname">ssh_get_path</code><span class="sig-paren">(</span><em>local_path</em>, <em>remote_path</em>, <em>hostname</em>, <em>username</em>, <em>password=None</em>, <em>ovewrite='different'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flexdata/scp.html#ssh_get_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flexdata.scp.ssh_get_path" title="Permalink to this definition">¶</a></dt>
-<dd><p>Copy files and directories recursively from remote path to local path.
-Set overwrite to:</p>
-<blockquote>
-<div>‘different’ to overwrite files with a different size;
-‘always’ to overwrite all files
-‘never’ to never overwrite</div></blockquote>
-</dd></dl>
-
-<dl class="function">
-<dt id="flexdata.scp.ssh_put_path">
-<code class="descclassname">flexdata.scp.</code><code class="descname">ssh_put_path</code><span class="sig-paren">(</span><em>local_path</em>, <em>remote_path</em>, <em>hostname</em>, <em>username</em>, <em>password=None</em>, <em>ovewrite='different'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flexdata/scp.html#ssh_put_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flexdata.scp.ssh_put_path" title="Permalink to this definition">¶</a></dt>
-<dd><p>Copy files and directories recursively from local path to remote path.
-Set overwrite to:</p>
-<blockquote>
-<div>‘different’ to overwrite files with a different size;
-‘always’ to overwrite all files
-‘never’ to never overwrite</div></blockquote>
-</dd></dl>
-
+<div class="section" id="flexdata-scp-module">
+<h2>flexdata.scp module<a class="headerlink" href="#flexdata-scp-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-flexdata">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-flexdata" title="Permalink to this headline">¶</a></h2>
