@@ -469,8 +469,12 @@ class circular(basic):
         
         # Create source orbit:
         thetas = self.get_thetas(proj_count)
+        
+        # src_ort may be a vector or a scalar:
+        org = numpy.outer(src_ort, [0,0,1])
+        
         src_vect, src_tan, src_rad, serc_orth = circular_orbit(src2obj, thetas, roll = axs_roll, pitch = axs_pitch, yaw = 0, 
-                                                         origin = [0, 0, src_ort], tan_shift = src_tan - axs_tan, index = index)
+                                                         origin = org, tan_shift = src_tan - axs_tan, index = index)
         
         return src_vect
     
@@ -506,8 +510,12 @@ class circular(basic):
                 
         # Create detector orbit:
         thetas = self.get_thetas(proj_count)
+        
+        # det_ort may be a vector or a scalar:
+        org = numpy.outer(det_ort, [0,0,1])
+        
         det_pos, det_tan, det_rad, det_orth = circular_orbit(det2obj, thetas, roll = axs_roll, pitch = axs_pitch, yaw = 180, 
-                                                         origin = [0, 0, det_ort], tan_shift = -det_tan + axs_tan, index = index)
+                                                         origin = org, tan_shift = -det_tan + axs_tan, index = index)
         
         # Invert vectors to keep them alligned with the source vectors:
         det_tan, det_rad, det_orth = -det_tan, -det_rad, -det_orth
@@ -569,8 +577,12 @@ class helical(circular):
         
         # Create source orbit:
         thetas = self.get_thetas(proj_count)
+        
+        # src_ort may be a vector or a scalar:
+        org = numpy.outer(src_ort, [0,0,1])
+        
         src_vect, src_tan, src_rad, src_orth = circular_orbit(src2obj, thetas, roll = axs_roll, pitch = axs_pitch, yaw = 0, 
-                                                         origin = [0, 0, src_ort], tan_shift = src_tan - axs_tan, index = index)
+                                                         origin = org, tan_shift = src_tan - axs_tan, index = index)
         
         # Add axial motion:
         vrt = numpy.linspace(self.parameters['axs_rng'][0], self.parameters['axs_rng'][1], proj_count)
@@ -602,8 +614,12 @@ class helical(circular):
                 
         # Create detector orbit:
         thetas = self.get_thetas(proj_count)
+        
+        # det_ort may be a vector or a scalar:
+        org = numpy.outer(det_ort, [0,0,1])
+        
         det_pos, det_tan, det_rad, det_orth = circular_orbit(det2obj, thetas, roll = axs_roll, pitch = axs_pitch, yaw = 180, 
-                                                         origin = [0, 0, det_ort], tan_shift = -det_tan + axs_tan, index = index)
+                                                         origin = org, tan_shift = -det_tan + axs_tan, index = index)
         
         # Add axial motion:
         vrt = numpy.linspace(self.parameters['axs_rng'][0], self.parameters['axs_rng'][1], proj_count)
@@ -863,7 +879,7 @@ def circular_orbit(radius, thetas, roll = 0, pitch = 0, yaw = 0,
         roll, pitch: define orientation of the rotation axis
         yaw        : initial angular position
         origin     : xyz vector of the orbit centre
-        tan_shift  : tangential shift from the default position
+        tan_shift  : tangential shift from the default position (scalar or array)
         index      : index of the subset of total rotation angles
         
     Returns:
@@ -895,10 +911,16 @@ def circular_orbit(radius, thetas, roll = 0, pitch = 0, yaw = 0,
         radius[ii, :] = Rt.dot(rad0)
         
     # Apply origin shift:
-    position += numpy.array(origin)[None, :]
+    if numpy.ndim(origin) == 1:
+        position += numpy.array(origin)[None, :]
+    else:
+        position += numpy.array(origin)
     
     # Apply other shifts:
-    position += tangent * tan_shift
+    if numpy.size(tan_shift) == 1:
+        position += tangent * tan_shift
+    else:
+        position += tangent * tan_shift[:, None]
     
     # Orthogonal to tangent and radius:
     orthogonal = numpy.cross(radius, tangent)
