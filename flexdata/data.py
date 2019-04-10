@@ -853,9 +853,9 @@ def convolve_kernel(array, kernel):
     else:
         axes = (2,)
         
-    kernel = numpy.fft.fftshift(kernel, axes)
-    kernel = numpy.fft.fftn(kernel, axes).conj()
-    convolve_filter(array, kernel, axes)
+    kernel = numpy.fft.fftshift(kernel, axes = axes)
+    kernel = numpy.fft.fftn(kernel, axes = axes).conj()
+    convolve_filter(array, kernel)
 
 def autocorrelation(array, axes = (0,1,2)):
     '''
