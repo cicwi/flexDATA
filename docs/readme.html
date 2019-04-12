@@ -198,28 +198,23 @@ flexDATA contains IO routines that were originally developed for the Flex-Ray X-
 <h2>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h2>
 <p>flexDATA is comprised of the following modules:</p>
 <ul class="simple">
-<li>io:     read / write raw projection stacks (tiffs), parse settings file of the scanner to produce meta data.</li>
-<li>array:  some utility functions compatible with large arrays mapped on disk (numpy.memmap)</li>
-<li>scp:    wrapper around an SCP client that allows to recursively copy folders across the network</li>
-<li>display:simple display routines for 3D arrays</li>
+<li>data:     read / write raw projection stacks (tiffs), parse settings file of the scanner to produce meta data.</li>
+<li>geometry:  geometry classes (circular, helical and linear).</li>
+<li>display: simple display routines for 3D arrays</li>
 </ul>
 <p>Typical code:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import:</span>
-<span class="kn">from</span> <span class="nn">flexdata</span> <span class="k">import</span> <span class="n">scp</span>
-<span class="kn">from</span> <span class="nn">flexdata</span> <span class="k">import</span> <span class="n">io</span>
-
-<span class="c1"># Get files from remote:</span>
-<span class="n">scp</span><span class="o">.</span><span class="n">ssh_get_path</span><span class="p">(</span><span class="n">local_path</span><span class="p">,</span> <span class="n">remote_path</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">flexdata</span> <span class="k">import</span> <span class="n">data</span>
 
 <span class="c1"># Read raw projections and flat field images:</span>
-<span class="n">proj</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_tiffs</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
-<span class="n">flat</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_tiffs</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+<span class="n">proj</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">read_tiffs</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+<span class="n">flat</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">read_tiffs</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
 
 <span class="c1"># Read metadata:</span>
-<span class="n">meta</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_meta</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">file_type</span><span class="p">)</span>
+<span class="n">meta</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">read_meta</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">file_type</span><span class="p">)</span>
 
 <span class="c1"># Generate an ASTRA-compatible projection geometry description:</span>
-<span class="n">proj_geom</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">astra_proj_geom</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">],</span> <span class="n">proj</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">proj_geom</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">astra_proj_geom</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">],</span> <span class="n">proj</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

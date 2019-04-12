@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 """
 Example of some I/O utilities and geometry parsing of log files.
+
+The dataset 'rat skull' can be found at: 
+    https://zenodo.org/badge/DOI/10.5281/zenodo.1164088.svg
 """
 #%% Imports
 

@@ -38,29 +38,24 @@ To learn about the functionality of the package check out our examples folder. E
 
 flexDATA is comprised of the following modules:
 
-* io:     read / write raw projection stacks (tiffs), parse settings file of the scanner to produce meta data.
-* array:  some utility functions compatible with large arrays mapped on disk (numpy.memmap)
-* scp:    wrapper around an SCP client that allows to recursively copy folders across the network
-* display:simple display routines for 3D arrays
+* data:     read / write raw projection stacks (tiffs), parse settings file of the scanner to produce meta data.
+* geometry:  geometry classes (circular, helical and linear).
+* display: simple display routines for 3D arrays
 
 Typical code:
 ```
 # Import:
-from flexdata import scp
-from flexdata import io
-
-# Get files from remote:
-scp.ssh_get_path(local_path, remote_path, host, user)
+from flexdata import data
 
 # Read raw projections and flat field images:
-proj = io.read_tiffs(path, file_name)
-flat = io.read_tiffs(path, file_name)
+proj = data.read_tiffs(path, file_name)
+flat = data.read_tiffs(path, file_name)
 
 # Read metadata:
-meta = io.read_meta(path, file_type)
+meta = data.read_meta(path, file_type)
 
 # Generate an ASTRA-compatible projection geometry description:
-proj_geom = io.astra_proj_geom(meta['geometry'], proj.shape)
+proj_geom = data.astra_proj_geom(meta['geometry'], proj.shape)
 ```
 
 ## Authors and contributors
