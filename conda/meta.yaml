@@ -1,6 +1,8 @@
+{% set data = load_setup_py_data() %}
+
 package:
     name: flexdata
-    version: "0.1.0"
+    version: {{ data['version'] }}
 
 source:
     path: ../
@@ -13,26 +15,19 @@ requirements:
         - python {{ python }}
         - tifffile
         - transforms3d
+        - pyqtgraph
 
     run:
         - python
-        - numpy
-	- scipy
-        - astra-toolbox
-        - matplotlib
-	- pyqtgraph
-        - tqdm
-        - imageio
-        - tifffile
-        - psutil
-        - toml
-        - transforms3d
-        - paramiko
+        # dependencies are defined in setup.py
+        {% for dep in data['install_requires'] %}
+        - {{ dep.lower() }}
+        {% endfor %}
 
 about:
     home: https://github.com/cicwi/flexdata
     license_file: LICENSE.md
-    summary: "This project comprises IO routines that make life easier with Flex-Ray scanner."
+    summary: "This project comprises IO routines for CT data."
 
 extra:
     maintainers:
