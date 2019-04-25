@@ -80,7 +80,7 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html">flexDATA</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../flexdata.html">flexdata package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../flexdata.html">Modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
 </ul>
 
@@ -148,10 +148,10 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">@author: A. Kostenko</span>
-<span class="sd">Created on Oct 2018</span>
-
-<span class="sd">This module contains a few simple routines for displaying data.</span>
+<span class="sd">This module contains a few simple routines for displaying data:</span>
+<span class="sd">* 2D displays like: slice, projection, etc.</span>
+<span class="sd">* Interactive slicer: pyqt_graph</span>
+<span class="sd">* Other displays: mesh, color_project</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">&quot;&quot;&quot; * Imports * &quot;&quot;&quot;</span>
@@ -176,12 +176,12 @@
     <span class="c1">#ax = fig.add_subplot(111, projection=&#39;3d&#39;)</span>
 
     <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
-    
+
     <span class="k">if</span> <span class="n">connected</span><span class="p">:</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
-        
+
     <span class="n">_after_plot_</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
-    
+
 <div class="viewcode-block" id="plot2d"><a class="viewcode-back" href="../../flexdata.html#flexdata.display.plot2d">[docs]</a><span class="k">def</span> <span class="nf">plot2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">semilogy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    A standard 2D plot.</span>
@@ -219,7 +219,7 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># create pyqtgraph app:</span>
     <span class="n">app</span> <span class="o">=</span> <span class="n">pq</span><span class="o">.</span><span class="n">mkQApp</span><span class="p">()</span>
-    
+
     <span class="n">pq</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">rollaxis</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dim</span><span class="p">),</span> <span class="n">axes</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)),</span> <span class="n">title</span> <span class="o">=</span> <span class="n">title</span><span class="p">)</span>
 
     <span class="n">app</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span></div>
@@ -258,9 +258,9 @@
         <span class="n">cbar</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
 
     <span class="n">_after_plot_</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span></div>
-    
+
 <span class="k">def</span> <span class="nf">_after_plot_</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
-    
+
     <span class="c1">#plt.axis(&quot;off&quot;)</span>
 
     <span class="k">if</span> <span class="n">title</span><span class="p">:</span>
@@ -290,6 +290,9 @@
 
 
 <div class="viewcode-block" id="projection"><a class="viewcode-back" href="../../flexdata.html#flexdata.display.projection">[docs]</a><span class="k">def</span> <span class="nf">projection</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    A simple projection of the volume along one of the dimensions.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="n">img</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
 
@@ -304,58 +307,62 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
-    
+
     <span class="n">_after_plot_</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="color_project"><a class="viewcode-back" href="../../flexdata.html#flexdata.display.color_project">[docs]</a><span class="k">def</span> <span class="nf">color_project</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sample</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;nipy_spectral&#39;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Create a pseudo color projection of a 3D volume.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># Sample array:</span>
     <span class="n">array</span> <span class="o">=</span> <span class="n">array</span><span class="p">[::</span><span class="n">sample</span><span class="p">,::</span><span class="n">sample</span><span class="p">,::</span><span class="n">sample</span><span class="p">]</span>
-    
+
     <span class="c1"># Initialize colormap:</span>
     <span class="n">cmap_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
-    
+
     <span class="c1"># Shape of the final image:</span>
     <span class="n">shape</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
     <span class="n">shape</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">dim</span><span class="p">])</span>
     <span class="n">shape</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 
-    <span class="c1"># Output image:    </span>
+    <span class="c1"># Output image:</span>
     <span class="n">rgb_total</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="s1">&#39;float32&#39;</span><span class="p">)</span>
-    
+
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Applying colormap...&#39;</span><span class="p">)</span>
-    
+
     <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">dim</span><span class="p">]):</span>
-        
+
         <span class="n">sl</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">anyslice</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">ii</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
         <span class="n">img</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="n">sl</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
-        
+
         <span class="n">img</span><span class="p">[</span><span class="n">img</span> <span class="o">&gt;</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">img</span><span class="p">[</span><span class="n">img</span> <span class="o">&lt;</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">img</span> <span class="o">-=</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">img</span> <span class="o">/=</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        
+
         <span class="n">rgba_img</span> <span class="o">=</span> <span class="n">cmap_</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
         <span class="n">rgb_img</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">rgba_img</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-        
+
         <span class="n">rgb_total</span> <span class="o">+=</span> <span class="n">rgb_img</span><span class="c1"># / array.shape[dim]</span>
         <span class="c1">#rgb_total = numpy.max([rgb_img, rgb_total], axis = 0)</span>
-        
+
     <span class="c1">#rgb_total /= rgb_total.max()</span>
     <span class="c1">#rgb_total = numpy.log(rgb_total)</span>
     <span class="n">rgb_total</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">rgb_total</span><span class="p">)</span>
-    
+
     <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-    
+
     <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">rgb_total</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">/</span> <span class="n">rgb_total</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">cmap</span><span class="p">)</span>
-    
+
     <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
-    
+
     <span class="n">_after_plot_</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="max_projection"><a class="viewcode-back" href="../../flexdata.html#flexdata.display.max_projection">[docs]</a><span class="k">def</span> <span class="nf">max_projection</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Projection of maximum values.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">img</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
 
     <span class="c1"># There is a bug in plt. It doesn&#39;t like float16</span>
@@ -373,7 +380,9 @@
 
 
 <div class="viewcode-block" id="min_projection"><a class="viewcode-back" href="../../flexdata.html#flexdata.display.min_projection">[docs]</a><span class="k">def</span> <span class="nf">min_projection</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Projection of minimum values.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">img</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
 
     <span class="c1"># There is a bug in plt. It doesn&#39;t like float16</span>

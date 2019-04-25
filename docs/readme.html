@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="flexdata package" href="flexdata.html" />
+    <link rel="next" title="Modules" href="flexdata.html" />
     <link rel="prev" title="Welcome to flexdata’s documentation!" href="index.html" /> 
 </head>
 
@@ -95,7 +95,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#acknowledgments">Acknowledgments</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="flexdata.html">flexdata package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flexdata.html">Modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
 </ul>
 
@@ -211,10 +211,10 @@ flexDATA contains IO routines that were originally developed for the Flex-Ray X-
 <span class="n">flat</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">read_tiffs</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
 
 <span class="c1"># Read metadata:</span>
-<span class="n">meta</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">read_meta</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">file_type</span><span class="p">)</span>
+<span class="n">geom</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">read_flexraylog</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> 
 
 <span class="c1"># Generate an ASTRA-compatible projection geometry description:</span>
-<span class="n">proj_geom</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">astra_proj_geom</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">],</span> <span class="n">proj</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">proj_geom</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">astra_proj_geom</span><span class="p">(</span><span class="n">proj</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -252,7 +252,7 @@ flexDATA contains IO routines that were originally developed for the Flex-Ray X-
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="flexdata.html" class="btn btn-neutral float-right" title="flexdata package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="flexdata.html" class="btn btn-neutral float-right" title="Modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="index.html" class="btn btn-neutral float-left" title="Welcome to flexdata’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

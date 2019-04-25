@@ -1,13 +1,22 @@
-flexdata package
+Modules
 ================
 
-Submodules
-----------
+flexDATA includes three modules: geometry, data and display. 
 
-flexdata.array module
+A wide range of acquisition geometries can be defined using the geometry module. For I/O operations and some utilities for out-of-memory arrays are implemented in the data module. Basic display utilities can be found in display module.
+
+flexdata.geometry module
+------------------
+
+.. automodule:: flexdata.geometry
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+flexdata.data module
 ---------------------
 
-.. automodule:: flexdata.array
+.. automodule:: flexdata.data
     :members:
     :undoc-members:
     :show-inheritance:
@@ -20,27 +29,3 @@ flexdata.display module
     :undoc-members:
     :show-inheritance:
 
-flexdata.io module
-------------------
-
-.. automodule:: flexdata.io
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-flexdata.scp module
--------------------
-
-.. automodule:: flexdata.scp
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: flexdata
-    :members:
-    :undoc-members:
-    :show-inheritance:

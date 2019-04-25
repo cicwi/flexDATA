@@ -52,10 +52,10 @@ proj = data.read_tiffs(path, file_name)
 flat = data.read_tiffs(path, file_name)
 
 # Read metadata:
-meta = data.read_meta(path, file_type)
+geom = data.read_flexraylog(path) 
 
 # Generate an ASTRA-compatible projection geometry description:
-proj_geom = data.astra_proj_geom(meta['geometry'], proj.shape)
+proj_geom = geom.astra_proj_geom(proj.shape)
 ```
 
 ## Authors and contributors

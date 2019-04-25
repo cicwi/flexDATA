@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-@author: A. Kostenko
-Created on Oct 2018
-
-This module contains a few simple routines for displaying data.
+This module contains a few simple routines for displaying data:
+* 2D displays like: slice, projection, etc.
+* Interactive slicer: pyqt_graph
+* Other displays: mesh, color_project
 """
 
 """ * Imports * """
@@ -29,12 +29,12 @@ def plot3d(x, y, z, connected = False, title = None):
     #ax = fig.add_subplot(111, projection='3d')
 
     ax.scatter(x, y, z)
-    
+
     if connected:
         ax.plot(x, y, z)
-        
+
     _after_plot_(title, None)
-    
+
 def plot2d(x, y=None, semilogy=False, title=None, legend=None):
     '''
     A standard 2D plot.
@@ -72,7 +72,7 @@ def pyqt_graph(array, dim = 0, title=None):
     '''
     # create pyqtgraph app:
     app = pq.mkQApp()
-    
+
     pq.image(numpy.rot90(numpy.rollaxis(array, dim), axes = (1,2)), title = title)
 
     app.exec_()
@@ -111,9 +111,9 @@ def slice(array, index=None, dim=0, bounds=None, title=None, cmap="gray", file=N
         cbar.ax.tick_params(labelsize=15)
 
     _after_plot_(title, file)
-    
+
 def _after_plot_(title, file):
-    
+
     #plt.axis("off")
 
     if title:
@@ -143,6 +143,9 @@ def mesh(stl_mesh):
 
 
 def projection(array, dim=1, bounds=None, title=None, cmap="gray", file=None):
+    '''
+    A simple projection of the volume along one of the dimensions.
+    '''
 
     img = array.sum(dim)
 
@@ -157,58 +160,62 @@ def projection(array, dim=1, bounds=None, title=None, cmap="gray", file=None):
         plt.imshow(img[::-1, :], cmap=cmap)
 
     plt.colorbar()
-    
+
     _after_plot_(title, file)
 
 
 def color_project(array, dim=1, sample = 2, bounds=[0.01, 0.1], title=None, cmap='nipy_spectral', file=None):
-
+    '''
+    Create a pseudo color projection of a 3D volume.
+    '''
     # Sample array:
     array = array[::sample,::sample,::sample]
-    
+
     # Initialize colormap:
     cmap_ = plt.get_cmap(cmap)
-    
+
     # Shape of the final image:
     shape = list(array.shape)
     shape.remove(shape[dim])
     shape.append(3)
 
-    # Output image:    
+    # Output image:
     rgb_total = numpy.zeros(shape, dtype = 'float32')
-    
+
     print('Applying colormap...')
-    
+
     for ii in range(array.shape[dim]):
-        
+
         sl = data.anyslice(array, ii, dim)
         img = numpy.squeeze(array[sl].copy())
-        
+
         img[img > bounds[1]] = bounds[1]
         img[img < bounds[0]] = bounds[0]
         img -= bounds[0]
         img /= bounds[1] - bounds[0]
-        
+
         rgba_img = cmap_(img)
         rgb_img = numpy.delete(rgba_img, 3, 2)
-        
+
         rgb_total += rgb_img# / array.shape[dim]
         #rgb_total = numpy.max([rgb_img, rgb_total], axis = 0)
-        
+
     #rgb_total /= rgb_total.max()
     #rgb_total = numpy.log(rgb_total)
     rgb_total = numpy.sqrt(rgb_total)
-    
+
     plt.figure()
-    
+
     plt.imshow(rgb_total[::-1, :] / rgb_total.max(), cmap = cmap)
-    
+
     plt.colorbar()
-    
+
     _after_plot_(title, file)
 
 def max_projection(array, dim=0, bounds=None, title=None, cmap="gray", file=None):
-
+    '''
+    Projection of maximum values.
+    '''
     img = array.max(dim)
 
     # There is a bug in plt. It doesn't like float16
@@ -226,7 +233,9 @@ def max_projection(array, dim=0, bounds=None, title=None, cmap="gray", file=None
 
 
 def min_projection(array, dim=0, title=None, cmap="gray", file=None):
-
+    '''
+    Projection of minimum values.
+    '''
     img = array.min(dim)
 
     # There is a bug in plt. It doesn't like float16
