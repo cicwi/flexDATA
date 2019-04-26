@@ -25,7 +25,7 @@ requirements:
         {% endfor %}
 
 about:
-    home: https://github.com/cicwi/flexdata
+    home: https://github.com/cicwi/flexDATA
     license_file: LICENSE.md
     summary: "This project comprises IO routines for CT data."
 

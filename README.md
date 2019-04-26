@@ -1,6 +1,6 @@
 # flexDATA
 
-This project is a part of the larger X-ray tomographic reconstruction toolbox comprised of flexDATA, flexTOMO and flexCALC.
+This project is a part of the larger X-ray tomographic reconstruction toolbox comprised of [flexDATA], [flexTOMO] and [flexCALC].
 flexDATA contains IO routines that were originally developed for the Flex-Ray X-ray CT scanner but can be used for reading and writing data from other types of CT scanners. It provides an interface between a scanner and a GPU-based CT reconstruction [ASTRA toolbox](https://www.astra-toolbox.com/). It can be especially helpful when the scanner has many degrees of freedom and the geometry of each scan is defined by a large number of parameters.
 
 ## Getting Started
