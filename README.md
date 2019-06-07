@@ -11,9 +11,12 @@ It takes a few steps to setup flexDATA on your machine. We recommend that the us
 
 Simply install with:
 ```
-conda create -n <your-environment> python=3.6
+conda create -n <your-environment> python=3.7
 conda install -c cicwi -c astra-toolbox/label/dev -c conda-forge -c owlas flexdata
 ```
+
+**NOTE**: currently, the latest version of flexDATA is only available
+for python version 3.7.
 
 ### Installing from source
 
@@ -52,7 +55,7 @@ proj = data.read_tiffs(path, file_name)
 flat = data.read_tiffs(path, file_name)
 
 # Read metadata:
-geom = data.read_flexraylog(path) 
+geom = data.read_flexraylog(path)
 
 # Generate an ASTRA-compatible projection geometry description:
 proj_geom = geom.astra_proj_geom(proj.shape)
