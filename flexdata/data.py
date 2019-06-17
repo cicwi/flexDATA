@@ -531,6 +531,81 @@ def read_geometry(path, sample = 1):
 
     return geom
 
+def geom_diff(geom1, geom2, full_diff=False):
+    '''
+    Returns a dictionary with changed values in two geometries. Diff is computed
+    per item as: geom1[item] - geom2[item].
+
+    If `full_diff` is `True`, also returns added, removed and unchanged dict items.
+
+    Useful if you'd like to see if corrections have been made in one geometry
+    with respect to a second another.
+
+    Either provide a path, geometry object or dictionary to `geom2` or `geom1`.
+
+    :param geom1: First path, geometry object or dictionary.
+    :param geom2: Second path, geometry object or dictionary.
+    :param full_diff: If set to `True` also shows added, removed and unchanged.
+    :return: Geometry dictionary
+    '''
+
+    from flexdata.geometry import basic
+
+    def input_to_dict(input, var_name):
+        if isinstance(input, str):
+            input = read_toml(input)
+        elif isinstance(input, basic):
+            input = input.to_dictionary()
+        elif isinstance(input, dict):
+            pass
+        else:
+            raise ValueError("`" + var_name + "` must be a path, dict or a geometry type.")
+
+        return input
+
+    geom1 = input_to_dict(geom1, 'geom1')
+    geom2 = input_to_dict(geom2, 'geom2')
+
+    # Source: https://stackoverflow.com/questions/1165352
+    class DictDiffer(object):
+        def __init__(self, current_dict, past_dict):
+            self.current_dict, self.past_dict = current_dict, past_dict
+            self.set_current, self.set_past = set(current_dict.keys()), set(past_dict.keys())
+            self.intersect = self.set_current.intersection(self.set_past)
+
+        def added(self):
+            return self.set_current - self.intersect
+
+        def removed(self):
+            return self.set_past - self.intersect
+
+        def changed(self):
+            return set(o for o in self.intersect if self.past_dict[o] != self.current_dict[o])
+
+        def diff(self):
+            diff = {}
+
+            for key in self.changed():
+                diff[key] = numpy.subtract(self.current_dict[key], self.past_dict[key])
+
+            return diff
+
+        def unchanged(self):
+            return set(o for o in self.intersect if self.past_dict[o] == self.current_dict[o])
+
+    dd = DictDiffer(geom2, geom1)
+
+    if full_diff:
+        return {
+            'added': dd.added(),
+            'removed': dd.removed(),
+            'changed': dd.changed(),
+            'diff_changed': dd.diff(),
+            'unchanged': dd.unchanged(),
+        }
+    else:
+        return dd.diff()
+
 def file_to_dictionary(file_path, separator = ':', translation = None):
     '''
     Read a text file and return a dictionary with records.
