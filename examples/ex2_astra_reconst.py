@@ -9,6 +9,7 @@ You can also install flaxTomo to be able to develope advanced reconstruction scr
 
 from flexdata import data
 from flexdata import display
+from flexdata import correction 
 
 import numpy
 import astra
@@ -18,14 +19,38 @@ import astra
 path = '/ufs/ciacc/flexbox/good/'
 binning = 2
 
-dark = data.read_stack(path, 'di00', sample = binning)
-flat = data.read_stack(path, 'io00', sample = binning)    
-proj = data.read_stack(path, 'scan_', skip = binning, sample = binning)
+dark = data.read_stack(path, 'di00', sample=binning)
+flat = data.read_stack(path, 'io00', sample=binning)    
+proj = data.read_stack(path, 'scan_', skip=binning, sample=binning)
 
-geom = data.read_flexraylog(path, sample = binning)   
+###############################################################################
+#                                 This is new                                 #
+###############################################################################
+geom = data.read_flexraylog(path, sample=binning)
+# If ROI:
+#  - automatically correct for ROI
+#  - print corrections to stderr
+#  - log to geometry: "Adjusted detector center to ROI {..}"
 
+# Note: store geometry, with comment "read from 'blah/blah/scan settings.txt'"
+data.write_toml('scan_geometry.toml', overwrite=True, exist_ok=True)
+
+# Profiel correctie (rode streepje)    
+geom = correction.correct(geom, profile='cwi-flexray-2019-06-01', logging=False/True)
+# Logging info:
+# INFO - Correct det_tan += 24 
+# INFO - Correct src_ort -= 7
+geom['det_ort'] -= 7
+geom.log("Corrected det_ort by -7 because reasons.")
+geom = data.calculate_volume(geom)
+# Logging info:
+# INFO - Volume center: (x, x, x) with size (y, y, y)
+
+
+###############################################################################
+#                            This can stay the same                           #
+###############################################################################
 #%% Prepro:
-
 flat = (flat - dark).mean(1)
 proj = (proj - dark) / flat[:, None, :]
 proj = -numpy.log(proj).astype('float32')
@@ -58,3 +83,13 @@ astra.data3d.delete(vol_id)
    
 display.slice(vol, dim = 0, bounds = [0, 0.04], title = 'Projection', cmap = 'magma')
 
+
+###############################################################################
+#                                 This is new                                 #
+###############################################################################
+data.write_stack('./output_dir/', vol)
+# Note: store geometry, with comment appended "corrected with profile 'cwi-flexray-2019-06-01'"
+data.write_toml('./output_dir/reconstruction_geometry.toml',
+                overwrite=True,
+                exist_ok=True
+)

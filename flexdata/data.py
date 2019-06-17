@@ -27,6 +27,10 @@ from scipy.io import loadmat # Reading matlab format
 from . import geometry       # geometry classes
 
 # >>>>>>>>>>>>>>>>>>>> LOGGER CLASS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+FLEXTOML_VERSION = '0.1.1'
+
 class logger:
    """
    A class for logging and printing messages.
@@ -1402,6 +1406,14 @@ def _parse_unit_(string):
 
     return factor
 
+profiles = {
+   'cwi-flexray-2019-06-01': {
+      'det_tan': 24,
+      'src_ort': -7,
+      'axs_tan': -0.5,
+   }
+}
+
 def _flex_motor_correct_(geom):
     '''
     Apply some motor offsets to get to a correct coordinate system.
@@ -1417,12 +1429,17 @@ def _flex_motor_correct_(geom):
 
     # roi:
     roi = geom.description['roi']
+    # XXX: Why do we hardcode 971 and 767? Does this also work when
+    # the geometry has already been binned or hardware binning has
+    # been used?
     centre = [(roi[0] + roi[2]) // 2 - 971, (roi[1] + roi[3]) // 2 - 767]
 
     # Not sure the binning should be taken into account...
     geom.parameters['det_ort'] -= centre[1] * geom.parameters['det_pixel']
     geom.parameters['det_tan'] -= centre[0] * geom.parameters['det_pixel']
 
+    # This is part of volume geometry determination.
+    # TODO: Split into separate function. Should NOT occur automatically. 
     geom.parameters['vol_tra'][0] = (geom.parameters['det_ort'] * geom.src2obj +
                    geom.parameters['src_ort'] * geom.det2obj) / geom.src2det
 
