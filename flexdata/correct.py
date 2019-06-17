@@ -94,7 +94,7 @@ def correct_roi(geometry):
 
 
 def correct_vol_center(geometry):
-    """Move the volume center to be between the source and detector center.
+    """Move the volume center in-between the source and detector center.
 
     :param geometry:
     :returns:

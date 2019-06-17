@@ -13,6 +13,7 @@ from flexdata import correct
 
 import numpy
 import astra
+from pathlib import Path
 
 #%% Read data:
     
@@ -36,13 +37,13 @@ geom = data.read_flexraylog(path, sample=binning)
 data.write_toml('scan_geometry.toml', overwrite=True, exist_ok=True)
 
 # Profiel correctie (rode streepje)    
-geom = correct.correct(geom, profile='cwi-flexray-2019-05-24', do_print_changes=True)
-# Logging info:
-# INFO - Correct det_tan += 24 
-# INFO - Correct src_ort -= 7
+geom = correct.correct(geom,
+                       profile='cwi-flexray-2019-05-24',
+                       do_print_changes=True)
 geom['det_ort'] -= 7
 geom.log("Corrected det_ort by -7 because reasons.")
-geom = data.calculate_volume(geom)
+# TODO: Implement geom.log()
+geom = correct.correct_vol_center(geom)
 # Logging info:
 # INFO - Volume center: (x, x, x) with size (y, y, y)
 
@@ -87,8 +88,11 @@ display.slice(vol, dim = 0, bounds = [0, 0.04], title = 'Projection', cmap = 'ma
 ###############################################################################
 #                                 This is new                                 #
 ###############################################################################
+
+# TODO: Create output directory
 data.write_stack('./output_dir/', vol)
 # Note: store geometry, with comment appended "corrected with profile 'cwi-flexray-2019-06-01'"
+# TODO: Implement storing of comments/changelog.
 data.write_toml('./output_dir/reconstruction_geometry.toml',
                 overwrite=True,
                 exist_ok=True

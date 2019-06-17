@@ -536,9 +536,9 @@ def read_geometry(path, sample = 1):
     # Check version
     version = records.get('FLEXTOML_VERSION')
     if version is None:
-       logger.warning(f"No version for toml file. Expected {geom.FLEXTOML_VERSION}")
+       logger.warning(f"No version for toml file. Expected {geometry.FLEXTOML_VERSION}")
     elif version != geom.FLEXTOML_VERSION:
-       logger.warning(f"Version {version} found for toml file. Expected: {geom.FLEXTOML_VERSION}")
+       logger.warning(f"Version {version} found for toml file. Expected: {geometry.FLEXTOML_VERSION}")
 
     # Initialize geometry:
     geom = geometry.circular()
