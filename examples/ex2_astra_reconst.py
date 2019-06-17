@@ -9,7 +9,7 @@ You can also install flaxTomo to be able to develope advanced reconstruction scr
 
 from flexdata import data
 from flexdata import display
-from flexdata import correction 
+from flexdata import correct
 
 import numpy
 import astra
@@ -36,7 +36,7 @@ geom = data.read_flexraylog(path, sample=binning)
 data.write_toml('scan_geometry.toml', overwrite=True, exist_ok=True)
 
 # Profiel correctie (rode streepje)    
-geom = correction.correct(geom, profile='cwi-flexray-2019-06-01', logging=False/True)
+geom = correct.correct(geom, profile='cwi-flexray-2019-05-24', do_print_changes=True)
 # Logging info:
 # INFO - Correct det_tan += 24 
 # INFO - Correct src_ort -= 7

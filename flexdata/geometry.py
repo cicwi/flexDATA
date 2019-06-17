@@ -55,7 +55,7 @@ class basic():
                            }
 
         self.description = {
-            'flextoml_version' : FLEXTOML_VERSION,
+            'flextoml_version': FLEXTOML_VERSION,
         }
 
     def __str__(self):
