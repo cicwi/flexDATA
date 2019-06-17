@@ -10,9 +10,12 @@ volume transformations ('vol_tra', 'vol_rot'), recostruction resolution and anis
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>> Imports >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 import astra
-
 import numpy
 from transforms3d import euler
+
+
+FLEXTOML_VERSION = '0.1.0'
+
 
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>> Classes >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 class basic():
@@ -51,7 +54,9 @@ class basic():
                            'vol_sample':[1,1,1]
                            }
 
-        self.description = {}
+        self.description = {
+            'flextoml_version' : FLEXTOML_VERSION,
+        }
 
     def __str__(self):
         '''

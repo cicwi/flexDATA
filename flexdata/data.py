@@ -29,8 +29,6 @@ from . import geometry       # geometry classes
 # >>>>>>>>>>>>>>>>>>>> LOGGER CLASS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 
-FLEXTOML_VERSION = '0.1.1'
-
 class logger:
    """
    A class for logging and printing messages.
@@ -505,6 +503,13 @@ def read_flexraymeta(path, sample = 1):
         records['det_pixel'] *= 4
         records['img_pixel'] *= 4
 
+    # Check version
+    version = records.get('FLEXTOML_VERSION')
+    if version is None:
+       logger.warning(f"No version for toml file. Expected {geom.FLEXTOML_VERSION}")
+    elif version != geom.FLEXTOML_VERSION:
+       logger.warning(f"Version {version} found for toml file. Expected: {geom.FLEXTOML_VERSION}")
+
     # Initialize geometry:
     geom = geometry.circular()
     geom.from_dictionary(records)
@@ -528,6 +533,13 @@ def read_geometry(path, sample = 1):
     records = read_toml(os.path.join(path, 'geometry.toml'))
     records['det_pixel'] *= sample
     records['img_pixel'] *= sample
+
+    # Check version
+    version = records.get('FLEXTOML_VERSION')
+    if version is None:
+       logger.warning(f"No version for toml file. Expected {geom.FLEXTOML_VERSION}")
+    elif version != geom.FLEXTOML_VERSION:
+       logger.warning(f"Version {version} found for toml file. Expected: {geom.FLEXTOML_VERSION}")
 
     # Initialize geometry:
     geom = geometry.circular()
