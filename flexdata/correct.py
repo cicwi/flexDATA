@@ -49,7 +49,9 @@ def correct(geometry, *, profile=None, do_print_changes=True):
     profile = profiles.get(profile)
     if profile is None:
         raise ValueError(
-            "Correction profile was not correctly specified. Choose one of: \n{profile_names}")
+            f"Correction profile was not correctly specified. Choose one of:\n"
+            f"{profile_names}"
+        )
 
     for k, v in profile.items():
         # Skip description, it is purely to describe correction profiles.
