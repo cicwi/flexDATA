@@ -34,37 +34,38 @@ def print_profiles():
                 print(f"   {l}")
 
 
-def correct(geometry, *, profile=None, do_print_changes=True):
+def correct(geometry, profile=None, do_print_changes=True):
     """Apply a correction profile to projection geometry.
 
 
     :param geometry:
     :param profile:
+        A string describing the calibration profile that should be applied.
+        Use `correct.print_profiles()' to view available profiles.
     :returns:
     :rtype:
 
     """
     profile_names = "\n".join(profiles.keys())
 
-    profile = profiles.get(profile)
-    if profile is None:
+    prof = profiles.get(profile)
+    if prof is None:
         raise ValueError(
             f"Correction profile was not correctly specified. Choose one of:\n"
             f"{profile_names}"
         )
 
-    for k, v in profile.items():
+    for k, v in prof.items():
         # Skip description, it is purely to describe correction profiles.
         if k == 'description':
             continue
 
-        prev = geometry.get(k)
+        prev = geometry[k]
         if do_print_changes:
             logging.info(f"For {k}: adjusting {prev} by {v}.")
         geometry[k] += v
 
-    # TODO: Add line of logging to geometry to indicate that this
-    # profile correction has taken place.
+    geometry.log(f"Applied correction profile '{profile}'")
 
     return geometry
 
@@ -84,13 +85,22 @@ def correct_roi(geometry):
     # XXX: Why do we hardcode 971 and 767? Does this also work when
     # the geometry has already been binned or hardware binning has
     # been used?
+
+    # TODO: This is definitely wrong when sampling/binning has been
+    # applied.
     centre = [(roi[0] + roi[2]) // 2 - 971, (roi[1] + roi[3]) // 2 - 767]
 
     # Not sure the binning should be taken into account...
-    geometry.parameters['det_ort'] -= centre[1] * \
-        geometry.parameters['det_pixel']
-    geometry.parameters['det_tan'] -= centre[0] * \
-        geometry.parameters['det_pixel']
+    d_ort = - centre[1] * geometry.parameters['det_pixel']
+    d_tan = - centre[0] * geometry.parameters['det_pixel']
+
+    geometry.parameters['det_ort'] += d_ort
+    geometry.parameters['det_tan'] += d_tan
+
+    if abs(d_ort) > 1e-6 or abs(d_tan) > 1e-6:
+        msg = f"Adjusted detector center to ROI window {roi}: {(d_ort, d_tan)}."
+        geometry.log(msg)
+        logging.info(msg)
 
     return geometry
 
