@@ -368,7 +368,26 @@ def read_image(file, sample = 1, shape = None, format = None, dtype = None):
     im = _sample_image_(im, sample)
     return im
 
-def read_flexraylog(path, sample = 1):
+def read_flexraylog(path, *args):
+   warnings.warn("""
+read_flexraylog is depecrated.
+
+This function combined too much functionality. If you want similar functionality to what
+read_flexraylog provided, use:
+>>> from flexdata import data
+>>> from flexdata import correct
+>>> geom = data.parse_flexraylog(path, sample=binning)
+>>> geom = correct.correct(geom,
+                           profile='cwi-flexray-2019-05-24',
+                           do_print_changes=True)
+>>> geom = correct.correct_vol_center(geom)
+
+
+""", DeprecationWarning, stacklevel=2)
+   raise NotImplementedError()
+
+
+def parse_flexraylog(path, sample = 1):
     """
     Read the log file of FLexRay scanner and return dictionaries with parameters of the scan.
 
@@ -441,9 +460,29 @@ def read_flexraylog(path, sample = 1):
 
     return geom
 
-def read_flexraymeta(path, sample = 1):
+
+def read_flexraymeta(*args):
+   warnings.warn("""
+read_flexraymeta is depecrated.
+
+This function combined too much functionality. If you want similar functionality to what
+read_flexraymeta provided, use:
+>>> from flexdata import data
+>>> from flexdata import correct
+>>> geom = data.parse_flexraymeta(path, sample=binning)
+>>> geom = correct.correct(geom,
+                           profile='cwi-flexray-2019-05-24',
+                           do_print_changes=True)
+>>> geom = correct.correct_vol_center(geom)
+
+
+""", DeprecationWarning, stacklevel=2)
+   raise NotImplementedError()
+
+
+def parse_flexraymeta(path, sample = 1):
     """
-    Read the metafile produced by Flexray scripting.
+    Read the metafile produced by the Flexray script generator.
 
     Args:
         path   (str): path to the files location
@@ -517,6 +556,7 @@ def read_flexraymeta(path, sample = 1):
     geom.parameters['img_pixel'] *= sample
 
     return geom
+
 
 def read_geometry(path, sample = 1):
     '''
