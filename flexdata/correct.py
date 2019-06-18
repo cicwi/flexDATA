@@ -5,7 +5,7 @@ import logging
 #                             Correction profiles                             #
 ###############################################################################
 profiles = {
-    'cwi-flexray-2019-05-24': {
+    'cwi-flexray-2019-04-24': {
         'description': """
 This profile was last updated by Alex Kostenko on 24 April 2019.
 

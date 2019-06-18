@@ -379,7 +379,7 @@ read_flexraylog provided, use:
 >>> from flexdata import correct
 >>> geom = data.parse_flexraylog(path, sample=binning)
 >>> geom = correct.correct(geom,
-                           profile='cwi-flexray-2019-05-24',
+                           profile='cwi-flexray-2019-04-24',
                            do_print_changes=True)
 >>> geom = correct.correct_vol_center(geom)
 
@@ -477,7 +477,7 @@ read_flexraymeta provided, use:
 >>> from flexdata import correct
 >>> geom = data.parse_flexraymeta(path, sample=binning)
 >>> geom = correct.correct(geom,
-                           profile='cwi-flexray-2019-05-24',
+                           profile='cwi-flexray-2019-04-24',
                            do_print_changes=True)
 >>> geom = correct.correct_vol_center(geom)
 
@@ -550,21 +550,21 @@ def parse_flexraymeta(path, sample = 1):
         records['img_pixel'] *= 4
         pixel_adjustment = 4
 
-    if pixel_adjustment != 1:
-       msg = f"Adjusted pixel size by {pixel_adjustement} due to {records['mode']}"
-       logging.info(msg)
-       geom.log(msg)
-
     # Check version
     version = records.get('FLEXTOML_VERSION')
     if version is None:
        logger.warning(f"No version for toml file. Expected {geom.FLEXTOML_VERSION}")
-    elif version != geom.FLEXTOML_VERSION:
+    elif version != geometry.FLEXTOML_VERSION:
        logger.warning(f"Version {version} found for toml file. Expected: {geom.FLEXTOML_VERSION}")
 
     # Initialize geometry:
     geom = geometry.circular()
     geom.from_dictionary(records)
+
+    if pixel_adjustment != 1:
+       msg = f"Adjusted pixel size by {pixel_adjustement} due to {records['mode']}"
+       logging.info(msg)
+       geom.log(msg)
 
     geom.parameters['det_pixel'] *= sample
     geom.parameters['img_pixel'] *= sample
@@ -596,7 +596,7 @@ def read_geometry(path, sample = 1):
     version = records.get('FLEXTOML_VERSION')
     if version is None:
        logger.warning(f"No version for toml file. Expected {geometry.FLEXTOML_VERSION}")
-    elif version != geom.FLEXTOML_VERSION:
+    elif version != geometry.FLEXTOML_VERSION:
        logger.warning(f"Version {version} found for toml file. Expected: {geometry.FLEXTOML_VERSION}")
 
     # Initialize geometry:

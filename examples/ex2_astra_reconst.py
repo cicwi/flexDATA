@@ -34,7 +34,7 @@ data.write_toml('scan_geometry.toml')
 
 # Apply profile correction
 geom = correct.correct(geom,
-                       profile='cwi-flexray-2019-05-24',
+                       profile='cwi-flexray-2019-04-24',
                        do_print_changes=True)
 geom['det_ort'] -= 7
 geom.log("Corrected det_ort by -7 because reasons.")
