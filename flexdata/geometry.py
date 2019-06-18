@@ -10,9 +10,12 @@ volume transformations ('vol_tra', 'vol_rot'), recostruction resolution and anis
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>> Imports >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 import astra
-
 import numpy
 from transforms3d import euler
+from datetime import datetime
+
+FLEXTOML_VERSION = '0.1.0'
+
 
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>> Classes >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 class basic():
@@ -51,7 +54,9 @@ class basic():
                            'vol_sample':[1,1,1]
                            }
 
-        self.description = {}
+        self.description = {
+            'flextoml_version': FLEXTOML_VERSION,
+        }
 
     def __str__(self):
         '''
@@ -159,6 +164,20 @@ class basic():
         for key in min_set:
             if not key in self.parameters:
                 raise Exception('Geometry parameter missing after parcing: ' + key)
+
+    def log(self, message):
+        """Add a message to the geometry changelog.
+
+        This changelog will be saved with the geometry in a toml file.
+
+        :param message: A message to log (single line).
+        :returns: None
+        :rtype: NoneType
+
+        """
+        changelog = self.description.get('changelog', '')
+        changelog += f"{datetime.now():%Y-%m-%d}: {message}\n"
+        self.description['changelog'] = changelog
 
     @property
     def vol_sample(self):

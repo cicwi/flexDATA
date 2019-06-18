@@ -23,10 +23,13 @@ import psutil         # RAM tester
 import toml           # TOML format parcer
 from tqdm import tqdm # Progress barring
 import time           # Pausing
+import logging
 from scipy.io import loadmat # Reading matlab format
 from . import geometry       # geometry classes
-
+from .correct import correct_roi
 # >>>>>>>>>>>>>>>>>>>> LOGGER CLASS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
 class logger:
    """
    A class for logging and printing messages.
@@ -366,7 +369,26 @@ def read_image(file, sample = 1, shape = None, format = None, dtype = None):
     im = _sample_image_(im, sample)
     return im
 
-def read_flexraylog(path, sample = 1):
+def read_flexraylog(path, *args):
+   warnings.warn("""
+read_flexraylog is depecrated.
+
+This function combined too much functionality. If you want similar functionality to what
+read_flexraylog provided, use:
+>>> from flexdata import data
+>>> from flexdata import correct
+>>> geom = data.parse_flexraylog(path, sample=binning)
+>>> geom = correct.correct(geom,
+                           profile='cwi-flexray-2019-04-24',
+                           do_print_changes=True)
+>>> geom = correct.correct_vol_center(geom)
+
+
+""", DeprecationWarning, stacklevel=2)
+   raise NotImplementedError()
+
+
+def parse_flexraylog(path, sample = 1):
     """
     Read the log file of FLexRay scanner and return dictionaries with parameters of the scan.
 
@@ -435,14 +457,38 @@ def read_flexraylog(path, sample = 1):
     geom.parameters['det_pixel'] *= sample
     geom.parameters['img_pixel'] *= sample
 
-    # Some Flexray scanner-specific motor offset corrections:
-    _flex_motor_correct_(geom)
+    geom = correct_roi(geom)
+
+    if sample != 1:
+        msg = f"Adjusted geometry by binning by {sample}"
+        logging.info(msg)
+        geom.log(msg)
 
     return geom
 
-def read_flexraymeta(path, sample = 1):
+
+def read_flexraymeta(*args):
+   warnings.warn("""
+read_flexraymeta is depecrated.
+
+This function combined too much functionality. If you want similar functionality to what
+read_flexraymeta provided, use:
+>>> from flexdata import data
+>>> from flexdata import correct
+>>> geom = data.parse_flexraymeta(path, sample=binning)
+>>> geom = correct.correct(geom,
+                           profile='cwi-flexray-2019-04-24',
+                           do_print_changes=True)
+>>> geom = correct.correct_vol_center(geom)
+
+
+""", DeprecationWarning, stacklevel=2)
+   raise NotImplementedError()
+
+
+def parse_flexraymeta(path, sample = 1):
     """
-    Read the metafile produced by Flexray scripting.
+    Read the metafile produced by the Flexray script generator.
 
     Args:
         path   (str): path to the files location
@@ -493,22 +539,43 @@ def read_flexraymeta(path, sample = 1):
     records['roi'] = roi.tolist()
 
     # Detector pixel is not changed here when binning mode is on...
+    pixel_adjustment = 1
     if (records['mode'] == 'HW2SW1High')|(records['mode'] == 'HW1SW2High'):
         records['det_pixel'] *= 2
         records['img_pixel'] *= 2
+        pixel_adjustment = 2
 
     elif (records['mode'] == 'HW2SW2High'):
         records['det_pixel'] *= 4
         records['img_pixel'] *= 4
+        pixel_adjustment = 4
+
+    # Check version
+    version = records.get('FLEXTOML_VERSION')
+    if version is None:
+       logger.warning(f"No version for toml file. Expected {geom.FLEXTOML_VERSION}")
+    elif version != geometry.FLEXTOML_VERSION:
+       logger.warning(f"Version {version} found for toml file. Expected: {geom.FLEXTOML_VERSION}")
 
     # Initialize geometry:
     geom = geometry.circular()
     geom.from_dictionary(records)
 
+    if pixel_adjustment != 1:
+       msg = f"Adjusted pixel size by {pixel_adjustement} due to {records['mode']}"
+       logging.info(msg)
+       geom.log(msg)
+
     geom.parameters['det_pixel'] *= sample
     geom.parameters['img_pixel'] *= sample
 
+    if sample != 1:
+        msg = f"Adjusted geometry by binning by {sample}"
+        logging.info(msg)
+        geom.log(msg)
+
     return geom
+
 
 def read_geometry(path, sample = 1):
     '''
@@ -524,6 +591,13 @@ def read_geometry(path, sample = 1):
     records = read_toml(os.path.join(path, 'geometry.toml'))
     records['det_pixel'] *= sample
     records['img_pixel'] *= sample
+
+    # Check version
+    version = records.get('FLEXTOML_VERSION')
+    if version is None:
+       logger.warning(f"No version for toml file. Expected {geometry.FLEXTOML_VERSION}")
+    elif version != geometry.FLEXTOML_VERSION:
+       logger.warning(f"Version {version} found for toml file. Expected: {geometry.FLEXTOML_VERSION}")
 
     # Initialize geometry:
     geom = geometry.circular()
@@ -1477,29 +1551,6 @@ def _parse_unit_(string):
 
     return factor
 
-def _flex_motor_correct_(geom):
-    '''
-    Apply some motor offsets to get to a correct coordinate system.
-    '''
-    # Correct some records (FlexRay specific):
-
-    # Horizontal offsets:
-    geom.parameters['det_tan'] += 24
-    geom.parameters['src_ort'] -= 7
-
-    # Rotation axis:
-    geom.parameters['axs_tan'] -= 0.5
-
-    # roi:
-    roi = geom.description['roi']
-    centre = [(roi[0] + roi[2]) // 2 - 971, (roi[1] + roi[3]) // 2 - 767]
-
-    # Not sure the binning should be taken into account...
-    geom.parameters['det_ort'] -= centre[1] * geom.parameters['det_pixel']
-    geom.parameters['det_tan'] -= centre[0] * geom.parameters['det_pixel']
-
-    geom.parameters['vol_tra'][0] = (geom.parameters['det_ort'] * geom.src2obj +
-                   geom.parameters['src_ort'] * geom.det2obj) / geom.src2det
 
 def _check_success_(proj, geom, success):
     """
