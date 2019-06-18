@@ -16,36 +16,29 @@ import astra
 from pathlib import Path
 
 #%% Read data:
-    
+
 path = '/ufs/ciacc/flexbox/good/'
 binning = 2
 
 dark = data.read_stack(path, 'di00', sample=binning)
-flat = data.read_stack(path, 'io00', sample=binning)    
+flat = data.read_stack(path, 'io00', sample=binning)
 proj = data.read_stack(path, 'scan_', skip=binning, sample=binning)
 
 ###############################################################################
 #                                 This is new                                 #
 ###############################################################################
-geom = data.read_flexraylog(path, sample=binning)
-# If ROI:
-#  - automatically correct for ROI
-#  - print corrections to stderr
-#  - log to geometry: "Adjusted detector center to ROI {..}"
+geom = data.parse_flexraylog(path, sample=binning)
 
-# Note: store geometry, with comment "read from 'blah/blah/scan settings.txt'"
-data.write_toml('scan_geometry.toml', overwrite=True, exist_ok=True)
+data.write_toml('scan_geometry.toml')
+# TODO: Add optional params: overwrite=True, exist_ok=True
 
-# Profiel correctie (rode streepje)    
+# Apply profile correction
 geom = correct.correct(geom,
                        profile='cwi-flexray-2019-05-24',
                        do_print_changes=True)
 geom['det_ort'] -= 7
 geom.log("Corrected det_ort by -7 because reasons.")
-# TODO: Implement geom.log()
 geom = correct.correct_vol_center(geom)
-# Logging info:
-# INFO - Volume center: (x, x, x) with size (y, y, y)
 
 
 ###############################################################################
@@ -66,7 +59,7 @@ vol = numpy.zeros([2000 // binning, 2000 // binning, 2000 // binning], dtype = '
 # Initialize ASTRA geometries:
 vol_geom = geom.astra_volume_geom(vol.shape)
 proj_geom = geom.astra_projection_geom(proj.shape)
-        
+
 # This is ASTRAAA!!!
 sin_id = astra.data3d.link('-sino', proj_geom, proj)
 vol_id = astra.data3d.link('-vol', vol_geom, vol)
@@ -77,11 +70,11 @@ cfg['ProjectionDataId'] = sin_id
 
 alg_id = astra.algorithm.create(cfg)
 astra.algorithm.run(alg_id, 1)
-  
+
 astra.algorithm.delete(alg_id)
 astra.data3d.delete(sin_id)
 astra.data3d.delete(vol_id)
-   
+
 display.slice(vol, dim = 0, bounds = [0, 0.04], title = 'Projection', cmap = 'magma')
 
 
@@ -91,9 +84,5 @@ display.slice(vol, dim = 0, bounds = [0, 0.04], title = 'Projection', cmap = 'ma
 
 # TODO: Create output directory
 data.write_stack('./output_dir/', vol)
-# Note: store geometry, with comment appended "corrected with profile 'cwi-flexray-2019-06-01'"
-# TODO: Implement storing of comments/changelog.
-data.write_toml('./output_dir/reconstruction_geometry.toml',
-                overwrite=True,
-                exist_ok=True
-)
+# Note: store geometry:
+data.write_toml('./output_dir/reconstruction_geometry.toml')

@@ -119,5 +119,7 @@ def correct_vol_center(geometry):
                                      geom.parameters['src_ort'] * geom.det2obj) / geom.src2det
 
     # TODO: Print changes to volume geometry..
+    # Logging info:
+    # INFO - Volume center: (x, x, x) with size (y, y, y)
 
     return geometry
