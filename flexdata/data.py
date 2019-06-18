@@ -23,6 +23,7 @@ import psutil         # RAM tester
 import toml           # TOML format parcer
 from tqdm import tqdm # Progress barring
 import time           # Pausing
+import logging
 from scipy.io import loadmat # Reading matlab format
 from . import geometry       # geometry classes
 from .correct import correct_roi
@@ -458,6 +459,11 @@ def parse_flexraylog(path, sample = 1):
 
     geom = correct_roi(geom)
 
+    if sample != 1:
+        msg = f"Adjusted geometry by binning by {sample}"
+        logging.info(msg)
+        geom.log(msg)
+
     return geom
 
 
@@ -533,13 +539,21 @@ def parse_flexraymeta(path, sample = 1):
     records['roi'] = roi.tolist()
 
     # Detector pixel is not changed here when binning mode is on...
+    pixel_adjustment = 1
     if (records['mode'] == 'HW2SW1High')|(records['mode'] == 'HW1SW2High'):
         records['det_pixel'] *= 2
         records['img_pixel'] *= 2
+        pixel_adjustment = 2
 
     elif (records['mode'] == 'HW2SW2High'):
         records['det_pixel'] *= 4
         records['img_pixel'] *= 4
+        pixel_adjustment = 4
+
+    if pixel_adjustment != 1:
+       msg = f"Adjusted pixel size by {pixel_adjustement} due to {records['mode']}"
+       logging.info(msg)
+       geom.log(msg)
 
     # Check version
     version = records.get('FLEXTOML_VERSION')
@@ -554,6 +568,11 @@ def parse_flexraymeta(path, sample = 1):
 
     geom.parameters['det_pixel'] *= sample
     geom.parameters['img_pixel'] *= sample
+
+    if sample != 1:
+        msg = f"Adjusted geometry by binning by {sample}"
+        logging.info(msg)
+        geom.log(msg)
 
     return geom
 
