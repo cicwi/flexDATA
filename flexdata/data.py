@@ -495,11 +495,9 @@ def read_flexraymeta(path, sample = 1):
     # Detector pixel is not changed here when binning mode is on...
     if (records['mode'] == 'HW2SW1High')|(records['mode'] == 'HW1SW2High'):
         records['det_pixel'] *= 2
-        records['img_pixel'] *= 2
 
     elif (records['mode'] == 'HW2SW2High'):
         records['det_pixel'] *= 4
-        records['img_pixel'] *= 4
 
     # Initialize geometry:
     geom = geometry.circular()
