@@ -542,12 +542,10 @@ def parse_flexraymeta(path, sample = 1):
     pixel_adjustment = 1
     if (records['mode'] == 'HW2SW1High')|(records['mode'] == 'HW1SW2High'):
         records['det_pixel'] *= 2
-        records['img_pixel'] *= 2
         pixel_adjustment = 2
 
     elif (records['mode'] == 'HW2SW2High'):
         records['det_pixel'] *= 4
-        records['img_pixel'] *= 4
         pixel_adjustment = 4
 
     # Check version
