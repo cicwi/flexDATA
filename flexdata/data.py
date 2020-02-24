@@ -452,10 +452,11 @@ def read_flexraymeta(path, sample = 1):
         geometry    : circular geometry class
     """
     param_dict = {'det_pixel':'detector pixel size',
+                  'mag':'magnification',
 
                 'src2obj':'sod',
                 'src2det':'sdd',
-
+                
                 'src_ort':'ver_tube',
                 'src_tan':'tra_tube',
 
@@ -491,6 +492,9 @@ def read_flexraymeta(path, sample = 1):
     roi = re.sub('[] []', '', records['roi']).split(sep=',')
     roi = numpy.int32(roi)
     records['roi'] = roi.tolist()
+    
+    #calculate image pixel
+    records['img_pixel'] = records['det_pixel']/records['mag']
 
     # Detector pixel is not changed here when binning mode is on...
     if (records['mode'] == 'HW2SW1High')|(records['mode'] == 'HW1SW2High'):
