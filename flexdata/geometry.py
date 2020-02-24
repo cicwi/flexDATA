@@ -263,8 +263,10 @@ class basic():
         '''
         # Get vectors:
         if hasattr(self, '_vectors_'):
-            vectors = self._vectors_
-
+            if index is None:
+                vectors = self._vectors_
+            else:
+                vectors = self._vectors_[index]
         else:
             vectors = self.get_vectors(data_shape[1], index)
 
