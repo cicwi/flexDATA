@@ -278,12 +278,25 @@ def read_flexray(path, sample = 1, skip = 1, memmap = None, proj_number = None):
     proj = read_stack(path, 'scan_', skip, sample, dtype = 'float32', memmap = memmap, success = success)
 
     # Try to retrieve metadata:
-    try:
+    if os.path.exists(os.path.join(path, 'metadata.toml')):
+        logger.print("Reading geometry from metadata.toml")
         geom = read_flexraymeta(path, sample)
 
-    except:
-
+    elif os.path.exists(os.path.join(path, 'scan settings.txt')):
+        logger.print("Reading geometry from 'scan settings.txt'")
         geom = read_flexraylog(path, sample)
+
+    elif os.path.exists(os.path.join(path, 'data settings XRE.txt')):
+        logger.print("Reading geometry from 'data settings XRE.txt'")
+        geom = read_flexraydatasettings(path, sample)
+
+    elif os.path.exists(os.path.join(path, 'geometry.toml')):
+        logger.print("Reading geometry from 'geometry.toml'")
+        geom = read_geometry(path, sample)
+
+    else:
+        logger.warning('No meta data found.')
+        geom = None
 
     # Check success. If a few files were not read - interpolate, otherwise adjust the meta record.
     proj = _check_success_(proj, geom, success)
