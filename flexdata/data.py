@@ -515,6 +515,84 @@ def read_flexraymeta(path, sample = 1):
 
     return geom
 
+def read_flexraydatasettings(path, sample = 1):
+    """
+    Read the data settings file of FLexRay scanner and return dictionaries with parameters of the scan.
+
+    Args:
+        path   (str): path to the files location
+        sample (int): subsampling of the input data
+
+    Returns:
+        geometry    : circular geometry class
+    """
+    # Dictionary that describes the Flexray log record:
+    param_dict =     {'img_pixel':'voxel size',
+                      'det_pixel':'pixel size',
+
+                    'src2obj':'sod',
+                    'src2det':'sdd',
+
+                    'src_ort':'ver_tube',
+                    'src_tan':'tra_tube',
+
+                    'det_ort':'ver_det',
+                    'det_tan':'tra_det',
+
+                    'axs_tan':'tra_obj',
+
+                    'theta_max':'last angle',
+                    'theta_min':'start angle',
+
+                    'roi':'import roi',
+
+                    'voltage':'tube voltage',
+                    'power':'tube power',
+                    'averages':'number of averages',
+                    'mode':'imaging mode',
+                    'filter':'filter',
+
+                    'exposure':'exposure time (ms)',
+
+                    'binning':'binning value',
+
+                    'dark_avrg' : '# offset images',
+                    'pre_flat':'# pre flat fields',
+                    'post_flat':'# post flat fields',
+
+                    'duration':'scan duration',
+                    'name':'sample name',
+                    'comments' : 'comment',
+
+                    'samp_size':'sample size',
+                    'owner':'sample owner',
+
+                    'date':'date'}
+
+    # Read file and translate:
+    records = file_to_dictionary(os.path.join(path, 'data settings XRE.txt'), separator = '=', translation = param_dict, strip_quotes = True, stop_at = "POIs".lower())
+    # Corrections specific to this type of file:
+    records['img_pixel'] *= _parse_unit_('mm')
+
+    # Initialize geometry:
+    geom = geometry.circular()
+    geom.from_dictionary(records)
+    det_binning = geom['det_pixel']//0.0748
+
+    roi = (numpy.int32(records.get('roi').rstrip(';').split(sep=';')) * int(det_binning) - numpy.int32([0, 0, 1, 1])).tolist()
+    records['roi'] = roi
+
+    geom.from_dictionary(records)
+    geom.parameters['det_pixel'] *= sample
+    geom.parameters['img_pixel'] *= sample
+
+    # Some Flexray scanner-specific motor offset corrections:
+    _flex_motor_correct_(geom)
+
+    return geom
+
+
+
 def read_geometry(path, sample = 1):
     '''
     Read a native meta file.
@@ -536,7 +614,7 @@ def read_geometry(path, sample = 1):
 
     return geom
 
-def file_to_dictionary(file_path, separator = ':', translation = None):
+def file_to_dictionary(file_path, separator = ':', translation = None, strip_quotes = False, stop_at = None):
     '''
     Read a text file and return a dictionary with records.
 
@@ -544,6 +622,8 @@ def file_to_dictionary(file_path, separator = ':', translation = None):
         file_path (str): file to read
         separator (str): separator between the keys and values
         translation (dict): dictionary for translating initial keys to a new naming
+        strip_quotes (bool): if True, remove double quotes (") from values
+        stop_at (str): if set, stop all parsing at section containing stop_at
     '''
 
     # Initialize records:
@@ -566,6 +646,9 @@ def file_to_dictionary(file_path, separator = ':', translation = None):
                     # Remove \n:
                     var = var.rstrip()
 
+                    if strip_quotes:
+                        var = var.strip().strip('"')
+
                     # If needed to separate the var and save the number of save the whole string:
                     try:
                         var = float(var.split()[0])
@@ -578,6 +661,9 @@ def file_to_dictionary(file_path, separator = ':', translation = None):
                         var = var.strip()
 
                     records[name] = var
+                elif stop_at is not None:
+                    if stop_at in name:
+                        break
 
     if not records:
         raise Exception('Something went wrong during parsing the log file at:' + file_path)
