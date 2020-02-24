@@ -485,7 +485,7 @@ def read_flexraymeta(path, sample = 1):
                 'duration':'total_scantime',
                 'name':'scan_name'}
 
-    records = file_to_dictionary(os.path.join(path, 'metadata.toml'), separator = '=', translate = param_dict)
+    records = file_to_dictionary(os.path.join(path, 'metadata.toml'), separator = '=', translation = param_dict)
 
     # Compute the center of the detector:
     roi = re.sub('[] []', '', records['roi']).split(sep=',')
