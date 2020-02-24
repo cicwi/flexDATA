@@ -1409,16 +1409,23 @@ def _flex_motor_correct_(geom):
     # Correct some records (FlexRay specific):
 
     # Horizontal offsets:
+#    geom.parameters['det_tan'] += 24
+#    geom.parameters['src_ort'] -= 7
+#
+#    # Rotation axis:
+#    geom.parameters['axs_tan'] -= 0.5
+    
+    #
     geom.parameters['det_tan'] += 24
-    geom.parameters['src_ort'] -= 7
+    geom.parameters['src_ort'] -= 5.9
 
     # Rotation axis:
-    geom.parameters['axs_tan'] -= 0.5
+    geom.parameters['axs_tan'] -= 0.59
 
     # roi:
     roi = geom.description['roi']
     centre = [(roi[0] + roi[2]) // 2 - 971, (roi[1] + roi[3]) // 2 - 767]
-
+    #print(centre)
     # Not sure the binning should be taken into account...
     geom.parameters['det_ort'] -= centre[1] * geom.parameters['det_pixel']
     geom.parameters['det_tan'] -= centre[0] * geom.parameters['det_pixel']
