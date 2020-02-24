@@ -509,6 +509,9 @@ def read_flexraymeta(path, sample = 1):
 
     geom.parameters['det_pixel'] *= sample
     geom.parameters['img_pixel'] *= sample
+    
+    # Some Flexray scanner-specific motor offset corrections:
+    _flex_motor_correct_(geom)
 
     return geom
 
