@@ -1527,7 +1527,7 @@ def _flex_motor_correct_(geom):
 #    geom.parameters['axs_tan'] -= 0.5
     
     #
-    geom.parameters['det_tan'] += 24
+    geom.parameters['det_tan'] += 24.4
     geom.parameters['src_ort'] -= 5.9
 
     # Rotation axis:
