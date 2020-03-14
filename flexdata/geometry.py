@@ -263,7 +263,8 @@ class basic():
         '''
         # Get vectors:
         if hasattr(self, '_vectors_'):
-            vectors = self._vectors_
+            vectors = self._vectors_[index] #index added
+            #print(index)
 
         else:
             vectors = self.get_vectors(data_shape[1], index)
@@ -376,6 +377,7 @@ class basic():
         T = numpy.array([vol_tra[1], vol_tra[2], vol_tra[0]])
         src_vect -= numpy.dot(T, R)
         det_vect -= numpy.dot(T, R)
+        
 
     def detector_size(self, proj_shape):
         '''

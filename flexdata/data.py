@@ -278,12 +278,30 @@ def read_flexray(path, sample = 1, skip = 1, memmap = None, proj_number = None):
     proj = read_stack(path, 'scan_', skip, sample, dtype = 'float32', memmap = memmap, success = success)
 
     # Try to retrieve metadata:
-    try:
-        geom = read_flexraymeta(path, sample)
+#    try:
+#        geom = read_flexraymeta(path, sample)
+#
+#    except:
+#
+#        geom = read_flexraylog(path, sample)
+    
+    if os.path.exists(os.path.join(path, 'metadata.toml')):
+        geom = read_flexraymeta(path, sample)   
+                
+    elif os.path.exists(os.path.join(path, 'scan settings.txt')):
+        geom = read_flexraylog(path, sample)  
+                
+    elif os.path.exists(os.path.join(path, 'data settings XRE.txt')):
+        geom = read_flexraydatasettings(path, sample)   
+        print('Warning: you are using the datasettings file, try to use metadata or scansettings if possible')
+        print(geom)
+            
+    elif os.path.exists(os.path.join(path, 'geometry.toml')):
+        geom = read_geometry(path, sample)    
 
-    except:
-
-        geom = read_flexraylog(path, sample)
+    else:
+        logger.warning('No meta data found.')
+        geom = None
 
     # Check success. If a few files were not read - interpolate, otherwise adjust the meta record.
     proj = _check_success_(proj, geom, success)
@@ -452,10 +470,11 @@ def read_flexraymeta(path, sample = 1):
         geometry    : circular geometry class
     """
     param_dict = {'det_pixel':'detector pixel size',
+                  'mag':'magnification',
 
                 'src2obj':'sod',
                 'src2det':'sdd',
-
+                
                 'src_ort':'ver_tube',
                 'src_tan':'tra_tube',
 
@@ -491,6 +510,9 @@ def read_flexraymeta(path, sample = 1):
     roi = re.sub('[] []', '', records['roi']).split(sep=',')
     roi = numpy.int32(roi)
     records['roi'] = roi.tolist()
+    
+    #calculate image pixel
+    records['img_pixel'] = records['det_pixel']/records['mag']
 
     # Detector pixel is not changed here when binning mode is on...
     if (records['mode'] == 'HW2SW1High')|(records['mode'] == 'HW1SW2High'):
@@ -505,8 +527,89 @@ def read_flexraymeta(path, sample = 1):
 
     geom.parameters['det_pixel'] *= sample
     geom.parameters['img_pixel'] *= sample
+    
+    # Some Flexray scanner-specific motor offset corrections:
+    _flex_motor_correct_(geom)
 
     return geom
+
+def read_flexraydatasettings(path, sample = 1):
+    """
+    Read the data settings file of FLexRay scanner and return dictionaries with parameters of the scan.
+    
+    Args:
+        path   (str): path to the files location
+        sample (int): subsampling of the input data
+        
+    Returns:    
+        geometry    : circular geometry class
+    """   
+    # Dictionary that describes the Flexray log record:        
+    param_dict =     {'img_pixel':'voxel size',
+                      'det_pixel':'pixel size',
+                     
+                    'src2obj':'sod',
+                    'src2det':'sdd',
+                    
+                    'src_ort':'ver_tube',
+                    'src_tan':'tra_tube',
+                    
+                    'det_ort':'ver_det',
+                    'det_tan':'tra_det',                    
+                    
+                    'axs_tan':'tra_obj',
+                    
+                    'theta_max':'last angle',
+                    'theta_min':'start angle',
+                    
+                    'roi':'import roi',
+                    
+                    'voltage':'tube voltage',
+                    'power':'tube power',
+                    'averages':'number of averages',
+                    'mode':'imaging mode',
+                    'filter':'filter',
+                    
+                    'exposure':'exposure time (ms)',
+                    
+                    'binning':'binning value',
+                    
+                    'dark_avrg' : '# offset images',
+                    'pre_flat':'# pre flat fields',
+                    'post_flat':'# post flat fields',
+    
+                    'duration':'scan duration',
+                    'name':'sample name',
+                    'comments' : 'comment', 
+                    
+                    'samp_size':'sample size',
+                    'owner':'sample owner',
+
+                    'date':'date'}
+    
+    # Read file and translate:
+    records = file_to_dictionary(os.path.join(path, 'data settings XRE.txt'), separator = '=', translation = param_dict, strip_quotes = True, stop_at = "POIs".lower())
+    # Corrections specific to this type of file:
+    records['img_pixel'] *= _parse_unit_('mm')
+    
+    # Initialize geometry:
+    geom = geometry.circular()
+    geom.from_dictionary(records)
+    det_binning = geom['det_pixel']//0.0748
+
+    
+    roi = (numpy.int32(records.get('roi').rstrip(';').split(sep=';')) * int(det_binning) - numpy.int32([0, 0, 1, 1])).tolist()
+    records['roi'] = roi
+    
+    geom.from_dictionary(records)
+    geom.parameters['det_pixel'] *= sample
+    geom.parameters['img_pixel'] *= sample
+    
+    # Some Flexray scanner-specific motor offset corrections:
+    _flex_motor_correct_(geom)
+        
+    return geom
+
 
 def read_geometry(path, sample = 1):
     '''
@@ -529,7 +632,8 @@ def read_geometry(path, sample = 1):
 
     return geom
 
-def file_to_dictionary(file_path, separator = ':', translation = None):
+
+def file_to_dictionary(file_path, separator = ':', translation = None, strip_quotes = False, stop_at = None):
     '''
     Read a text file and return a dictionary with records.
 
@@ -558,6 +662,8 @@ def file_to_dictionary(file_path, separator = ':', translation = None):
 
                     # Remove \n:
                     var = var.rstrip()
+                    if strip_quotes:
+                        var = var.strip().strip('"')
 
                     # If needed to separate the var and save the number of save the whole string:
                     try:
@@ -571,6 +677,10 @@ def file_to_dictionary(file_path, separator = ':', translation = None):
                         var = var.strip()
 
                     records[name] = var
+                elif stop_at is not None:
+                    if stop_at in name:
+                        break
+
 
     if not records:
         raise Exception('Something went wrong during parsing the log file at:' + file_path)
@@ -586,6 +696,7 @@ def file_to_dictionary(file_path, separator = ':', translation = None):
         return records_t
     else:
         return records
+
 
 def read_toml(file_path):
     """
@@ -1407,16 +1518,23 @@ def _flex_motor_correct_(geom):
     # Correct some records (FlexRay specific):
 
     # Horizontal offsets:
-    geom.parameters['det_tan'] += 24
-    geom.parameters['src_ort'] -= 7
+#    geom.parameters['det_tan'] += 24
+#    geom.parameters['src_ort'] -= 7
+#
+#    # Rotation axis:
+#    geom.parameters['axs_tan'] -= 0.5
+    
+    #
+    geom.parameters['det_tan'] += 24.4
+    geom.parameters['src_ort'] -= 5.9
 
     # Rotation axis:
-    geom.parameters['axs_tan'] -= 0.5
+    geom.parameters['axs_tan'] -= 0.59
 
     # roi:
     roi = geom.description['roi']
     centre = [(roi[0] + roi[2]) // 2 - 971, (roi[1] + roi[3]) // 2 - 767]
-
+    #print(centre)
     # Not sure the binning should be taken into account...
     geom.parameters['det_ort'] -= centre[1] * geom.parameters['det_pixel']
     geom.parameters['det_tan'] -= centre[0] * geom.parameters['det_pixel']
