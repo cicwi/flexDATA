@@ -1520,18 +1520,18 @@ def _flex_motor_correct_(geom):
     # Correct some records (FlexRay specific):
 
     # Horizontal offsets:
-#    geom.parameters['det_tan'] += 24
-#    geom.parameters['src_ort'] -= 7
-#
-#    # Rotation axis:
-#    geom.parameters['axs_tan'] -= 0.5
-    
-    #
-    geom.parameters['det_tan'] += 24.4
-    geom.parameters['src_ort'] -= 5.9
+    geom.parameters['det_tan'] += 24
+    geom.parameters['src_ort'] -= 7
 
     # Rotation axis:
-    geom.parameters['axs_tan'] -= 0.59
+    geom.parameters['axs_tan'] -= 0.5
+    
+    #
+#    geom.parameters['det_tan'] += 24.4
+#    geom.parameters['src_ort'] -= 5.9
+#
+#    # Rotation axis:
+#    geom.parameters['axs_tan'] -= 0.59
 
     # roi:
     roi = geom.description['roi']
