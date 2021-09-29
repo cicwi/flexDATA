@@ -86,13 +86,14 @@ def correct_roi(geometry):
     # the geometry has already been binned or hardware binning has
     # been used?
 
-    # TODO: This is definitely wrong when sampling/binning has been
-    # applied.
     centre = [(roi[0] + roi[2]) // 2 - 971, (roi[1] + roi[3]) // 2 - 767]
 
+    # ROI is written for a pixel in 1x1 binning, so 75 um should be used for correction
+    detector_pixel_size = 0.0748
+
     # Not sure the binning should be taken into account...
-    d_ort = - centre[1] * geometry.parameters['det_pixel']
-    d_tan = - centre[0] * geometry.parameters['det_pixel']
+    d_ort = centre[1] * detector_pixel_size
+    d_tan = centre[0] * detector_pixel_size
 
     geometry.parameters['det_ort'] += d_ort
     geometry.parameters['det_tan'] += d_tan
