@@ -1,4 +1,5 @@
 import logging
+from copy import deepcopy
 
 
 ###############################################################################
@@ -55,6 +56,8 @@ def correct(geometry, profile=None, do_print_changes=True):
             f"{profile_names}"
         )
 
+    geometry = deepcopy(geometry)
+
     for k, v in prof.items():
         # Skip description, it is purely to describe correction profiles.
         if k == 'description':
@@ -80,6 +83,8 @@ def correct_roi(geometry):
     :rtype:
 
     """
+    geometry = deepcopy(geometry)
+
     # Fix roi:
     roi = geometry.description['roi']
     # XXX: Why do we hardcode 971 and 767? Does this also work when
@@ -115,9 +120,9 @@ def correct_vol_center(geometry):
 
     """
 
-    geom = geometry
-    geom.parameters['vol_tra'][0] = (geom.parameters['det_ort'] * geom.src2obj +
-                                     geom.parameters['src_ort'] * geom.det2obj) / geom.src2det
+    geometry = deepcopy(geometry)
+    geometry.parameters['vol_tra'][0] = (geometry.parameters['det_ort'] * geom.src2obj +
+                                         geometry.parameters['src_ort'] * geom.det2obj) / geom.src2det
 
     # TODO: Print changes to volume geometry..
     # Logging info:
