@@ -765,13 +765,14 @@ def read_toml(file_path):
 
     return record
 
-def write_toml(filename, record):
+def write_toml(filename, record, overwrite=False):
     """
     Write a toml file.
 
     Args:
         filename (str): location to write the file to
-        record (dict, geometry): geomety class record or an arbitrary dictionary
+        record (dict, geometry): geometry class record or an arbitrary dictionary
+        overwrite (bool): if True, allow overwriting existing file. Default False
     """
     # Convert to dictionary:
     if not(type(record) is dict):
@@ -792,7 +793,8 @@ def write_toml(filename, record):
     #        record[key] = _numpy2python_(record[key])
 
     # Save TOML to a file:
-    with open(filename, 'w') as f:
+    mode = 'w' if overwrite else 'x'
+    with open(filename, mode) as f:
         d = toml.dumps(record)
         f.write(d)
 

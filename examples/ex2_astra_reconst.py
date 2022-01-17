@@ -29,8 +29,7 @@ proj = data.read_stack(path, 'scan_', skip=binning, sample=binning)
 ###############################################################################
 geom = data.parse_flexraylog(path, sample=binning)
 
-data.write_toml('scan_geometry.toml')
-# TODO: Add optional params: overwrite=True, exist_ok=True
+data.write_toml('scan_geometry.toml', overwrite=True)
 
 # Apply profile correction
 geom = correct.correct(geom,
@@ -82,7 +81,7 @@ display.slice(vol, dim = 0, bounds = [0, 0.04], title = 'Projection', cmap = 'ma
 #                                 This is new                                 #
 ###############################################################################
 
-# TODO: Create output directory
+# Store output data
 data.write_stack('./output_dir/', vol)
-# Note: store geometry:
-data.write_toml('./output_dir/reconstruction_geometry.toml')
+# Write reconstruction geometry
+data.write_toml('./output_dir/reconstruction_geometry.toml', overwrite=True)
