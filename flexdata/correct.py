@@ -112,7 +112,7 @@ def correct_roi(geometry):
 
 
 def correct_vol_center(geometry):
-    """Move the volume center in-between the source and detector center.
+    """Move the volume center vertically in-between the source and detector center.
 
     :param geometry:
     :returns:
@@ -121,11 +121,14 @@ def correct_vol_center(geometry):
     """
 
     geometry = deepcopy(geometry)
-    geometry.parameters['vol_tra'][0] = (geometry.parameters['det_ort'] * geom.src2obj +
-                                         geometry.parameters['src_ort'] * geom.det2obj) / geom.src2det
+    vol_tra_z_old = geometry.parameters['vol_tra'][0]
+    vol_tra_z_new = (geometry.parameters['det_ort'] * geom.src2obj +
+                   geometry.parameters['src_ort'] * geom.det2obj) / geom.src2det
+    geometry.parameters['vol_tra'][0] = vol_tra_z_new
 
-    # TODO: Print changes to volume geometry..
-    # Logging info:
-    # INFO - Volume center: (x, x, x) with size (y, y, y)
+    if abs(vol_tra_z_old - vol_tra_z_new) > 1e-6:
+        msg = f"Adjusted vertical volume center to source/detector pos: z = {vol_tra_z_new}."
+        geometry.log(msg)
+        logging.info(msg)
 
     return geometry
