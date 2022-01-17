@@ -15,4 +15,4 @@ style: install_dev
 	black flexdata
 
 conda_package: install_dev
-	conda build conda/ -c astra-toolbox/label/dev -c conda-forge -c owlas
+	conda build conda/ -c astra-toolbox/label/dev -c conda-forge

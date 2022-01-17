@@ -12,7 +12,7 @@ It takes a few steps to setup flexDATA on your machine. We recommend that the us
 Simply install with:
 ```
 conda create -n <your-environment> python=3.7
-conda install -c cicwi -c astra-toolbox/label/dev -c conda-forge -c owlas flexdata
+conda install -c cicwi -c astra-toolbox/label/dev -c conda-forge flexdata
 ```
 
 **NOTE**: currently, the latest version of flexDATA is only available
