@@ -15,8 +15,6 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import ticker
 
-import pyqtgraph as pq
-
 from . import data
 
 """ * Methods * """
@@ -70,6 +68,8 @@ def pyqt_graph(array, dim = 0, title=None):
     '''
     Create a PYQT window to display a 3D arrayset.
     '''
+    import pyqtgraph as pq
+
     # create pyqtgraph app:
     app = pq.mkQApp()
 
