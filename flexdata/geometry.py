@@ -9,7 +9,6 @@ volume transformations ('vol_tra', 'vol_rot'), recostruction resolution and anis
 """
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>> Imports >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-import astra
 import numpy
 import scipy.spatial
 
@@ -260,6 +259,8 @@ class basic():
         Returns:
             geometry : ASTRA cone-beam geometry.
         '''
+        import astra
+
         # Get vectors:
         if hasattr(self, '_vectors_'):
             if index is None:
@@ -283,6 +284,7 @@ class basic():
             slice_first: first slice of an ROI to update
             slice_last : last slice of an ROI to update
         '''
+        import astra
 
         # Shape and size (mm) of the volume
         vol_shape = numpy.array(vol_shape)
