@@ -113,7 +113,7 @@ class basic():
             T (1x3 array): translation vector
         """
         # Translate to flex geometry:
-        self.parameters['vol_rot'] = numpy.rad2deg(euler.mat2euler(R.T, axes = 'sxyz'))
+        self.parameters['vol_rot'] = _mat2euler(R.T, axes='sxyz')
         self.parameters['vol_tra'] = numpy.array(self.parameters['vol_tra']) - numpy.dot(T, R.T)[[0,2,1]] * self.voxel
 
     def from_dictionary(self, dictionary):
@@ -971,6 +971,10 @@ def circular_orbit(radius, thetas, roll = 0, pitch = 0, yaw = 0,
         return position[index], tangent[index], radius[index], orthogonal[index]
     else:
         return position, tangent, radius, orthogonal
+
+
+def _mat2euler(M, axes='sxyz'):
+    return numpy.rad2deg(euler.mat2euler(M, axes))
 
 def _euler2mat_(a, b, c, axes='sxyz'):
     a = numpy.deg2rad(a)
