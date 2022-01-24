@@ -11,9 +11,6 @@ This module contains a few simple routines for displaying data:
 
 import numpy
 
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib import ticker
 
 from . import data
 
@@ -22,6 +19,8 @@ def plot3d(x, y, z, connected = False, title = None):
     '''
     Plot a 3D line or a scatter plot.
     '''
+    import matplotlib.pyplot as plt
+
     fig = plt.figure()
     ax = fig.gca(projection='3d')
     #ax = fig.add_subplot(111, projection='3d')
@@ -37,6 +36,8 @@ def plot2d(x, y=None, semilogy=False, title=None, legend=None):
     '''
     A standard 2D plot.
     '''
+    import matplotlib.pyplot as plt
+
     if y is None:
         y = x
         x = numpy.arange(numpy.size(x))
@@ -79,6 +80,9 @@ def pyqt_graph(array, dim = 0, title=None):
 
 def slice(array, index=None, dim=0, bounds=None, title=None, cmap="gray", file=None, cbar = True):
 
+    import matplotlib.pyplot as plt
+    from matplotlib import ticker
+
     # Just in case squeeze:
     array = numpy.squeeze(array)
 
@@ -114,6 +118,7 @@ def slice(array, index=None, dim=0, bounds=None, title=None, cmap="gray", file=N
 
 def _after_plot_(title, file):
 
+    import matplotlib.pyplot as plt
     #plt.axis("off")
 
     if title:
@@ -126,9 +131,11 @@ def _after_plot_(title, file):
 
 def mesh(stl_mesh):
     """
-    Display an stl mesh. Use flexCompute.generate_stl(volume) to generate mesh.
+    Display an stl mesh. Use flexcalc.generate_stl(volume) to generate mesh.
     """
+    import matplotlib.pyplot as plt
     from mpl_toolkits import mplot3d
+    from mpl_toolkits.mplot3d import Axes3D
 
     figure = plt.figure()
     axes = mplot3d.Axes3D(figure)
@@ -146,6 +153,7 @@ def projection(array, dim=1, bounds=None, title=None, cmap="gray", file=None):
     '''
     A simple projection of the volume along one of the dimensions.
     '''
+    import matplotlib.pyplot as plt
 
     img = array.sum(dim)
 
@@ -168,6 +176,8 @@ def color_project(array, dim=1, sample = 2, bounds=[0.01, 0.1], title=None, cmap
     '''
     Create a pseudo color projection of a 3D volume.
     '''
+    import matplotlib.pyplot as plt
+
     # Sample array:
     array = array[::sample,::sample,::sample]
 
@@ -216,6 +226,8 @@ def max_projection(array, dim=0, bounds=None, title=None, cmap="gray", file=None
     '''
     Projection of maximum values.
     '''
+    import matplotlib.pyplot as plt
+
     img = array.max(dim)
 
     # There is a bug in plt. It doesn't like float16
@@ -236,6 +248,8 @@ def min_projection(array, dim=0, title=None, cmap="gray", file=None):
     '''
     Projection of minimum values.
     '''
+    import matplotlib.pyplot as plt
+
     img = array.min(dim)
 
     # There is a bug in plt. It doesn't like float16
