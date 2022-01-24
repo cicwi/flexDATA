@@ -14,7 +14,6 @@ requirements:
     build:
         - python {{ python }}
         - tifffile
-        - transforms3d
         - pyqtgraph
 
     run:

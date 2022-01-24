@@ -10,9 +10,8 @@ volume transformations ('vol_tra', 'vol_rot'), recostruction resolution and anis
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>> Imports >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 import astra
-
 import numpy
-from transforms3d import euler
+import scipy.spatial
 
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>> Classes >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 class basic():
@@ -972,18 +971,31 @@ def circular_orbit(radius, thetas, roll = 0, pitch = 0, yaw = 0,
     else:
         return position, tangent, radius, orthogonal
 
+def _convertAxesToScipy(axes):
+    # convert from transforms3d convention to scipy convention
+    if axes[0] == 'r':
+        # 'rxyz', rotating/intrinsic axes -> XYZ
+        return axes[1:].upper()
+    elif axes[0] == 's':
+        # 'sxyz', static/extrinsic axes -> xyz
+        return axes[1:].lower()
+    else:
+        # assumed to be already in scipy format
+        return axes
 
 def _mat2euler(M, axes='sxyz'):
-    return numpy.rad2deg(euler.mat2euler(M, axes))
+    seq = _convertAxesToScipy(axes)
+    return scipy.spatial.transform.Rotation.from_matrix(M).as_euler(seq=seq, degrees=True)
 
 def _euler2mat_(a, b, c, axes='sxyz'):
-    a = numpy.deg2rad(a)
-    b = numpy.deg2rad(b)
-    c = numpy.deg2rad(c)
-
-    return euler.euler2mat(a, b, c, axes)
+    seq = _convertAxesToScipy(axes)
+    return scipy.spatial.transform.Rotation.from_euler(seq=seq, angles=[a,b,c], degrees=True).as_matrix()
 
 def _axangle2mat_(ax, a):
     a = numpy.deg2rad(a)
-
-    return euler.axangle2mat(ax, a)
+    x,y,z = ax
+    n = numpy.sqrt(x*x + y*y + z*z)
+    x = a*x/n
+    y = a*y/n
+    z = a*z/n
+    return scipy.spatial.transform.Rotation.from_rotvec([x,y,z]).as_matrix()

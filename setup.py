@@ -13,8 +13,8 @@ setup(
         "tqdm",
         "imageio",
         "psutil",
+        "scipy",
         "toml",
-        "transforms3d",
         ],
 
     extras_require={
