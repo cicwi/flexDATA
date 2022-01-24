@@ -1538,8 +1538,10 @@ def _flex_motor_correct_(geom):
     centre = [(roi[0] + roi[2]) // 2 - 971, (roi[1] + roi[3]) // 2 - 767]
     #print(centre)
     # Not sure the binning should be taken into account...
-    geom.parameters['det_ort'] -= centre[1] * geom.parameters['det_pixel']
-    geom.parameters['det_tan'] -= centre[0] * geom.parameters['det_pixel']
+     # ROI is written for a pixel in 1x1 binning, so 75 um should be used for correction
+    detector_pixel_size = 0.0748
+    geom.parameters['det_ort'] += centre[1] * detector_pixel_size
+    geom.parameters['det_tan'] += centre[0] * detector_pixel_size
 
     geom.parameters['vol_tra'][0] = (geom.parameters['det_ort'] * geom.src2obj +
                    geom.parameters['src_ort'] * geom.det2obj) / geom.src2det
