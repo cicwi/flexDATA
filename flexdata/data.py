@@ -382,7 +382,7 @@ def read_image(file, sample = 1, shape = None, format = None, dtype = None):
     im = _sample_image_(im, sample)
     return im
 
-def read_flexraylog(path, *args):
+def read_flexraylog(path, *args, **kwargs):
    warnings.warn("""
 read_flexraylog is depecrated.
 
@@ -480,7 +480,7 @@ def parse_flexraylog(path, sample = 1):
     return geom
 
 
-def read_flexraymeta(*args):
+def read_flexraymeta(*args, **kwargs):
    warnings.warn("""
 read_flexraymeta is depecrated.
 
@@ -593,7 +593,7 @@ def parse_flexraymeta(path, sample = 1):
 
     return geom
 
-def read_flexraydatasettings(*args):
+def read_flexraydatasettings(*args, **kwargs):
    warnings.warn("""
 read_flexraydatasettings is depecrated.
 
