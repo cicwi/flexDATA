@@ -906,7 +906,7 @@ def write_toml(filename, record, overwrite=False):
 
     # Make path if does not exist:
     path = os.path.dirname(filename)
-    if not os.path.exists(path):
+    if len(path) > 0 and not os.path.exists(path):
         os.makedirs(path)
 
     # It looks like TOML module doesnt like numpy arrays and numpy types.
@@ -966,7 +966,7 @@ def write_astra(filename, data_shape, geom):
     """
     # Make path if does not exist:
     path = os.path.dirname(filename)
-    if not os.path.exists(path):
+    if len(path) > 0 and not os.path.exists(path):
         os.makedirs(path)
 
     numpy.savetxt(filename, geom.astra_projection_geom(data_shape)['Vectors'])
