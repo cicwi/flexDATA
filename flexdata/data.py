@@ -308,7 +308,7 @@ def read_flexray(path, *, sample = 1, skip = 1, memmap = None, proj_number = Non
         geom = correct.correct_vol_center(geom)
 
     # Check success. If a few files were not read - interpolate, otherwise adjust the meta record.
-    proj = _check_success_(proj, geom, success)
+    proj, geom = _check_success_(proj, geom, success)
 
     return proj, flat, dark, geom
 
@@ -1703,12 +1703,12 @@ def _check_success_(proj, geom, success):
     If few files are missing - interpolate, if many - adjust theta record in meta
     """
     if success is None:
-        return proj
+        return proj, geom
 
     success = numpy.array(success)
 
     if len(success) == sum(success):
-        return proj
+        return proj, geom
 
     # Check if failed projections come in bunches or singles:
     fails = numpy.where(success == 0)[0]
@@ -1732,5 +1732,7 @@ def _check_success_(proj, geom, success):
             thetas = numpy.linspace(geom.range[0], geom.range[1], len(success))
             geom.parameters['_thetas_'] = thetas[success == 1]
             proj = proj[success == 1]
+            geom = deepcopy(geom)
+            geom.log('Adjusted angles for missing clusters of projections')
 
-    return proj
+    return proj, geom
