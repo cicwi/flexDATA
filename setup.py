@@ -12,11 +12,10 @@ setup(
         "matplotlib",
         "tqdm",
         "imageio",
-        "tifffile",
         "psutil",
+        "scipy",
         "toml",
-        "transforms3d",
-        "paramiko"],
+        ],
 
     extras_require={
         'dev': [

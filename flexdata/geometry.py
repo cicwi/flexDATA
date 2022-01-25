@@ -9,9 +9,8 @@ volume transformations ('vol_tra', 'vol_rot'), recostruction resolution and anis
 """
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>> Imports >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-import astra
 import numpy
-from transforms3d import euler
+import scipy.spatial
 from datetime import datetime
 
 FLEXTOML_VERSION = '0.1.0'
@@ -118,7 +117,7 @@ class basic():
             T (1x3 array): translation vector
         """
         # Translate to flex geometry:
-        self.parameters['vol_rot'] = numpy.rad2deg(euler.mat2euler(R.T, axes = 'sxyz'))
+        self.parameters['vol_rot'] = _mat2euler(R.T, axes='sxyz')
         self.parameters['vol_tra'] = numpy.array(self.parameters['vol_tra']) - numpy.dot(T, R.T)[[0,2,1]] * self.voxel
 
     def from_dictionary(self, dictionary):
@@ -280,10 +279,14 @@ class basic():
         Returns:
             geometry : ASTRA cone-beam geometry.
         '''
+        import astra
+
         # Get vectors:
         if hasattr(self, '_vectors_'):
-            vectors = self._vectors_
-
+            if index is None:
+                vectors = self._vectors_
+            else:
+                vectors = self._vectors_[index]
         else:
             vectors = self.get_vectors(data_shape[1], index)
 
@@ -301,6 +304,7 @@ class basic():
             slice_first: first slice of an ROI to update
             slice_last : last slice of an ROI to update
         '''
+        import astra
 
         # Shape and size (mm) of the volume
         vol_shape = numpy.array(vol_shape)
@@ -989,14 +993,31 @@ def circular_orbit(radius, thetas, roll = 0, pitch = 0, yaw = 0,
     else:
         return position, tangent, radius, orthogonal
 
-def _euler2mat_(a, b, c, axes='sxyz'):
-    a = numpy.deg2rad(a)
-    b = numpy.deg2rad(b)
-    c = numpy.deg2rad(c)
+def _convertAxesToScipy(axes):
+    # convert from transforms3d convention to scipy convention
+    if axes[0] == 'r':
+        # 'rxyz', rotating/intrinsic axes -> XYZ
+        return axes[1:].upper()
+    elif axes[0] == 's':
+        # 'sxyz', static/extrinsic axes -> xyz
+        return axes[1:].lower()
+    else:
+        # assumed to be already in scipy format
+        return axes
 
-    return euler.euler2mat(a, b, c, axes)
+def _mat2euler(M, axes='sxyz'):
+    seq = _convertAxesToScipy(axes)
+    return scipy.spatial.transform.Rotation.from_matrix(M).as_euler(seq=seq, degrees=True)
+
+def _euler2mat_(a, b, c, axes='sxyz'):
+    seq = _convertAxesToScipy(axes)
+    return scipy.spatial.transform.Rotation.from_euler(seq=seq, angles=[a,b,c], degrees=True).as_matrix()
 
 def _axangle2mat_(ax, a):
     a = numpy.deg2rad(a)
-
-    return euler.axangle2mat(ax, a)
+    x,y,z = ax
+    n = numpy.sqrt(x*x + y*y + z*z)
+    x = a*x/n
+    y = a*y/n
+    z = a*z/n
+    return scipy.spatial.transform.Rotation.from_rotvec([x,y,z]).as_matrix()
