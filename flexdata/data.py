@@ -567,7 +567,7 @@ def parse_flexraymeta(path, sample = 1):
         pixel_adjustment = 4
 
     # Check version
-    version = records.get('FLEXTOML_VERSION')
+    version = records.get('flextoml_version')
     if version is None:
        logger.warning(f"No version for toml file. Expected {geom.FLEXTOML_VERSION}")
     elif version != geometry.FLEXTOML_VERSION:
@@ -713,7 +713,7 @@ def read_geometry(path, sample = 1):
     records['img_pixel'] *= sample
 
     # Check version
-    version = records.get('FLEXTOML_VERSION')
+    version = records.get('flextoml_version')
     if version is None:
        logger.warning(f"No version for toml file. Expected {geometry.FLEXTOML_VERSION}")
     elif version != geometry.FLEXTOML_VERSION:
