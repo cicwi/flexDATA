@@ -87,16 +87,12 @@ def correct_roi(geometry):
 
     # Fix roi:
     roi = geometry.description['roi']
-    # XXX: Why do we hardcode 971 and 767? Does this also work when
-    # the geometry has already been binned or hardware binning has
-    # been used?
 
+    # ROI is written for a pixel in 1x1 binning, so the centre of the detector
+    # is at (767,971), and detector pixel size 74.8 um
     centre = [(roi[0] + roi[2]) // 2 - 971, (roi[1] + roi[3]) // 2 - 767]
-
-    # ROI is written for a pixel in 1x1 binning, so 75 um should be used for correction
     detector_pixel_size = 0.0748
 
-    # Not sure the binning should be taken into account...
     d_ort = centre[1] * detector_pixel_size
     d_tan = centre[0] * detector_pixel_size
 

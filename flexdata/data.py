@@ -470,12 +470,12 @@ def parse_flexraylog(path, sample = 1):
     geom.parameters['det_pixel'] *= sample
     geom.parameters['img_pixel'] *= sample
 
-    geom = correct_roi(geom)
-
     if sample != 1:
         msg = f"Adjusted geometry by binning by {sample}"
         logging.info(msg)
         geom.log(msg)
+
+    geom = correct_roi(geom)
 
     return geom
 
@@ -589,6 +589,8 @@ def parse_flexraymeta(path, sample = 1):
         logging.info(msg)
         geom.log(msg)
 
+    geom = correct_roi(geom)
+
     return geom
 
 def read_flexraydatasettings(*args):
@@ -673,12 +675,20 @@ def parse_flexraydatasettings(path, sample = 1):
     geom.from_dictionary(records)
     det_binning = geom['det_pixel']//0.0748
 
+    # The roi field is expected to be in unbinned pixels, but this file
+    # contains a binned version, so we update it, and then re-parse records
     roi = (numpy.int32(records.get('roi').rstrip(';').split(sep=';')) * int(det_binning) - numpy.int32([0, 0, 1, 1])).tolist()
     records['roi'] = roi
-
     geom.from_dictionary(records)
     geom.parameters['det_pixel'] *= sample
     geom.parameters['img_pixel'] *= sample
+
+    if sample != 1:
+        msg = f"Adjusted geometry by binning by {sample}"
+        logging.info(msg)
+        geom.log(msg)
+
+    geom = correct_roi(geom)
 
     return geom
 
