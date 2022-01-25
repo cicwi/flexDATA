@@ -118,8 +118,8 @@ def correct_vol_center(geometry):
 
     geometry = deepcopy(geometry)
     vol_tra_z_old = geometry.parameters['vol_tra'][0]
-    vol_tra_z_new = (geometry.parameters['det_ort'] * geom.src2obj +
-                   geometry.parameters['src_ort'] * geom.det2obj) / geom.src2det
+    vol_tra_z_new = (geometry.parameters['det_ort'] * geometry.src2obj +
+                   geometry.parameters['src_ort'] * geometry.det2obj) / geometry.src2det
     geometry.parameters['vol_tra'][0] = vol_tra_z_new
 
     if abs(vol_tra_z_old - vol_tra_z_new) > 1e-6:
