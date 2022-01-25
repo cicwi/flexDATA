@@ -697,7 +697,7 @@ def parse_flexray_datasettings(path, sample = 1):
     return geom
 
 
-def read_geometry(path, sample = 1):
+def read_geometrytoml(path, sample = 1):
     '''
     Read a native meta file.
 
@@ -708,7 +708,7 @@ def read_geometry(path, sample = 1):
     Returns:
         geometry    : circular geometry class
     '''
-    records = read_toml(os.path.join(path, 'geometry.toml'))
+    records = read_raw_toml(os.path.join(path, 'geometry.toml'))
     records['det_pixel'] *= sample
     records['img_pixel'] *= sample
 
@@ -747,7 +747,7 @@ def geom_diff(geom1, geom2, full_diff=False):
 
     def input_to_dict(input, var_name):
         if isinstance(input, str):
-            input = read_toml(input)
+            input = read_raw_toml(input)
         elif isinstance(input, basic):
             input = input.to_dictionary()
         elif isinstance(input, dict):
@@ -866,7 +866,7 @@ def file_to_dictionary(file_path, separator = ':', translation = None, strip_quo
     else:
         return records
 
-def read_toml(file_path):
+def read_raw_toml(file_path):
     """
     Read a toml file.
 
@@ -894,6 +894,17 @@ def read_toml(file_path):
             record[key] = _python2numpy_(record[key])
 
     return record
+
+def write_geometrytoml(path, geometry, overwrite=False):
+    """
+    Write a geometry.toml file
+
+    Args:
+        path (str): location to write geometry.toml to
+        geometry (dict): geometry
+        overwrite (bool): if True, allow overwriting existing file. Default False
+    """
+    write_toml(os.path.join(path, 'geometry.toml'), geometry, overwrite)
 
 def write_toml(filename, record, overwrite=False):
     """
