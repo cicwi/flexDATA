@@ -26,7 +26,7 @@ import time           # Pausing
 import logging
 from scipy.io import loadmat # Reading matlab format
 from . import geometry       # geometry classes
-from .correct import correct_roi
+from . import correct
 # >>>>>>>>>>>>>>>>>>>> LOGGER CLASS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 
@@ -250,9 +250,14 @@ def write_stack(path, name, data, dim = 1, skip = 1, dtype = None, zip = False, 
             else:
                 write_image(path_name + '.' + format, img, 0)
 
-def read_flexray(path, sample = 1, skip = 1, memmap = None, proj_number = None):
+def read_flexray(path, *, sample = 1, skip = 1, memmap = None, proj_number = None, correct):
     '''
-    Read projecition data for the FLex-Ray scaner. Read, dark-, flat-field images and scan parameters.
+    Convenience function for reading projection data from the FLex-Ray scanner.
+    Read, dark-, flat-field images and scan parameters.
+    Also apply a geometry correction profile (correct.correct()),
+    and adjust the vertical volume center to the vertical source/detector
+    positions (correct.correct_vol_center()).
+    Finally detect and try to handle missing projection images.
 
     Args:
         path   (str): path to flexray data.
@@ -260,6 +265,7 @@ def read_flexray(path, sample = 1, skip = 1, memmap = None, proj_number = None):
         sample (int): keep every ## x ## pixel
         memmap (str): output a memmap array using the given path
         proj_number (int): force projection number (treat lesser numbers as missing)
+        correct (str): geometry correction profile to apply
 
     Returns:
         proj (numpy.array): projections stack
@@ -278,28 +284,28 @@ def read_flexray(path, sample = 1, skip = 1, memmap = None, proj_number = None):
     else:
         success = None
 
-    proj = read_stack(path, 'scan_', skip, sample, dtype = 'float32', memmap = memmap, success = success)
+    proj = read_stack(path, 'scan_0', skip, sample, dtype = 'float32', memmap = memmap, success = success)
 
     # Try to retrieve metadata:
     if os.path.exists(os.path.join(path, 'metadata.toml')):
         logger.print("Reading geometry from metadata.toml")
-        geom = read_flexraymeta(path, sample)
+        geom = parse_flexray_metadatatoml(path, sample)
 
     elif os.path.exists(os.path.join(path, 'scan settings.txt')):
         logger.print("Reading geometry from 'scan settings.txt'")
-        geom = read_flexraylog(path, sample)
+        geom = parse_flexray_scansettings(path, sample)
 
     elif os.path.exists(os.path.join(path, 'data settings XRE.txt')):
         logger.print("Reading geometry from 'data settings XRE.txt'")
-        geom = read_flexraydatasettings(path, sample)
-
-    elif os.path.exists(os.path.join(path, 'geometry.toml')):
-        logger.print("Reading geometry from 'geometry.toml'")
-        geom = read_geometry(path, sample)
+        geom = parse_flexray_datasettings(path, sample)
 
     else:
         logger.warning('No meta data found.')
         geom = None
+
+    if geom is not None:
+        geom = correct.correct(geom, profile=correct, do_print_changes=True)
+        geom = correct.correct_vol_center(geom)
 
     # Check success. If a few files were not read - interpolate, otherwise adjust the meta record.
     proj = _check_success_(proj, geom, success)
@@ -476,7 +482,7 @@ def parse_flexray_scansettings(path, sample = 1):
         logging.info(msg)
         geom.log(msg)
 
-    geom = correct_roi(geom)
+    geom = correct.correct_roi(geom)
 
     return geom
 
@@ -591,7 +597,7 @@ def parse_flexray_metadatatoml(path, sample = 1):
         logging.info(msg)
         geom.log(msg)
 
-    geom = correct_roi(geom)
+    geom = correct.correct_roi(geom)
 
     return geom
 
@@ -692,7 +698,7 @@ def parse_flexray_datasettings(path, sample = 1):
         logging.info(msg)
         geom.log(msg)
 
-    geom = correct_roi(geom)
+    geom = correct.correct_roi(geom)
 
     return geom
 
