@@ -84,4 +84,4 @@ display.slice(vol, dim = 0, bounds = [0, 0.04], title = 'Projection', cmap = 'ma
 # Store output data
 data.write_stack('./output_dir/', vol)
 # Write reconstruction geometry
-data.write_toml('./output_dir/reconstruction_geometry.toml', overwrite=True)
+data.write_geometrytoml('./output_dir/', overwrite=True)

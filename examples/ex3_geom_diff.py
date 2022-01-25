@@ -10,7 +10,7 @@ path = '/export/scratch2/adriaan/eierwekker/'
 
 # ------------------------------------------------------------------------------
 # Compare just the values in two geometries
-geom1 = data.read_flexraylog(path)
+geom1 = data.parse_flexray_scansettings(path)
 geom2 = deepcopy(geom1)
 geom2['src2obj'] = 10
 
@@ -19,7 +19,7 @@ print("Corrections: " + str(corrections))
 # outputs "Corrections: {'src2obj': -489...}"
 
 # ------------------------------------------------------------------------------
-geom1 = data.read_flexraylog(path)
+geom1 = data.parse_flexray_scansettings(path)
 geom2 = deepcopy(geom1).to_dictionary()
 geom2['new_key'] = 'new_value'
 
