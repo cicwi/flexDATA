@@ -390,7 +390,7 @@ This function combined too much functionality. If you want similar functionality
 read_flexraylog provided, use:
 >>> from flexdata import data
 >>> from flexdata import correct
->>> geom = data.parse_flexraylog(path, sample=binning)
+>>> geom = data.parse_flexray_scansettings(path, sample=binning)
 >>> geom = correct.correct(geom,
                            profile='cwi-flexray-2019-04-24',
                            do_print_changes=True)
@@ -401,7 +401,7 @@ read_flexraylog provided, use:
    raise NotImplementedError()
 
 
-def parse_flexraylog(path, sample = 1):
+def parse_flexray_scansettings(path, sample = 1):
     """
     Read the log file of FLexRay scanner and return dictionaries with parameters of the scan.
 
@@ -489,7 +489,7 @@ This function combined too much functionality. If you want similar functionality
 read_flexraymeta provided, use:
 >>> from flexdata import data
 >>> from flexdata import correct
->>> geom = data.parse_flexraymeta(path, sample=binning)
+>>> geom = data.parse_flexray_metadatatoml(path, sample=binning)
 >>> geom = correct.correct(geom,
                            profile='cwi-flexray-2019-04-24',
                            do_print_changes=True)
@@ -500,7 +500,7 @@ read_flexraymeta provided, use:
    raise NotImplementedError()
 
 
-def parse_flexraymeta(path, sample = 1):
+def parse_flexray_metadatatoml(path, sample = 1):
     """
     Read the metafile produced by the Flexray script generator.
 
@@ -603,7 +603,7 @@ This function combined too much functionality. If you want similar functionality
 read_flexraydatasettings provided, use:
 >>> from flexdata import data
 >>> from flexdata import correct
->>> geom = data.parse_flexraydatasettings(path, sample=binning)
+>>> geom = data.parse_flexray_datasettings(path, sample=binning)
 >>> geom = correct.correct(geom,
                            profile='cwi-flexray-2019-04-24',
                            do_print_changes=True)
@@ -613,7 +613,7 @@ read_flexraydatasettings provided, use:
 """, DeprecationWarning, stacklevel=2)
    raise NotImplementedError()
 
-def parse_flexraydatasettings(path, sample = 1):
+def parse_flexray_datasettings(path, sample = 1):
     """
     Read the data settings file of FLexRay scanner and return dictionaries with parameters of the scan.
 

@@ -27,7 +27,7 @@ proj = data.read_stack(path, 'scan_', skip=binning, sample=binning)
 ###############################################################################
 #                                 This is new                                 #
 ###############################################################################
-geom = data.parse_flexraylog(path, sample=binning)
+geom = data.parse_flexray_scansettings(path, sample=binning)
 
 data.write_toml('scan_geometry.toml', overwrite=True)
 
