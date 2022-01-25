@@ -466,6 +466,7 @@ def parse_flexraylog(path, sample = 1):
     # Initialize geometry:
     geom = geometry.circular()
     geom.from_dictionary(records)
+    geom.log("Parsed geometry from 'scan settings.txt'")
 
     geom.parameters['det_pixel'] *= sample
     geom.parameters['img_pixel'] *= sample
@@ -575,6 +576,7 @@ def parse_flexraymeta(path, sample = 1):
     # Initialize geometry:
     geom = geometry.circular()
     geom.from_dictionary(records)
+    geom.log("Parsed geometry from 'metadata.toml'")
 
     if pixel_adjustment != 1:
        msg = f"Adjusted pixel size by {pixel_adjustement} due to {records['mode']}"
@@ -680,6 +682,8 @@ def parse_flexraydatasettings(path, sample = 1):
     roi = (numpy.int32(records.get('roi').rstrip(';').split(sep=';')) * int(det_binning) - numpy.int32([0, 0, 1, 1])).tolist()
     records['roi'] = roi
     geom.from_dictionary(records)
+    geom.log("Parsed geometry from 'data settings XRE.txt'")
+
     geom.parameters['det_pixel'] *= sample
     geom.parameters['img_pixel'] *= sample
 
