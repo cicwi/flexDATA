@@ -10,6 +10,8 @@ The dataset 'rat skull' can be found at:
 
 from flexdata import data
 from flexdata import display
+from flexdata import correct
+import os
 
 #%% Read image stacks:
 
@@ -26,18 +28,20 @@ display.slice(proj, dim = 1, title = 'Projection', cmap = 'magma')
 
 #%% Read / write a geometry file:
 
-# Parcer for a flexray log file:
-geom = data.read_flexraylog(path, sample = 4)
-
+# Parser for a flexray log file:
 print('\nParsing "scan settings.txt":')
+geom = data.parse_flexray_scansettings(path, sample = 4)
+geom = correct.correct(geom, profile='cwi-flexray-2019-04-24')
+geom = correct.correct_vol_center(geom)
+
 print(geom)
 
 # Write TOML format to disk:
-data.write_toml(path + 'geometry.toml', geom)
+data.write_geometrytoml(path, geom)
 
 print('\nReading raw TOML:')
-print(data.read_toml(path + 'geometry.toml'))
+print(data.read_raw_toml(os.path.join(path, 'geometry.toml')))
 
-print('\nParsing raw TOML:')
-print(data.read_geometry(path, sample = 4))
+print('\nParsing geometry.toml:')
+print(data.read_geometrytoml(path, sample = 4))
 

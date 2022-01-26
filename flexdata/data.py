@@ -23,10 +23,13 @@ import psutil         # RAM tester
 import toml           # TOML format parcer
 from tqdm import tqdm # Progress barring
 import time           # Pausing
+import logging
 from scipy.io import loadmat # Reading matlab format
 from . import geometry       # geometry classes
-
+from . import correct
 # >>>>>>>>>>>>>>>>>>>> LOGGER CLASS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
 class logger:
    """
    A class for logging and printing messages.
@@ -247,9 +250,14 @@ def write_stack(path, name, data, dim = 1, skip = 1, dtype = None, zip = False, 
             else:
                 write_image(path_name + '.' + format, img, 0)
 
-def read_flexray(path, sample = 1, skip = 1, memmap = None, proj_number = None):
+def read_flexray(path, *, sample = 1, skip = 1, memmap = None, proj_number = None, correct, correct_vol_center = True):
     '''
-    Read projecition data for the FLex-Ray scaner. Read, dark-, flat-field images and scan parameters.
+    Convenience function for reading projection data from the FLex-Ray scanner.
+    Read, dark-, flat-field images and scan parameters.
+    Also apply a geometry correction profile (correct.correct()),
+    and adjust the vertical volume center to the vertical source/detector
+    positions (correct.correct_vol_center()).
+    Finally detect and try to handle missing projection images.
 
     Args:
         path   (str): path to flexray data.
@@ -257,6 +265,8 @@ def read_flexray(path, sample = 1, skip = 1, memmap = None, proj_number = None):
         sample (int): keep every ## x ## pixel
         memmap (str): output a memmap array using the given path
         proj_number (int): force projection number (treat lesser numbers as missing)
+        correct (str): geometry correction profile to apply
+        correct_vol_center (bool): if True (default), correct vertical volume position
 
     Returns:
         proj (numpy.array): projections stack
@@ -275,31 +285,45 @@ def read_flexray(path, sample = 1, skip = 1, memmap = None, proj_number = None):
     else:
         success = None
 
-    proj = read_stack(path, 'scan_', skip, sample, dtype = 'float32', memmap = memmap, success = success)
+    proj = read_stack(path, 'scan_0', skip, sample, dtype = 'float32', memmap = memmap, success = success)
 
     # Try to retrieve metadata:
     if os.path.exists(os.path.join(path, 'metadata.toml')):
         logger.print("Reading geometry from metadata.toml")
-        geom = read_flexraymeta(path, sample)
+        if correct is None:
+            logger.warning("Not applying correction profile after reading metadata.toml.")
+
+        geom = parse_flexray_metadatatoml(path, sample)
 
     elif os.path.exists(os.path.join(path, 'scan settings.txt')):
         logger.print("Reading geometry from 'scan settings.txt'")
-        geom = read_flexraylog(path, sample)
+        if correct is None:
+            logger.warning("Not applying correction profile after reading 'scan settings.txt'.")
+        geom = parse_flexray_scansettings(path, sample)
 
     elif os.path.exists(os.path.join(path, 'data settings XRE.txt')):
         logger.print("Reading geometry from 'data settings XRE.txt'")
-        geom = read_flexraydatasettings(path, sample)
+        if correct is None:
+            logger.warning("Not applying correction profile after reading 'data settings XRE.txt'.")
+        geom = parse_flexray_datasettings(path, sample)
 
     elif os.path.exists(os.path.join(path, 'geometry.toml')):
         logger.print("Reading geometry from 'geometry.toml'")
-        geom = read_geometry(path, sample)
+        if correct is not None:
+            logger.warning("Applying correction profile after reading geometry.toml.")
+        geom = read_geometrytoml(path, sample)
 
     else:
         logger.warning('No meta data found.')
         geom = None
 
+    if geom is not None and correct is not None:
+        geom = correct.correct(geom, profile=correct, do_print_changes=True)
+    if geom is not None and correct_vol_center:
+        geom = correct.correct_vol_center(geom)
+
     # Check success. If a few files were not read - interpolate, otherwise adjust the meta record.
-    proj = _check_success_(proj, geom, success)
+    proj, geom = _check_success_(proj, geom, success)
 
     return proj, flat, dark, geom
 
@@ -379,7 +403,26 @@ def read_image(file, sample = 1, shape = None, format = None, dtype = None):
     im = _sample_image_(im, sample)
     return im
 
-def read_flexraylog(path, sample = 1):
+def read_flexraylog(path, *args, **kwargs):
+   warnings.warn("""
+read_flexraylog is depecrated.
+
+This function combined too much functionality. If you want similar functionality to what
+read_flexraylog provided, use:
+>>> from flexdata import data
+>>> from flexdata import correct
+>>> geom = data.parse_flexray_scansettings(path, sample=binning)
+>>> geom = correct.correct(geom,
+                           profile='cwi-flexray-2019-04-24',
+                           do_print_changes=True)
+>>> geom = correct.correct_vol_center(geom)
+
+
+""", DeprecationWarning, stacklevel=2)
+   raise NotImplementedError()
+
+
+def parse_flexray_scansettings(path, sample = 1):
     """
     Read the log file of FLexRay scanner and return dictionaries with parameters of the scan.
 
@@ -444,18 +487,43 @@ def read_flexraylog(path, sample = 1):
     # Initialize geometry:
     geom = geometry.circular()
     geom.from_dictionary(records)
+    geom.log("Parsed geometry from 'scan settings.txt'")
 
     geom.parameters['det_pixel'] *= sample
     geom.parameters['img_pixel'] *= sample
 
-    # Some Flexray scanner-specific motor offset corrections:
-    _flex_motor_correct_(geom)
+    if sample != 1:
+        msg = f"Adjusted geometry by binning by {sample}"
+        logging.info(msg)
+        geom.log(msg)
+
+    geom = correct.correct_roi(geom)
 
     return geom
 
-def read_flexraymeta(path, sample = 1):
+
+def read_flexraymeta(*args, **kwargs):
+   warnings.warn("""
+read_flexraymeta is depecrated.
+
+This function combined too much functionality. If you want similar functionality to what
+read_flexraymeta provided, use:
+>>> from flexdata import data
+>>> from flexdata import correct
+>>> geom = data.parse_flexray_metadatatoml(path, sample=binning)
+>>> geom = correct.correct(geom,
+                           profile='cwi-flexray-2019-04-24',
+                           do_print_changes=True)
+>>> geom = correct.correct_vol_center(geom)
+
+
+""", DeprecationWarning, stacklevel=2)
+   raise NotImplementedError()
+
+
+def parse_flexray_metadatatoml(path, sample = 1):
     """
-    Read the metafile produced by Flexray scripting.
+    Read the metafile produced by the Flexray script generator.
 
     Args:
         path   (str): path to the files location
@@ -510,25 +578,63 @@ def read_flexraymeta(path, sample = 1):
     records['img_pixel'] = records['det_pixel']/records['mag']
 
     # Detector pixel is not changed here when binning mode is on...
+    pixel_adjustment = 1
     if (records['mode'] == 'HW2SW1High')|(records['mode'] == 'HW1SW2High'):
         records['det_pixel'] *= 2
+        pixel_adjustment = 2
 
     elif (records['mode'] == 'HW2SW2High'):
         records['det_pixel'] *= 4
+        pixel_adjustment = 4
+
+    # Check version
+    version = records.get('flextoml_version')
+    if version is None:
+       logger.warning(f"No version for toml file. Expected {geom.FLEXTOML_VERSION}")
+    elif version != geometry.FLEXTOML_VERSION:
+       logger.warning(f"Version {version} found for toml file. Expected: {geom.FLEXTOML_VERSION}")
 
     # Initialize geometry:
     geom = geometry.circular()
     geom.from_dictionary(records)
+    geom.log("Parsed geometry from 'metadata.toml'")
+
+    if pixel_adjustment != 1:
+       msg = f"Adjusted pixel size by {pixel_adjustement} due to {records['mode']}"
+       logging.info(msg)
+       geom.log(msg)
 
     geom.parameters['det_pixel'] *= sample
     geom.parameters['img_pixel'] *= sample
     
-    # Some Flexray scanner-specific motor offset corrections:
-    _flex_motor_correct_(geom)
+    if sample != 1:
+        msg = f"Adjusted geometry by binning by {sample}"
+        logging.info(msg)
+        geom.log(msg)
+
+    geom = correct.correct_roi(geom)
 
     return geom
 
-def read_flexraydatasettings(path, sample = 1):
+def read_flexraydatasettings(*args, **kwargs):
+   warnings.warn("""
+read_flexraydatasettings is depecrated.
+
+This function combined too much functionality. If you want similar functionality to what
+read_flexraydatasettings provided, use:
+>>> from flexdata import data
+>>> from flexdata import correct
+>>> geom = data.parse_flexray_datasettings(path, sample=binning)
+>>> geom = correct.correct(geom,
+                           profile='cwi-flexray-2019-04-24',
+                           do_print_changes=True)
+>>> geom = correct.correct_vol_center(geom)
+
+
+""", DeprecationWarning, stacklevel=2)
+   raise NotImplementedError()
+
+def parse_flexray_datasettings(path, sample = 1):
     """
     Read the data settings file of FLexRay scanner and return dictionaries with parameters of the scan.
 
@@ -592,21 +698,27 @@ def read_flexraydatasettings(path, sample = 1):
     geom.from_dictionary(records)
     det_binning = geom['det_pixel']//0.0748
 
+    # The roi field is expected to be in unbinned pixels, but this file
+    # contains a binned version, so we update it, and then re-parse records
     roi = (numpy.int32(records.get('roi').rstrip(';').split(sep=';')) * int(det_binning) - numpy.int32([0, 0, 1, 1])).tolist()
     records['roi'] = roi
-
     geom.from_dictionary(records)
+    geom.log("Parsed geometry from 'data settings XRE.txt'")
+
     geom.parameters['det_pixel'] *= sample
     geom.parameters['img_pixel'] *= sample
 
-    # Some Flexray scanner-specific motor offset corrections:
-    _flex_motor_correct_(geom)
+    if sample != 1:
+        msg = f"Adjusted geometry by binning by {sample}"
+        logging.info(msg)
+        geom.log(msg)
+
+    geom = correct.correct_roi(geom)
 
     return geom
 
 
-
-def read_geometry(path, sample = 1):
+def read_geometrytoml(path, sample = 1):
     '''
     Read a native meta file.
 
@@ -617,15 +729,97 @@ def read_geometry(path, sample = 1):
     Returns:
         geometry    : circular geometry class
     '''
-    records = read_toml(os.path.join(path, 'geometry.toml'))
+    records = read_raw_toml(os.path.join(path, 'geometry.toml'))
     records['det_pixel'] *= sample
     records['img_pixel'] *= sample
+
+    # Check version
+    version = records.get('flextoml_version')
+    if version is None:
+       logger.warning(f"No version for toml file. Expected {geometry.FLEXTOML_VERSION}")
+    elif version != geometry.FLEXTOML_VERSION:
+       logger.warning(f"Version {version} found for toml file. Expected: {geometry.FLEXTOML_VERSION}")
 
     # Initialize geometry:
     geom = geometry.circular()
     geom.from_dictionary(records)
 
     return geom
+
+def geom_diff(geom1, geom2, full_diff=False):
+    '''
+    Returns a dictionary with changed values in two geometries. Diff is computed
+    per item as: geom1[item] - geom2[item].
+
+    If `full_diff` is `True`, also returns added, removed and unchanged dict items.
+
+    Useful if you'd like to see if corrections have been made in one geometry
+    with respect to a second another.
+
+    Either provide a path, geometry object or dictionary to `geom2` or `geom1`.
+
+    :param geom1: First path, geometry object or dictionary.
+    :param geom2: Second path, geometry object or dictionary.
+    :param full_diff: If set to `True` also shows added, removed and unchanged.
+    :return: Geometry dictionary
+    '''
+
+    from flexdata.geometry import basic
+
+    def input_to_dict(input, var_name):
+        if isinstance(input, str):
+            input = read_raw_toml(input)
+        elif isinstance(input, basic):
+            input = input.to_dictionary()
+        elif isinstance(input, dict):
+            pass
+        else:
+            raise ValueError("`" + var_name + "` must be a path, dict or a geometry type.")
+
+        return input
+
+    geom1 = input_to_dict(geom1, 'geom1')
+    geom2 = input_to_dict(geom2, 'geom2')
+
+    # Source: https://stackoverflow.com/questions/1165352
+    class DictDiffer(object):
+        def __init__(self, current_dict, past_dict):
+            self.current_dict, self.past_dict = current_dict, past_dict
+            self.set_current, self.set_past = set(current_dict.keys()), set(past_dict.keys())
+            self.intersect = self.set_current.intersection(self.set_past)
+
+        def added(self):
+            return self.set_current - self.intersect
+
+        def removed(self):
+            return self.set_past - self.intersect
+
+        def changed(self):
+            return set(o for o in self.intersect if self.past_dict[o] != self.current_dict[o])
+
+        def diff(self):
+            diff = {}
+
+            for key in self.changed():
+                diff[key] = numpy.subtract(self.current_dict[key], self.past_dict[key])
+
+            return diff
+
+        def unchanged(self):
+            return set(o for o in self.intersect if self.past_dict[o] == self.current_dict[o])
+
+    dd = DictDiffer(geom2, geom1)
+
+    if full_diff:
+        return {
+            'added': dd.added(),
+            'removed': dd.removed(),
+            'changed': dd.changed(),
+            'diff_changed': dd.diff(),
+            'unchanged': dd.unchanged(),
+        }
+    else:
+        return dd.diff()
 
 def file_to_dictionary(file_path, separator = ':', translation = None, strip_quotes = False, stop_at = None):
     '''
@@ -693,7 +887,7 @@ def file_to_dictionary(file_path, separator = ':', translation = None, strip_quo
     else:
         return records
 
-def read_toml(file_path):
+def read_raw_toml(file_path):
     """
     Read a toml file.
 
@@ -722,13 +916,25 @@ def read_toml(file_path):
 
     return record
 
-def write_toml(filename, record):
+def write_geometrytoml(path, geometry, overwrite=False):
+    """
+    Write a geometry.toml file
+
+    Args:
+        path (str): location to write geometry.toml to
+        geometry (dict): geometry
+        overwrite (bool): if True, allow overwriting existing file. Default False
+    """
+    write_toml(os.path.join(path, 'geometry.toml'), geometry, overwrite)
+
+def write_toml(filename, record, overwrite=False):
     """
     Write a toml file.
 
     Args:
         filename (str): location to write the file to
-        record (dict, geometry): geomety class record or an arbitrary dictionary
+        record (dict, geometry): geometry class record or an arbitrary dictionary
+        overwrite (bool): if True, allow overwriting existing file. Default False
     """
     # Convert to dictionary:
     if not(type(record) is dict):
@@ -736,7 +942,7 @@ def write_toml(filename, record):
 
     # Make path if does not exist:
     path = os.path.dirname(filename)
-    if not os.path.exists(path):
+    if len(path) > 0 and not os.path.exists(path):
         os.makedirs(path)
 
     # It looks like TOML module doesnt like numpy arrays and numpy types.
@@ -749,7 +955,8 @@ def write_toml(filename, record):
     #        record[key] = _numpy2python_(record[key])
 
     # Save TOML to a file:
-    with open(filename, 'w') as f:
+    mode = 'w' if overwrite else 'x'
+    with open(filename, mode) as f:
         d = toml.dumps(record)
         f.write(d)
 
@@ -795,7 +1002,7 @@ def write_astra(filename, data_shape, geom):
     """
     # Make path if does not exist:
     path = os.path.dirname(filename)
-    if not os.path.exists(path):
+    if len(path) > 0 and not os.path.exists(path):
         os.makedirs(path)
 
     numpy.savetxt(filename, geom.astra_projection_geom(data_shape)['Vectors'])
@@ -1506,42 +1713,17 @@ def _parse_unit_(string):
 
     return factor
 
-def _flex_motor_correct_(geom):
-    '''
-    Apply some motor offsets to get to a correct coordinate system.
-    '''
-    # Correct some records (FlexRay specific):
-
-    # Horizontal offsets:
-    geom.parameters['det_tan'] += 24
-    geom.parameters['src_ort'] -= 7
-
-    # Rotation axis:
-    geom.parameters['axs_tan'] -= 0.5
-
-    # roi:
-    roi = geom.description['roi']
-    centre = [(roi[0] + roi[2]) // 2 - 971, (roi[1] + roi[3]) // 2 - 767]
-
-    # ROI is written for a pixel in 1x1 binning, so 75 um should be used for correction
-    detector_pixel_size = 0.0748
-    geom.parameters['det_ort'] += centre[1] * detector_pixel_size
-    geom.parameters['det_tan'] += centre[0] * detector_pixel_size
-
-    geom.parameters['vol_tra'][0] = (geom.parameters['det_ort'] * geom.src2obj +
-                   geom.parameters['src_ort'] * geom.det2obj) / geom.src2det
-
 def _check_success_(proj, geom, success):
     """
     If few files are missing - interpolate, if many - adjust theta record in meta
     """
     if success is None:
-        return proj
+        return proj, geom
 
     success = numpy.array(success)
 
     if len(success) == sum(success):
-        return proj
+        return proj, geom
 
     # Check if failed projections come in bunches or singles:
     fails = numpy.where(success == 0)[0]
@@ -1565,5 +1747,7 @@ def _check_success_(proj, geom, success):
             thetas = numpy.linspace(geom.range[0], geom.range[1], len(success))
             geom.parameters['_thetas_'] = thetas[success == 1]
             proj = proj[success == 1]
+            geom = deepcopy(geom)
+            geom.log('Adjusted angles for missing clusters of projections')
 
-    return proj
+    return proj, geom
