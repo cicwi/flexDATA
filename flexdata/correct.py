@@ -5,6 +5,13 @@ from copy import deepcopy
 ###############################################################################
 #                             Correction profiles                             #
 ###############################################################################
+#
+# Once a profile has been added here, it should never be changed to ensure
+# reproducibility of existing scripts using the profile.
+# If an existing profile needs retroactive corrections, add a new profile
+# with a -v2 (-v3, ...) suffix.
+# If the physical setup changed, create a new profile with an updated date.
+
 profiles = {
     'cwi-flexray-2019-04-24': {
         'description': """
