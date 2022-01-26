@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-This example shows how flexData can be can be used with ASTRA-toolbox to reconstruct the data.
-You can also install flaxTomo to be able to develope advanced reconstruction scripts faster.
+This example shows how flexData can be used with ASTRA-toolbox to reconstruct the data.
+You can also install flexTomo to be able to develop advanced reconstruction scripts faster.
 """
 
 #%% Imports:
@@ -24,9 +24,6 @@ dark = data.read_stack(path, 'di00', sample=binning)
 flat = data.read_stack(path, 'io00', sample=binning)
 proj = data.read_stack(path, 'scan_', skip=binning, sample=binning)
 
-###############################################################################
-#                                 This is new                                 #
-###############################################################################
 geom = data.parse_flexray_scansettings(path, sample=binning)
 
 data.write_toml('scan_geometry.toml', overwrite=True)
@@ -35,14 +32,9 @@ data.write_toml('scan_geometry.toml', overwrite=True)
 geom = correct.correct(geom,
                        profile='cwi-flexray-2019-04-24',
                        do_print_changes=True)
-geom['det_ort'] -= 7
-geom.log("Corrected det_ort by -7 because reasons.")
 geom = correct.correct_vol_center(geom)
 
 
-###############################################################################
-#                            This can stay the same                           #
-###############################################################################
 #%% Prepro:
 flat = (flat - dark).mean(1)
 proj = (proj - dark) / flat[:, None, :]
@@ -76,10 +68,6 @@ astra.data3d.delete(vol_id)
 
 display.slice(vol, dim = 0, bounds = [0, 0.04], title = 'Projection', cmap = 'magma')
 
-
-###############################################################################
-#                                 This is new                                 #
-###############################################################################
 
 # Store output data
 data.write_stack('./output_dir/', vol)
