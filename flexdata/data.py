@@ -250,7 +250,7 @@ def write_stack(path, name, data, dim = 1, skip = 1, dtype = None, zip = False, 
             else:
                 write_image(path_name + '.' + format, img, 0)
 
-def read_flexray(path, *, sample = 1, skip = 1, memmap = None, proj_number = None, correct):
+def read_flexray(path, *, sample = 1, skip = 1, memmap = None, proj_number = None, correct, correct_vol_center = True):
     '''
     Convenience function for reading projection data from the FLex-Ray scanner.
     Read, dark-, flat-field images and scan parameters.
@@ -266,6 +266,7 @@ def read_flexray(path, *, sample = 1, skip = 1, memmap = None, proj_number = Non
         memmap (str): output a memmap array using the given path
         proj_number (int): force projection number (treat lesser numbers as missing)
         correct (str): geometry correction profile to apply
+        correct_vol_center (bool): if True (default), correct vertical volume position
 
     Returns:
         proj (numpy.array): projections stack
@@ -289,22 +290,36 @@ def read_flexray(path, *, sample = 1, skip = 1, memmap = None, proj_number = Non
     # Try to retrieve metadata:
     if os.path.exists(os.path.join(path, 'metadata.toml')):
         logger.print("Reading geometry from metadata.toml")
+        if correct is None:
+            logger.warning("Not applying correction profile after reading metadata.toml.")
+
         geom = parse_flexray_metadatatoml(path, sample)
 
     elif os.path.exists(os.path.join(path, 'scan settings.txt')):
         logger.print("Reading geometry from 'scan settings.txt'")
+        if correct is None:
+            logger.warning("Not applying correction profile after reading 'scan settings.txt'.")
         geom = parse_flexray_scansettings(path, sample)
 
     elif os.path.exists(os.path.join(path, 'data settings XRE.txt')):
         logger.print("Reading geometry from 'data settings XRE.txt'")
+        if correct is None:
+            logger.warning("Not applying correction profile after reading 'data settings XRE.txt'.")
         geom = parse_flexray_datasettings(path, sample)
+
+    elif os.path.exists(os.path.join(path, 'geometry.toml')):
+        logger.print("Reading geometry from 'geometry.toml'")
+        if correct is not None:
+            logger.warning("Applying correction profile after reading geometry.toml.")
+        geom = read_geometrytoml(path, sample)
 
     else:
         logger.warning('No meta data found.')
         geom = None
 
-    if geom is not None:
+    if geom is not None and correct is not None:
         geom = correct.correct(geom, profile=correct, do_print_changes=True)
+    if geom is not None and correct_vol_center:
         geom = correct.correct_vol_center(geom)
 
     # Check success. If a few files were not read - interpolate, otherwise adjust the meta record.
