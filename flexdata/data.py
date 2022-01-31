@@ -26,7 +26,7 @@ import time           # Pausing
 import logging
 from scipy.io import loadmat # Reading matlab format
 from . import geometry       # geometry classes
-from . import correct
+from . import correct as fdc
 # >>>>>>>>>>>>>>>>>>>> LOGGER CLASS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 
@@ -318,9 +318,9 @@ def read_flexray(path, *, sample = 1, skip = 1, memmap = None, proj_number = Non
         geom = None
 
     if geom is not None and correct is not None:
-        geom = correct.correct(geom, profile=correct, do_print_changes=True)
+        geom = fdc.correct(geom, profile=correct, do_print_changes=True)
     if geom is not None and correct_vol_center:
-        geom = correct.correct_vol_center(geom)
+        geom = fdc.correct_vol_center(geom)
 
     # Check success. If a few files were not read - interpolate, otherwise adjust the meta record.
     proj, geom = _check_success_(proj, geom, success)
@@ -497,7 +497,7 @@ def parse_flexray_scansettings(path, sample = 1):
         logging.info(msg)
         geom.log(msg)
 
-    geom = correct.correct_roi(geom)
+    geom = fdc.correct_roi(geom)
 
     return geom
 
@@ -612,7 +612,7 @@ def parse_flexray_metadatatoml(path, sample = 1):
         logging.info(msg)
         geom.log(msg)
 
-    geom = correct.correct_roi(geom)
+    geom = fdc.correct_roi(geom)
 
     return geom
 
@@ -713,7 +713,7 @@ def parse_flexray_datasettings(path, sample = 1):
         logging.info(msg)
         geom.log(msg)
 
-    geom = correct.correct_roi(geom)
+    geom = fdc.correct_roi(geom)
 
     return geom
 
