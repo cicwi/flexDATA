@@ -663,7 +663,8 @@ def parse_flexray_datasettings(path, sample = 1):
                     'theta_max':'last angle',
                     'theta_min':'start angle',
 
-                    'roi':'import roi',
+                    'roi':'roi',
+                    'import_roi':'import roi',
 
                     'voltage':'tube voltage',
                     'power':'tube power',
@@ -688,6 +689,11 @@ def parse_flexray_datasettings(path, sample = 1):
 
                     'date':'date'}
 
+    # TODO: This function is not able to read every type of
+    # 'data settings XRE.txt' yet. Some do not contain motor positions.
+    # It is possible to derive good values for those (up to translations)
+    # from SOD, SDD, HC, VC, COR.
+
     # Read file and translate:
     records = file_to_dictionary(os.path.join(path, 'data settings XRE.txt'), separator = '=', translation = param_dict, strip_quotes = True, stop_at = "POIs".lower())
     # Corrections specific to this type of file:
@@ -698,9 +704,23 @@ def parse_flexray_datasettings(path, sample = 1):
     geom.from_dictionary(records)
     det_binning = geom['det_pixel']//0.0748
 
-    # The roi field is expected to be in unbinned pixels, but this file
-    # contains a binned version, so we update it, and then re-parse records
-    roi = (numpy.int32(records.get('roi').rstrip(';').split(sep=';')) * int(det_binning) - numpy.int32([0, 0, 1, 1])).tolist()
+    # ROI handling:
+    # Prior to a software update in early 2020 this file contained the
+    # ROI information in a field called 'import ROI'. After this update, this
+    # field no longer contains the full ROI information (only its size), but
+    # there is a new field called 'ROI' that does contain the full ROI.
+
+    # Furthermore, the format of the ROI in this file (both fields) is
+    # different from the one in 'scan settings.txt'.
+    # Parse it here, then update the dictionary and re-parse records.
+
+    # First see if the have the full ROI field.
+    if records['roi'] is not None:
+      roi = numpy.int32(records.get('roi').split(sep=';')).tolist()
+    else:
+      # If not, use the old field.
+      roi = (numpy.int32(records.get('import_roi').rstrip(';').split(sep=';')) * int(det_binning) - numpy.int32([0, 0, 1, 1])).tolist()
+
     records['roi'] = roi
     geom.from_dictionary(records)
     geom.log("Parsed geometry from 'data settings XRE.txt'")
