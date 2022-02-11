@@ -720,6 +720,11 @@ def parse_flexray_datasettings(path, sample = 1):
     else:
       # If not, use the old field.
       roi = (numpy.int32(records.get('import_roi').rstrip(';').split(sep=';')) * int(det_binning) - numpy.int32([0, 0, 1, 1])).tolist()
+      # If this roi is not the full detector and starting at (0,0), there is
+      # a good chance that this ROI is incorrect. (Right size; wrong position.)
+      if (roi[2] - roi[0]) != 1944 or (roi[3] - roi[1]) != 1536:
+          if roi[0] == 0 and roi[1] == 0:
+              logger.warning("Potentially incorrect ROI in data settings XRE.txt")
 
     records['roi'] = roi
     geom.from_dictionary(records)
