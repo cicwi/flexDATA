@@ -13,6 +13,40 @@ from copy import deepcopy
 # If the physical setup changed, create a new profile with an updated date.
 
 profiles = {
+    'cwi-flexray-2022-05-31': {
+        'description': """
+correction profile deduced from acquila hc/vc/cor settings after the 31 may 2022 re-calibration. Includes det_roll determined by Robert using markers.
+""",
+        'det_tan': 24.4203,
+        'src_ort': -6.2281,
+        'axs_tan': -0.5010,
+        'det_roll': -0.262,
+    },
+    'cwi-flexray-2022-05-31-norotation': {
+        'description': """
+correction profile deduced from acquila hc/vc/cor settings after the 31 may 2022 re-calibration.
+""",
+        'det_tan': 24.4203,
+        'src_ort': -6.2281,
+        'axs_tan': -0.5010,
+    },
+    'cwi-flexray-2020-03-26': {
+        'description': """
+Correction profile deduced from Acquila HC/VC/COR settings after the March 2020 maintenance. Includes empirically determined det_roll.
+""",
+        'det_tan': 24.300,
+        'src_ort': -6.086,
+        'axs_tan': -0.524,
+        'det_roll': -0.175,
+    },
+    'cwi-flexray-2020-03-26-norotation': {
+        'description': """
+Correction profile deduced from Acquila HC/VC/COR settings after the March 2020 maintenance.
+""",
+        'det_tan': 24.300,
+        'src_ort': -6.086,
+        'axs_tan': -0.524,
+    },
     'cwi-flexray-2019-04-24': {
         'description': """
 This profile was last updated by Alex Kostenko on 24 April 2019.
