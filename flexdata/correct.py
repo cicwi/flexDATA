@@ -13,6 +13,14 @@ from copy import deepcopy
 # If the physical setup changed, create a new profile with an updated date.
 
 profiles = {
+    'cwi-flexray-2023-08-21': {
+        'description': """
+Correction profile deduced from Acquila hc/vc/cor settings after the exchange of the detector motor.
+""",
+        'det_tan': 24.1215,
+        'src_ort': -6.2917,
+        'axs_tan': -0.5405
+    },
     'cwi-flexray-2022-10-28': {
         'description': """
 Correction profile deduced from markers after the October 2022 maintenance.
