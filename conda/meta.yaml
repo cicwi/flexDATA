@@ -8,16 +8,19 @@ source:
     path: ../
 
 build:
-    number: '0'
+    noarch: python
+    number: 0
+    script: {{ PYTHON }} -m pip install . --no-deps --ignore-installed --no-build-isolation --verbose
 
 requirements:
-    build:
-        - python {{ python }}
-        - tifffile
-        - pyqtgraph
+    host:
+        - python >=3.7
+        - pip
+        - setuptools
+        - wheel
 
     run:
-        - python
+        - python >=3.7
         # dependencies are defined in setup.py
         {% for dep in data['install_requires'] %}
         - {{ dep.lower() }}
@@ -27,7 +30,3 @@ about:
     home: https://github.com/cicwi/flexDATA
     license_file: LICENSE.md
     summary: "This project comprises IO routines for CT data."
-
-extra:
-    maintainers:
-        - Alexander Kostenko
