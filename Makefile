@@ -14,5 +14,6 @@ docs: install_dev
 style: install_dev
 	black flexdata
 
-conda_package: install_dev
-	conda build conda/ -c astra-toolbox/label/dev -c conda-forge
+conda_package:
+	conda build conda/ -c astra-toolbox -c nvidia
+
