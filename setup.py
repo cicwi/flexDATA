@@ -35,4 +35,6 @@ setup(
         ]
     },
     version='1.0.0',
+    description='IO routines for CT data',
+    url='https://github.com/cicwi/flexdata'
 )
