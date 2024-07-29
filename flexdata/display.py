@@ -22,8 +22,7 @@ def plot3d(x, y, z, connected = False, title = None):
     import matplotlib.pyplot as plt
 
     fig = plt.figure()
-    ax = fig.gca(projection='3d')
-    #ax = fig.add_subplot(111, projection='3d')
+    ax = fig.add_subplot(projection='3d')
 
     ax.scatter(x, y, z)
 
