@@ -1,149 +1,74 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>flexdata.geometry &mdash; flexdata  documentation</title>
-  
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
 
   
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-  
-
-  
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
 
           
-            <a href="../../index.html" class="icon icon-home"> flexdata
           
-
-          
+          <a href="../../index.html" class="icon icon-home">
+            flexdata
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../readme.html">flexDATA</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../flexdata.html">Modules</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">flexdata</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
-        
-          <li><a href="../index.html">Module code</a> &raquo;</li>
-        
-      <li>flexdata.geometry</li>
-    
-    
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">flexdata.geometry</li>
       <li class="wy-breadcrumbs-aside">
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <h1>Source code for flexdata.geometry</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
@@ -156,20 +81,24 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="c1"># &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Imports &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span>
 
-<span class="kn">import</span> <span class="nn">astra</span>
-
 <span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">from</span> <span class="nn">transforms3d</span> <span class="k">import</span> <span class="n">euler</span>
+<span class="kn">import</span> <span class="nn">scipy.spatial</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="n">FLEXTOML_VERSION</span> <span class="o">=</span> <span class="s1">&#39;0.1.0&#39;</span>
+
 
 <span class="c1"># &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Classes &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span>
-<div class="viewcode-block" id="basic"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic">[docs]</a><span class="k">class</span> <span class="nc">basic</span><span class="p">():</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="basic">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic">[docs]</a>
+<span class="k">class</span> <span class="nc">basic</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Base geometry class. Needs only SDD, ODD and pixel size to initialize.</span>
 <span class="sd">    Use &#39;parameters&#39; to store parameters and &#39;description&#39; to store relevant metadata.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src2obj</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">det2obj</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">det_pixel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">img_pixel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">unit</span> <span class="o">=</span> <span class="s1">&#39;mm&#39;</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src2obj</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">det2obj</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">det_pixel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">img_pixel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">unit</span> <span class="o">=</span> <span class="s1">&#39;mm&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Constructor for the base geometry class.</span>
 
 <span class="sd">        Args:</span>
@@ -198,22 +127,24 @@
                            <span class="s1">&#39;vol_sample&#39;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
                            <span class="p">}</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;flextoml_version&#39;</span><span class="p">:</span> <span class="n">FLEXTOML_VERSION</span><span class="p">,</span>
+        <span class="p">}</span>
 
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Show my description.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="s1">&#39;Geometry class: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> Parameters: </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Show my description.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="s1">&#39;Geometry class: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> Parameters: </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Retrieve one of the geometry parameters.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
@@ -223,8 +154,8 @@
 
         <span class="k">return</span> <span class="n">val</span>
 
-    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Set one of the geometry parameters.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -232,8 +163,10 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
 
-<div class="viewcode-block" id="basic.copy"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="basic.copy">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.copy">[docs]</a>
+    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Copy me.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">geom</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)()</span>
@@ -242,8 +175,11 @@
 
         <span class="k">return</span> <span class="n">geom</span></div>
 
-<div class="viewcode-block" id="basic.to_dictionary"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.to_dictionary">[docs]</a>    <span class="k">def</span> <span class="nf">to_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="basic.to_dictionary">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.to_dictionary">[docs]</a>
+    <span class="k">def</span> <span class="nf">to_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Return a dictionary describing this geometry.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">records</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -251,8 +187,11 @@
 
         <span class="k">return</span> <span class="n">records</span></div>
 
-<div class="viewcode-block" id="basic.from_matrix"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.from_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">from_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">T</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="basic.from_matrix">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.from_matrix">[docs]</a>
+    <span class="k">def</span> <span class="nf">from_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">T</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Rotates and translates the reconstruction volume.</span>
 
 <span class="sd">        Args:</span>
@@ -260,11 +199,14 @@
 <span class="sd">            T (1x3 array): translation vector</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Translate to flex geometry:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;vol_rot&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">euler</span><span class="o">.</span><span class="n">mat2euler</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="s1">&#39;sxyz&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;vol_rot&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_mat2euler</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="s1">&#39;sxyz&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;vol_tra&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;vol_tra&#39;</span><span class="p">])</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">R</span><span class="o">.</span><span class="n">T</span><span class="p">)[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">voxel</span></div>
 
-<div class="viewcode-block" id="basic.from_dictionary"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.from_dictionary">[docs]</a>    <span class="k">def</span> <span class="nf">from_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="basic.from_dictionary">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.from_dictionary">[docs]</a>
+    <span class="k">def</span> <span class="nf">from_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Use dictionary records to initialize this geometry.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># Fill gaps if needed:</span>
@@ -307,78 +249,98 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Geometry parameter missing after parcing: &#39;</span> <span class="o">+</span> <span class="n">key</span><span class="p">)</span></div>
 
+
+<div class="viewcode-block" id="basic.log">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.log">[docs]</a>
+    <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a message to the geometry changelog.</span>
+
+<span class="sd">        This changelog will be saved with the geometry in a toml file.</span>
+
+<span class="sd">        :param message: A message to log (single line).</span>
+<span class="sd">        :returns: None</span>
+<span class="sd">        :rtype: NoneType</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">changelog</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;changelog&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">changelog</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="si">:</span><span class="s2">%Y-%m-%d</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">[</span><span class="s1">&#39;changelog&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">changelog</span></div>
+
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">vol_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Voxel shape.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;vol_sample&#39;</span><span class="p">)</span>
 
     <span class="nd">@vol_sample</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">vol_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Voxel shape.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;vol_sample&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">det_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Pixel shape.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;det_sample&#39;</span><span class="p">)</span>
 
     <span class="nd">@det_sample</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">det_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Pixel shape.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;det_sample&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">pixel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Pixel size (mm).</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;det_pixel&#39;</span><span class="p">)</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;det_sample&#39;</span><span class="p">))</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">voxel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Voxel size (mm).</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;img_pixel&#39;</span><span class="p">)</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;vol_sample&#39;</span><span class="p">))</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">src2obj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Source-to-object distance.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;src2obj&#39;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">det2obj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Detector-to-object distance.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;det2obj&#39;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">src2det</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Source-to-detector distance.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;src2obj&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;det2obj&#39;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">magnification</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Magnification.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">src2det</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">src2obj</span>
 
-<div class="viewcode-block" id="basic.volume_xyz"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.volume_xyz">[docs]</a>    <span class="k">def</span> <span class="nf">volume_xyz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="basic.volume_xyz">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.volume_xyz">[docs]</a>
+    <span class="k">def</span> <span class="nf">volume_xyz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Coordinate grid in units of the geometry.</span>
 
 <span class="sd">        Args:</span>
@@ -391,14 +353,20 @@
 
         <span class="k">return</span> <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">zz</span></div>
 
-<div class="viewcode-block" id="basic.from_astra_cone_vec"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.from_astra_cone_vec">[docs]</a>    <span class="k">def</span> <span class="nf">from_astra_cone_vec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vectors</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="basic.from_astra_cone_vec">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.from_astra_cone_vec">[docs]</a>
+    <span class="k">def</span> <span class="nf">from_astra_cone_vec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vectors</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Take vectors from ASTRA &#39;cone_vec&#39; geometry. This will override any other parameters.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_vectors_</span> <span class="o">=</span> <span class="n">vectors</span></div>
 
-<div class="viewcode-block" id="basic.astra_projection_geom"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.astra_projection_geom">[docs]</a>    <span class="k">def</span> <span class="nf">astra_projection_geom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_shape</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="basic.astra_projection_geom">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.astra_projection_geom">[docs]</a>
+    <span class="k">def</span> <span class="nf">astra_projection_geom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_shape</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Get ASTRA projection geometry.</span>
 
 <span class="sd">        Args:</span>
@@ -408,10 +376,14 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            geometry : ASTRA cone-beam geometry.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
+        <span class="kn">import</span> <span class="nn">astra</span>
+
         <span class="c1"># Get vectors:</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_vectors_&#39;</span><span class="p">):</span>
-            <span class="n">vectors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vectors_</span>
-
+            <span class="k">if</span> <span class="n">index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">vectors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vectors_</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vectors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vectors_</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">vectors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_vectors</span><span class="p">(</span><span class="n">data_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">index</span><span class="p">)</span>
 
@@ -420,8 +392,11 @@
         <span class="n">det_count_z</span> <span class="o">=</span> <span class="n">data_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">astra</span><span class="o">.</span><span class="n">create_proj_geom</span><span class="p">(</span><span class="s1">&#39;cone_vec&#39;</span><span class="p">,</span> <span class="n">det_count_z</span><span class="p">,</span> <span class="n">det_count_x</span><span class="p">,</span> <span class="n">vectors</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="basic.astra_volume_geom"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.astra_volume_geom">[docs]</a>    <span class="k">def</span> <span class="nf">astra_volume_geom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vol_shape</span><span class="p">,</span> <span class="n">slice_first</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">slice_last</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="basic.astra_volume_geom">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.astra_volume_geom">[docs]</a>
+    <span class="k">def</span> <span class="nf">astra_volume_geom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vol_shape</span><span class="p">,</span> <span class="n">slice_first</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">slice_last</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Initialize ASTRA volume geometry.</span>
 
 <span class="sd">        Args:</span>
@@ -429,6 +404,7 @@
 <span class="sd">            slice_first: first slice of an ROI to update</span>
 <span class="sd">            slice_last : last slice of an ROI to update</span>
 <span class="sd">        &#39;&#39;&#39;</span>
+        <span class="kn">import</span> <span class="nn">astra</span>
 
         <span class="c1"># Shape and size (mm) of the volume</span>
         <span class="n">vol_shape</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vol_shape</span><span class="p">)</span>
@@ -458,8 +434,11 @@
 
         <span class="k">return</span> <span class="n">vol_geom</span></div>
 
-<div class="viewcode-block" id="basic.get_vectors"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.get_vectors">[docs]</a>    <span class="k">def</span> <span class="nf">get_vectors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj_count</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="basic.get_vectors">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.get_vectors">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_vectors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj_count</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Get source, detector and detector orientation vectors.</span>
 
 <span class="sd">        Args:</span>
@@ -479,8 +458,11 @@
         <span class="n">vectors</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">src_vect</span><span class="p">,</span> <span class="n">det_vect</span><span class="p">,</span> <span class="n">det_tan</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixel</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">det_orth</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixel</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">vectors</span></div>
 
-<div class="viewcode-block" id="basic.get_source_orbit"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.get_source_orbit">[docs]</a>    <span class="k">def</span> <span class="nf">get_source_orbit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj_count</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="basic.get_source_orbit">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.get_source_orbit">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_source_orbit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj_count</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Get the source orbit. In the base class it is a circular orbit.</span>
 
 <span class="sd">        Args:</span>
@@ -492,8 +474,11 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Override this method in a geometry class derived from the base class!&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="basic.get_detector_orbit"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.get_detector_orbit">[docs]</a>    <span class="k">def</span> <span class="nf">get_detector_orbit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj_count</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="basic.get_detector_orbit">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.get_detector_orbit">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_detector_orbit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj_count</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Get the detector orbit. In the base class it is a circular orbit.</span>
 
 <span class="sd">        Args:</span>
@@ -504,8 +489,9 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Override this method in a geometry class derived from the base class!&#39;</span><span class="p">)</span></div>
 
+
     <span class="k">def</span> <span class="nf">_transform_vectors_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_vect</span><span class="p">,</span> <span class="n">det_vect</span><span class="p">,</span> <span class="n">det_tan</span><span class="p">,</span> <span class="n">det_rad</span><span class="p">,</span> <span class="n">det_orth</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Rotate and translate vectors depending on the volume orientation.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">vol_rot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;vol_rot&#39;</span><span class="p">]</span>
@@ -524,8 +510,10 @@
         <span class="n">src_vect</span> <span class="o">-=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span>
         <span class="n">det_vect</span> <span class="o">-=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span>
 
-<div class="viewcode-block" id="basic.detector_size"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.detector_size">[docs]</a>    <span class="k">def</span> <span class="nf">detector_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj_shape</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="basic.detector_size">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.detector_size">[docs]</a>
+    <span class="k">def</span> <span class="nf">detector_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj_shape</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Get the size of detector in length units.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">proj_shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
@@ -533,16 +521,22 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">proj_shape</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixel</span></div>
 
-<div class="viewcode-block" id="basic.detector_centre"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.detector_centre">[docs]</a>    <span class="k">def</span> <span class="nf">detector_centre</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="basic.detector_centre">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.detector_centre">[docs]</a>
+    <span class="k">def</span> <span class="nf">detector_centre</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Get the centre coordinate of the first position of the detector.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">det_pos</span><span class="p">,</span> <span class="n">det_tan</span><span class="p">,</span> <span class="n">det_rad</span><span class="p">,</span> <span class="n">det_orth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_detector_orbit</span><span class="p">(</span><span class="n">proj_count</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">[</span><span class="n">det_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">det_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span></div>
 
-<div class="viewcode-block" id="basic.detector_bounds"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.detector_bounds">[docs]</a>    <span class="k">def</span> <span class="nf">detector_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj_shape</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="basic.detector_bounds">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.detector_bounds">[docs]</a>
+    <span class="k">def</span> <span class="nf">detector_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj_shape</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Get the boundaries of the detector at the start of the scan in length units.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
@@ -556,14 +550,20 @@
 
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">vrt</span><span class="p">,</span> <span class="n">hrz</span><span class="p">])</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cntr</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="basic.volume_size"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.volume_size">[docs]</a>    <span class="k">def</span> <span class="nf">volume_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vol_shape</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="basic.volume_size">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.volume_size">[docs]</a>
+    <span class="k">def</span> <span class="nf">volume_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vol_shape</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Return volume size in length units.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vol_shape</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">voxel</span></div>
 
-<div class="viewcode-block" id="basic.volume_bounds"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.volume_bounds">[docs]</a>    <span class="k">def</span> <span class="nf">volume_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vol_shape</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="basic.volume_bounds">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.basic.volume_bounds">[docs]</a>
+    <span class="k">def</span> <span class="nf">volume_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vol_shape</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Return volume bounds:</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">sz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">volume_size</span><span class="p">(</span><span class="n">vol_shape</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
@@ -572,15 +572,19 @@
         <span class="n">mag</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">sz</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">sz</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
         <span class="n">hrz</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">sz</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">sz</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
 
-        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">vrt</span><span class="p">,</span> <span class="n">mag</span><span class="p">,</span> <span class="n">hrz</span><span class="p">])</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;vol_tra&#39;</span><span class="p">])[:,</span> <span class="kc">None</span><span class="p">]</span></div></div>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">vrt</span><span class="p">,</span> <span class="n">mag</span><span class="p">,</span> <span class="n">hrz</span><span class="p">])</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;vol_tra&#39;</span><span class="p">])[:,</span> <span class="kc">None</span><span class="p">]</span></div>
+</div>
 
-<div class="viewcode-block" id="circular"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.circular">[docs]</a><span class="k">class</span> <span class="nc">circular</span><span class="p">(</span><span class="n">basic</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="circular">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.circular">[docs]</a>
+<span class="k">class</span> <span class="nc">circular</span><span class="p">(</span><span class="n">basic</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Circular orbit geometry class. Includes additional parameters such as detector and source shifts and rotations.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src2obj</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">det2obj</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">det_pixel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">img_pixel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ang_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">360</span><span class="p">),</span> <span class="n">unit</span> <span class="o">=</span> <span class="s1">&#39;mm&#39;</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src2obj</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">det2obj</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">det_pixel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">img_pixel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ang_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">360</span><span class="p">),</span> <span class="n">unit</span> <span class="o">=</span> <span class="s1">&#39;mm&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Constructor for the circular geometry class.</span>
 
 <span class="sd">        Args:</span>
@@ -610,8 +614,10 @@
                            <span class="s1">&#39;axs_pitch&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
                            <span class="p">})</span>
 
-<div class="viewcode-block" id="circular.get_thetas"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.circular.get_thetas">[docs]</a>    <span class="k">def</span> <span class="nf">get_thetas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj_count</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="circular.get_thetas">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.circular.get_thetas">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_thetas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj_count</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Get rotation angles. Either returns an equidistant array or self.thetas if that is defined.</span>
 
 <span class="sd">        Args:</span>
@@ -630,8 +636,11 @@
 
         <span class="k">return</span> <span class="n">thetas</span></div>
 
-<div class="viewcode-block" id="circular.get_source_orbit"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.circular.get_source_orbit">[docs]</a>    <span class="k">def</span> <span class="nf">get_source_orbit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj_count</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="circular.get_source_orbit">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.circular.get_source_orbit">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_source_orbit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj_count</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Get the source orbit.</span>
 
 <span class="sd">        Args:</span>
@@ -662,8 +671,11 @@
 
         <span class="k">return</span> <span class="n">src_vect</span></div>
 
-<div class="viewcode-block" id="circular.get_detector_orbit"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.circular.get_detector_orbit">[docs]</a>    <span class="k">def</span> <span class="nf">get_detector_orbit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj_count</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="circular.get_detector_orbit">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.circular.get_detector_orbit">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_detector_orbit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj_count</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Get the detector orbit.</span>
 
 <span class="sd">        Args:</span>
@@ -720,15 +732,19 @@
             <span class="n">det_rad</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">det_rad</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:])</span>
             <span class="n">det_orth</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">det_orth</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:])</span>
 
-        <span class="k">return</span> <span class="n">det_pos</span><span class="p">,</span> <span class="n">det_tan</span><span class="p">,</span> <span class="n">det_rad</span><span class="p">,</span> <span class="n">det_orth</span></div></div>
+        <span class="k">return</span> <span class="n">det_pos</span><span class="p">,</span> <span class="n">det_tan</span><span class="p">,</span> <span class="n">det_rad</span><span class="p">,</span> <span class="n">det_orth</span></div>
+</div>
 
-<div class="viewcode-block" id="helical"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.helical">[docs]</a><span class="k">class</span> <span class="nc">helical</span><span class="p">(</span><span class="n">circular</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="helical">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.helical">[docs]</a>
+<span class="k">class</span> <span class="nc">helical</span><span class="p">(</span><span class="n">circular</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Helical orbit geometry class. Similar to the &#39;circular&#39; class with additional parameter of helix</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src2obj</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">det2obj</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">det_pixel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">img_pixel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">axis_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>  <span class="n">ang_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">720</span><span class="p">),</span> <span class="n">unit</span> <span class="o">=</span> <span class="s1">&#39;mm&#39;</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src2obj</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">det2obj</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">det_pixel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">img_pixel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">axis_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>  <span class="n">ang_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">720</span><span class="p">),</span> <span class="n">unit</span> <span class="o">=</span> <span class="s1">&#39;mm&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Constructor for the helical geometry class.</span>
 
 <span class="sd">        Args:</span>
@@ -746,8 +762,10 @@
         <span class="c1"># Additional parameters:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;axs_rng&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">axis_range</span>
 
-<div class="viewcode-block" id="helical.get_source_orbit"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.helical.get_source_orbit">[docs]</a>    <span class="k">def</span> <span class="nf">get_source_orbit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj_count</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="helical.get_source_orbit">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.helical.get_source_orbit">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_source_orbit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj_count</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Get the source orbit. In the base class it is a circular orbit.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">src2obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">src2obj</span>
@@ -776,8 +794,11 @@
 
         <span class="k">return</span> <span class="n">src_vect</span></div>
 
-<div class="viewcode-block" id="helical.get_detector_orbit"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.helical.get_detector_orbit">[docs]</a>    <span class="k">def</span> <span class="nf">get_detector_orbit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj_count</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="helical.get_detector_orbit">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.helical.get_detector_orbit">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_detector_orbit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj_count</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Get the detector orbit. In the base class it is a circular orbit.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">det2obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">det2obj</span>
@@ -829,16 +850,20 @@
             <span class="n">det_rad</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">det_rad</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:])</span>
             <span class="n">det_orth</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">det_orth</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:])</span>
 
-        <span class="k">return</span> <span class="n">det_pos</span><span class="p">,</span> <span class="n">det_tan</span><span class="p">,</span> <span class="n">det_rad</span><span class="p">,</span> <span class="n">det_orth</span></div></div>
+        <span class="k">return</span> <span class="n">det_pos</span><span class="p">,</span> <span class="n">det_tan</span><span class="p">,</span> <span class="n">det_rad</span><span class="p">,</span> <span class="n">det_orth</span></div>
+</div>
 
-<div class="viewcode-block" id="linear"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.linear">[docs]</a><span class="k">class</span> <span class="nc">linear</span><span class="p">(</span><span class="n">basic</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="linear">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.linear">[docs]</a>
+<span class="k">class</span> <span class="nc">linear</span><span class="p">(</span><span class="n">basic</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    A simple linear orbit geometry class.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src2obj</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">det2obj</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">det_pixel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">img_pixel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src2obj</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">det2obj</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">det_pixel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">img_pixel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">src_hrz_rng</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">src_vrt_rng</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">det_hrz_rng</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">det_vrt_rng</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">unit</span> <span class="o">=</span> <span class="s1">&#39;mm&#39;</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Constructor for the linear geometry class.</span>
 
 <span class="sd">        Args:</span>
@@ -868,8 +893,10 @@
                            <span class="s1">&#39;det_yaw&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
                            <span class="p">})</span>
 
-<div class="viewcode-block" id="linear.get_source_orbit"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.linear.get_source_orbit">[docs]</a>    <span class="k">def</span> <span class="nf">get_source_orbit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj_count</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="linear.get_source_orbit">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.linear.get_source_orbit">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_source_orbit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj_count</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Get the source orbit. In the base class it is a circular orbit.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">src2obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">src2obj</span>
@@ -882,8 +909,11 @@
 
         <span class="k">return</span> <span class="n">src_vect</span></div>
 
-<div class="viewcode-block" id="linear.get_detector_orbit"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.linear.get_detector_orbit">[docs]</a>    <span class="k">def</span> <span class="nf">get_detector_orbit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj_count</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="linear.get_detector_orbit">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.linear.get_detector_orbit">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_detector_orbit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj_count</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Get the detector orbit. In the base class it is a circular orbit.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">det2obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">det2obj</span>
@@ -914,11 +944,15 @@
             <span class="n">det_rad</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">det_rad</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:])</span>
             <span class="n">det_orth</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">det_orth</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:])</span>
 
-        <span class="k">return</span> <span class="n">det_pos</span><span class="p">,</span> <span class="n">det_tan</span><span class="p">,</span> <span class="n">det_rad</span><span class="p">,</span> <span class="n">det_orth</span></div></div>
+        <span class="k">return</span> <span class="n">det_pos</span><span class="p">,</span> <span class="n">det_tan</span><span class="p">,</span> <span class="n">det_rad</span><span class="p">,</span> <span class="n">det_orth</span></div>
+</div>
+
 
 <span class="c1"># &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Static methods &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span>
-<div class="viewcode-block" id="tiles_shape"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.tiles_shape">[docs]</a><span class="k">def</span> <span class="nf">tiles_shape</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">geometry_list</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="tiles_shape">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.tiles_shape">[docs]</a>
+<span class="k">def</span> <span class="nf">tiles_shape</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">geometry_list</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the size of the stiched dataset.</span>
 
 <span class="sd">    Args:</span>
@@ -964,8 +998,11 @@
 
     <span class="k">return</span> <span class="n">new_shape</span><span class="p">,</span> <span class="n">geometry</span></div>
 
-<div class="viewcode-block" id="astra_projection_geom"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.astra_projection_geom">[docs]</a><span class="k">def</span> <span class="nf">astra_projection_geom</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">data_shape</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="astra_projection_geom">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.astra_projection_geom">[docs]</a>
+<span class="k">def</span> <span class="nf">astra_projection_geom</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">data_shape</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Initialize ASTRA projection geometry.</span>
 
 <span class="sd">    Args:</span>
@@ -977,14 +1014,20 @@
     <span class="k">return</span> <span class="n">geom</span><span class="o">.</span><span class="n">astra_projection_geom</span><span class="p">(</span><span class="n">data_shape</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="astra_volume_geom"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.astra_volume_geom">[docs]</a><span class="k">def</span> <span class="nf">astra_volume_geom</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">vol_shape</span><span class="p">,</span> <span class="n">slice_first</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">slice_last</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="astra_volume_geom">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.astra_volume_geom">[docs]</a>
+<span class="k">def</span> <span class="nf">astra_volume_geom</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">vol_shape</span><span class="p">,</span> <span class="n">slice_first</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">slice_last</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Initialize ASTRA volume geometry.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">geom</span><span class="o">.</span><span class="n">astra_volume_geom</span><span class="p">(</span><span class="n">vol_shape</span><span class="p">,</span> <span class="n">slice_first</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">slice_last</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="get_vectors"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.get_vectors">[docs]</a><span class="k">def</span> <span class="nf">get_vectors</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">angle_count</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="get_vectors">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.get_vectors">[docs]</a>
+<span class="k">def</span> <span class="nf">get_vectors</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">angle_count</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Get source, detector and detector orientation vectors.</span>
 
 <span class="sd">    Args:</span>
@@ -994,33 +1037,48 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">geom</span><span class="o">.</span><span class="n">get_vectors</span><span class="p">(</span><span class="n">angle_count</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="detector_size"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.detector_size">[docs]</a><span class="k">def</span> <span class="nf">detector_size</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">proj_shape</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="detector_size">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.detector_size">[docs]</a>
+<span class="k">def</span> <span class="nf">detector_size</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">proj_shape</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Get the size of detector in length units.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">geom</span><span class="o">.</span><span class="n">detector_size</span><span class="p">(</span><span class="n">proj_shape</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="detector_bounds"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.detector_bounds">[docs]</a><span class="k">def</span> <span class="nf">detector_bounds</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">proj_shape</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="detector_bounds">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.detector_bounds">[docs]</a>
+<span class="k">def</span> <span class="nf">detector_bounds</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">proj_shape</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Get the boundaries of the detector in length units.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">geom</span><span class="o">.</span><span class="n">detector_bounds</span><span class="p">(</span><span class="n">proj_shape</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="volume_bounds"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.volume_bounds">[docs]</a><span class="k">def</span> <span class="nf">volume_bounds</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">proj_shape</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="volume_bounds">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.volume_bounds">[docs]</a>
+<span class="k">def</span> <span class="nf">volume_bounds</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">proj_shape</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    A very simplified version of volume bounds...</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">geom</span><span class="o">.</span><span class="n">volume_bounds</span><span class="p">(</span><span class="n">proj_shape</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="volume_shape"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.volume_shape">[docs]</a><span class="k">def</span> <span class="nf">volume_shape</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">proj_shape</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="volume_shape">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.volume_shape">[docs]</a>
+<span class="k">def</span> <span class="nf">volume_shape</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">proj_shape</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Based on physical volume bnounds compute shape in pixels:</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">geom</span><span class="o">.</span><span class="n">volume_shape</span><span class="p">(</span><span class="n">proj_shape</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="linear_orbit"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.linear_orbit">[docs]</a><span class="k">def</span> <span class="nf">linear_orbit</span><span class="p">(</span><span class="n">hrz_rng</span><span class="p">,</span> <span class="n">rad_rng</span><span class="p">,</span> <span class="n">vrt_rng</span><span class="p">,</span> <span class="n">proj_count</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="linear_orbit">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.linear_orbit">[docs]</a>
+<span class="k">def</span> <span class="nf">linear_orbit</span><span class="p">(</span><span class="n">hrz_rng</span><span class="p">,</span> <span class="n">rad_rng</span><span class="p">,</span> <span class="n">vrt_rng</span><span class="p">,</span> <span class="n">proj_count</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Generate a linear orbit vector.</span>
 
 <span class="sd">    Args:</span>
@@ -1055,9 +1113,12 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">position</span><span class="p">,</span> <span class="n">tangent</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">orthogonal</span></div>
 
-<div class="viewcode-block" id="circular_orbit"><a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.circular_orbit">[docs]</a><span class="k">def</span> <span class="nf">circular_orbit</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">thetas</span><span class="p">,</span> <span class="n">roll</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pitch</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">yaw</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+
+<div class="viewcode-block" id="circular_orbit">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.geometry.circular_orbit">[docs]</a>
+<span class="k">def</span> <span class="nf">circular_orbit</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">thetas</span><span class="p">,</span> <span class="n">roll</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pitch</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">yaw</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
                      <span class="n">origin</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">tan_shift</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Generate a circular orbit vector.</span>
 
 <span class="sd">    Args:</span>
@@ -1117,56 +1178,62 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">position</span><span class="p">,</span> <span class="n">tangent</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">orthogonal</span></div>
 
-<span class="k">def</span> <span class="nf">_euler2mat_</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="s1">&#39;sxyz&#39;</span><span class="p">):</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">euler</span><span class="o">.</span><span class="n">euler2mat</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">axes</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">_convertAxesToScipy</span><span class="p">(</span><span class="n">axes</span><span class="p">):</span>
+    <span class="c1"># convert from transforms3d convention to scipy convention</span>
+    <span class="k">if</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;r&#39;</span><span class="p">:</span>
+        <span class="c1"># &#39;rxyz&#39;, rotating/intrinsic axes -&gt; XYZ</span>
+        <span class="k">return</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span><span class="p">:</span>
+        <span class="c1"># &#39;sxyz&#39;, static/extrinsic axes -&gt; xyz</span>
+        <span class="k">return</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># assumed to be already in scipy format</span>
+        <span class="k">return</span> <span class="n">axes</span>
+
+<span class="k">def</span> <span class="nf">_mat2euler</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="s1">&#39;sxyz&#39;</span><span class="p">):</span>
+    <span class="n">seq</span> <span class="o">=</span> <span class="n">_convertAxesToScipy</span><span class="p">(</span><span class="n">axes</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Rotation</span><span class="o">.</span><span class="n">from_matrix</span><span class="p">(</span><span class="n">M</span><span class="p">)</span><span class="o">.</span><span class="n">as_euler</span><span class="p">(</span><span class="n">seq</span><span class="o">=</span><span class="n">seq</span><span class="p">,</span> <span class="n">degrees</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_euler2mat_</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="s1">&#39;sxyz&#39;</span><span class="p">):</span>
+    <span class="n">seq</span> <span class="o">=</span> <span class="n">_convertAxesToScipy</span><span class="p">(</span><span class="n">axes</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Rotation</span><span class="o">.</span><span class="n">from_euler</span><span class="p">(</span><span class="n">seq</span><span class="o">=</span><span class="n">seq</span><span class="p">,</span> <span class="n">angles</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">],</span> <span class="n">degrees</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">()</span>
 
 <span class="k">def</span> <span class="nf">_axangle2mat_</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">euler</span><span class="o">.</span><span class="n">axangle2mat</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+    <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span> <span class="o">=</span> <span class="n">ax</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span> <span class="n">z</span><span class="o">*</span><span class="n">z</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="n">x</span><span class="o">/</span><span class="n">n</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="n">y</span><span class="o">/</span><span class="n">n</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="n">z</span><span class="o">/</span><span class="n">n</span>
+    <span class="k">return</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Rotation</span><span class="o">.</span><span class="n">from_rotvec</span><span class="p">([</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">])</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">()</span>
 </pre></div>
 
            </div>
-           
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; Copyright 2018, Author
-
-    </p>
+    <p>&#169; Copyright 2018, Author.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

@@ -31,7 +31,7 @@ setup(
             # Documentation
             'sphinx',
             'sphinx_rtd_theme',
-            'recommonmark'
+            'myst-parser'
         ]
     },
     version='1.0.0',

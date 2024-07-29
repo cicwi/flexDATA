@@ -1,149 +1,74 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>flexdata.data &mdash; flexdata  documentation</title>
-  
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
 
   
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-  
-
-  
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
 
           
-            <a href="../../index.html" class="icon icon-home"> flexdata
           
-
-          
+          <a href="../../index.html" class="icon icon-home">
+            flexdata
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../readme.html">flexDATA</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../flexdata.html">Modules</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">flexdata</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
-        
-          <li><a href="../index.html">Module code</a> &raquo;</li>
-        
-      <li>flexdata.data</li>
-    
-    
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">flexdata.data</li>
       <li class="wy-breadcrumbs-aside">
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <h1>Source code for flexdata.data</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
@@ -168,14 +93,19 @@
 <span class="kn">import</span> <span class="nn">imageio</span>        <span class="c1"># io for images</span>
 <span class="kn">import</span> <span class="nn">psutil</span>         <span class="c1"># RAM tester</span>
 <span class="kn">import</span> <span class="nn">toml</span>           <span class="c1"># TOML format parcer</span>
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="k">import</span> <span class="n">tqdm</span> <span class="c1"># Progress barring</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span> <span class="c1"># Progress barring</span>
 <span class="kn">import</span> <span class="nn">time</span>           <span class="c1"># Pausing</span>
-<span class="kn">from</span> <span class="nn">scipy.io</span> <span class="k">import</span> <span class="n">loadmat</span> <span class="c1"># Reading matlab format</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">geometry</span>       <span class="c1"># geometry classes</span>
-
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">scipy.io</span> <span class="kn">import</span> <span class="n">loadmat</span> <span class="c1"># Reading matlab format</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">geometry</span>       <span class="c1"># geometry classes</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">correct</span> <span class="k">as</span> <span class="n">fdc</span>
 <span class="c1"># &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; LOGGER CLASS &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span>
-<div class="viewcode-block" id="logger"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.logger">[docs]</a><span class="k">class</span> <span class="nc">logger</span><span class="p">:</span>
-   <span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="logger">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.logger">[docs]</a>
+<span class="k">class</span> <span class="nc">logger</span><span class="p">:</span>
+<span class="w">   </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">   A class for logging and printing messages.</span>
 <span class="sd">   &quot;&quot;&quot;</span>
    <span class="c1"># Save messages to a log file:</span>
@@ -183,7 +113,7 @@
 
    <span class="nd">@staticmethod</span>
    <span class="k">def</span> <span class="nf">_write_</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
-       <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">       </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">       Dump message into a file if it is available.</span>
 <span class="sd">       &quot;&quot;&quot;</span>
        <span class="c1"># Add timestamp:</span>
@@ -194,41 +124,56 @@
            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">logger</span><span class="o">.</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
-<div class="viewcode-block" id="logger.print"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.logger.print">[docs]</a>   <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="logger.print">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.logger.print">[docs]</a>
+   <span class="nd">@staticmethod</span>
    <span class="k">def</span> <span class="nf">print</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
-      <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Simply prints and saves a message.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="logger.title"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.logger.title">[docs]</a>   <span class="nd">@staticmethod</span>
+
+<div class="viewcode-block" id="logger.title">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.logger.title">[docs]</a>
+   <span class="nd">@staticmethod</span>
    <span class="k">def</span> <span class="nf">title</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
-      <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Print something important.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
       <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
       <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="logger.warning"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.logger.warning">[docs]</a>   <span class="nd">@staticmethod</span>
+
+<div class="viewcode-block" id="logger.warning">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.logger.warning">[docs]</a>
+   <span class="nd">@staticmethod</span>
    <span class="k">def</span> <span class="nf">warning</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
-      <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Raise a warning.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="logger.error"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.logger.error">[docs]</a>   <span class="nd">@staticmethod</span>
+
+<div class="viewcode-block" id="logger.error">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.logger.error">[docs]</a>
+   <span class="nd">@staticmethod</span>
    <span class="k">def</span> <span class="nf">error</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
-      <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Raise an error.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
-      <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div></div>
+      <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+</div>
+
 
 
 <span class="c1"># &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Methods &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span>
 
-<div class="viewcode-block" id="stack_shape"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.stack_shape">[docs]</a><span class="k">def</span> <span class="nf">stack_shape</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">skip</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sample</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="stack_shape">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.stack_shape">[docs]</a>
+<span class="k">def</span> <span class="nf">stack_shape</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">skip</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sample</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determine the shape of stack on disk.</span>
 
 <span class="sd">    Args:</span>
@@ -258,9 +203,12 @@
 
     <span class="k">return</span> <span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span></div>
 
-<div class="viewcode-block" id="read_stack"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.read_stack">[docs]</a><span class="k">def</span> <span class="nf">read_stack</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">skip</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sample</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+
+<div class="viewcode-block" id="read_stack">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.read_stack">[docs]</a>
+<span class="k">def</span> <span class="nf">read_stack</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">skip</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sample</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                <span class="nb">format</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">transpose</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">updown</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">memmap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">success</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read stack of files and return a numpy array.</span>
 
 <span class="sd">    Args:</span>
@@ -326,17 +274,20 @@
         <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">success</span><span class="p">)</span> <span class="o">!=</span> <span class="n">file_n</span><span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%u</span><span class="s1"> files are CORRUPTED!&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">file_n</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">success</span><span class="p">)))</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">%u</span><span class="s1"> files were loaded. </span><span class="si">%u%%</span><span class="s1"> memory left (</span><span class="si">%u</span><span class="s1"> GB).&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">success</span><span class="p">),</span> <span class="n">free_memory</span><span class="p">(</span><span class="kc">True</span><span class="p">),</span> <span class="n">free_memory</span><span class="p">(</span><span class="kc">False</span><span class="p">)))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;%u files were loaded. %u%% memory left (%u GB).&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">success</span><span class="p">),</span> <span class="n">free_memory</span><span class="p">(</span><span class="kc">True</span><span class="p">),</span> <span class="n">free_memory</span><span class="p">(</span><span class="kc">False</span><span class="p">)))</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">%u</span><span class="s1"> files were loaded. </span><span class="si">%u%%</span><span class="s1"> memory left (</span><span class="si">%u</span><span class="s1"> GB).&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">),</span> <span class="n">free_memory</span><span class="p">(</span><span class="kc">True</span><span class="p">),</span> <span class="n">free_memory</span><span class="p">(</span><span class="kc">False</span><span class="p">)))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;%u files were loaded. %u%% memory left (%u GB).&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">),</span> <span class="n">free_memory</span><span class="p">(</span><span class="kc">True</span><span class="p">),</span> <span class="n">free_memory</span><span class="p">(</span><span class="kc">False</span><span class="p">)))</span>
 
     <span class="c1"># Apply dimension switch:</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">flipdim</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span> <span class="n">updown</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">data</span></div>
 
-<div class="viewcode-block" id="write_stack"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.write_stack">[docs]</a><span class="k">def</span> <span class="nf">write_stack</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">skip</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">zip</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="s1">&#39;tiff&#39;</span><span class="p">,</span> <span class="n">updown</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="write_stack">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.write_stack">[docs]</a>
+<span class="k">def</span> <span class="nf">write_stack</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">skip</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">zip</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="s1">&#39;tiff&#39;</span><span class="p">,</span> <span class="n">updown</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Write an image stack.</span>
 
 <span class="sd">    Args:</span>
@@ -394,9 +345,17 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">write_image</span><span class="p">(</span><span class="n">path_name</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="nb">format</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="read_flexray"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.read_flexray">[docs]</a><span class="k">def</span> <span class="nf">read_flexray</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sample</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">skip</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">memmap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">proj_number</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Read projecition data for the FLex-Ray scaner. Read, dark-, flat-field images and scan parameters.</span>
+
+<div class="viewcode-block" id="read_flexray">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.read_flexray">[docs]</a>
+<span class="k">def</span> <span class="nf">read_flexray</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">sample</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">skip</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">memmap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">proj_number</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">correct</span><span class="p">,</span> <span class="n">correct_vol_center</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Convenience function for reading projection data from the FLex-Ray scanner.</span>
+<span class="sd">    Read, dark-, flat-field images and scan parameters.</span>
+<span class="sd">    Also apply a geometry correction profile (correct.correct()),</span>
+<span class="sd">    and adjust the vertical volume center to the vertical source/detector</span>
+<span class="sd">    positions (correct.correct_vol_center()).</span>
+<span class="sd">    Finally detect and try to handle missing projection images.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        path   (str): path to flexray data.</span>
@@ -404,6 +363,8 @@
 <span class="sd">        sample (int): keep every ## x ## pixel</span>
 <span class="sd">        memmap (str): output a memmap array using the given path</span>
 <span class="sd">        proj_number (int): force projection number (treat lesser numbers as missing)</span>
+<span class="sd">        correct (str): geometry correction profile to apply</span>
+<span class="sd">        correct_vol_center (bool): if True (default), correct vertical volume position</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        proj (numpy.array): projections stack</span>
@@ -422,30 +383,63 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">success</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="n">proj</span> <span class="o">=</span> <span class="n">read_stack</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;scan_&#39;</span><span class="p">,</span> <span class="n">skip</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="s1">&#39;float32&#39;</span><span class="p">,</span> <span class="n">memmap</span> <span class="o">=</span> <span class="n">memmap</span><span class="p">,</span> <span class="n">success</span> <span class="o">=</span> <span class="n">success</span><span class="p">)</span>
+    <span class="n">proj</span> <span class="o">=</span> <span class="n">read_stack</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;scan_0&#39;</span><span class="p">,</span> <span class="n">skip</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="s1">&#39;float32&#39;</span><span class="p">,</span> <span class="n">memmap</span> <span class="o">=</span> <span class="n">memmap</span><span class="p">,</span> <span class="n">success</span> <span class="o">=</span> <span class="n">success</span><span class="p">)</span>
 
     <span class="c1"># Try to retrieve metadata:</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">geom</span> <span class="o">=</span> <span class="n">read_flexraymeta</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sample</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;metadata.toml&#39;</span><span class="p">)):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;Reading geometry from metadata.toml&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">correct</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Not applying correction profile after reading metadata.toml.&quot;</span><span class="p">)</span>
 
-    <span class="k">except</span><span class="p">:</span>
+        <span class="n">geom</span> <span class="o">=</span> <span class="n">parse_flexray_metadatatoml</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sample</span><span class="p">)</span>
 
-        <span class="n">geom</span> <span class="o">=</span> <span class="n">read_flexraylog</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sample</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;scan settings.txt&#39;</span><span class="p">)):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;Reading geometry from &#39;scan settings.txt&#39;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">correct</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Not applying correction profile after reading &#39;scan settings.txt&#39;.&quot;</span><span class="p">)</span>
+        <span class="n">geom</span> <span class="o">=</span> <span class="n">parse_flexray_scansettings</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sample</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;data settings XRE.txt&#39;</span><span class="p">)):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;Reading geometry from &#39;data settings XRE.txt&#39;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">correct</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Not applying correction profile after reading &#39;data settings XRE.txt&#39;.&quot;</span><span class="p">)</span>
+        <span class="n">geom</span> <span class="o">=</span> <span class="n">parse_flexray_datasettings</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sample</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;geometry.toml&#39;</span><span class="p">)):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;Reading geometry from &#39;geometry.toml&#39;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">correct</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Applying correction profile after reading geometry.toml.&quot;</span><span class="p">)</span>
+        <span class="n">geom</span> <span class="o">=</span> <span class="n">read_geometrytoml</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sample</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;No meta data found.&#39;</span><span class="p">)</span>
+        <span class="n">geom</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">geom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">correct</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">geom</span> <span class="o">=</span> <span class="n">fdc</span><span class="o">.</span><span class="n">correct</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="n">correct</span><span class="p">,</span> <span class="n">do_print_changes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">geom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">correct_vol_center</span><span class="p">:</span>
+        <span class="n">geom</span> <span class="o">=</span> <span class="n">fdc</span><span class="o">.</span><span class="n">correct_vol_center</span><span class="p">(</span><span class="n">geom</span><span class="p">)</span>
 
     <span class="c1"># Check success. If a few files were not read - interpolate, otherwise adjust the meta record.</span>
-    <span class="n">proj</span> <span class="o">=</span> <span class="n">_check_success_</span><span class="p">(</span><span class="n">proj</span><span class="p">,</span> <span class="n">geom</span><span class="p">,</span> <span class="n">success</span><span class="p">)</span>
+    <span class="n">proj</span><span class="p">,</span> <span class="n">geom</span> <span class="o">=</span> <span class="n">_check_success_</span><span class="p">(</span><span class="n">proj</span><span class="p">,</span> <span class="n">geom</span><span class="p">,</span> <span class="n">success</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">proj</span><span class="p">,</span> <span class="n">flat</span><span class="p">,</span> <span class="n">dark</span><span class="p">,</span> <span class="n">geom</span></div>
 
-<div class="viewcode-block" id="write_image"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.write_image">[docs]</a><span class="k">def</span> <span class="nf">write_image</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">compress</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="write_image">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.write_image">[docs]</a>
+<span class="k">def</span> <span class="nf">write_image</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">compress</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Write a single image. Use compression if needed (0-9).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">imageio</span><span class="o">.</span><span class="n">get_writer</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
         <span class="n">w</span><span class="o">.</span><span class="n">append_data</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;compress&#39;</span><span class="p">:</span> <span class="n">compress</span><span class="p">})</span></div>
 
-<div class="viewcode-block" id="read_image"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.read_image">[docs]</a><span class="k">def</span> <span class="nf">read_image</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sample</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="read_image">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.read_image">[docs]</a>
+<span class="k">def</span> <span class="nf">read_image</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sample</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read a single image. Use sampling and roi parameters to reduce the array size.</span>
 <span class="sd">    Use shape, format and dtype to force file reading settings.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -513,8 +507,33 @@
     <span class="n">im</span> <span class="o">=</span> <span class="n">_sample_image_</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">sample</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">im</span></div>
 
-<div class="viewcode-block" id="read_flexraylog"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.read_flexraylog">[docs]</a><span class="k">def</span> <span class="nf">read_flexraylog</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sample</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="read_flexraylog">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.read_flexraylog">[docs]</a>
+<span class="k">def</span> <span class="nf">read_flexraylog</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+   <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">read_flexraylog is depecrated.</span>
+
+<span class="s2">This function combined too much functionality. If you want similar functionality to what</span>
+<span class="s2">read_flexraylog provided, use:</span>
+<span class="s2">&gt;&gt;&gt; from flexdata import data</span>
+<span class="s2">&gt;&gt;&gt; from flexdata import correct</span>
+<span class="s2">&gt;&gt;&gt; geom = data.parse_flexray_scansettings(path, sample=binning)</span>
+<span class="s2">&gt;&gt;&gt; geom = correct.correct(geom,</span>
+<span class="s2">                           profile=&#39;cwi-flexray-2019-04-24&#39;,</span>
+<span class="s2">                           do_print_changes=True)</span>
+<span class="s2">&gt;&gt;&gt; geom = correct.correct_vol_center(geom)</span>
+
+
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+   <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="parse_flexray_scansettings">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.parse_flexray_scansettings">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_flexray_scansettings</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sample</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read the log file of FLexRay scanner and return dictionaries with parameters of the scan.</span>
 
 <span class="sd">    Args:</span>
@@ -578,18 +597,49 @@
     <span class="c1"># Initialize geometry:</span>
     <span class="n">geom</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">circular</span><span class="p">()</span>
     <span class="n">geom</span><span class="o">.</span><span class="n">from_dictionary</span><span class="p">(</span><span class="n">records</span><span class="p">)</span>
+    <span class="n">geom</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Parsed geometry from &#39;scan settings.txt&#39;&quot;</span><span class="p">)</span>
 
     <span class="n">geom</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;det_pixel&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="n">sample</span>
     <span class="n">geom</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;img_pixel&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="n">sample</span>
 
-    <span class="c1"># Some Flexray scanner-specific motor offset corrections:</span>
-    <span class="n">_flex_motor_correct_</span><span class="p">(</span><span class="n">geom</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sample</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Adjusted geometry by binning by </span><span class="si">{</span><span class="n">sample</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="n">geom</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="n">geom</span> <span class="o">=</span> <span class="n">fdc</span><span class="o">.</span><span class="n">correct_roi</span><span class="p">(</span><span class="n">geom</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">geom</span></div>
 
-<div class="viewcode-block" id="read_flexraymeta"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.read_flexraymeta">[docs]</a><span class="k">def</span> <span class="nf">read_flexraymeta</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sample</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Read the metafile produced by Flexray scripting.</span>
+
+
+<div class="viewcode-block" id="read_flexraymeta">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.read_flexraymeta">[docs]</a>
+<span class="k">def</span> <span class="nf">read_flexraymeta</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+   <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">read_flexraymeta is depecrated.</span>
+
+<span class="s2">This function combined too much functionality. If you want similar functionality to what</span>
+<span class="s2">read_flexraymeta provided, use:</span>
+<span class="s2">&gt;&gt;&gt; from flexdata import data</span>
+<span class="s2">&gt;&gt;&gt; from flexdata import correct</span>
+<span class="s2">&gt;&gt;&gt; geom = data.parse_flexray_metadatatoml(path, sample=binning)</span>
+<span class="s2">&gt;&gt;&gt; geom = correct.correct(geom,</span>
+<span class="s2">                           profile=&#39;cwi-flexray-2019-04-24&#39;,</span>
+<span class="s2">                           do_print_changes=True)</span>
+<span class="s2">&gt;&gt;&gt; geom = correct.correct_vol_center(geom)</span>
+
+
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+   <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="parse_flexray_metadatatoml">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.parse_flexray_metadatatoml">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_flexray_metadatatoml</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sample</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read the metafile produced by the Flexray script generator.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        path   (str): path to the files location</span>
@@ -599,10 +649,11 @@
 <span class="sd">        geometry    : circular geometry class</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">param_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;det_pixel&#39;</span><span class="p">:</span><span class="s1">&#39;detector pixel size&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;mag&#39;</span><span class="p">:</span><span class="s1">&#39;magnification&#39;</span><span class="p">,</span>
 
                 <span class="s1">&#39;src2obj&#39;</span><span class="p">:</span><span class="s1">&#39;sod&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;src2det&#39;</span><span class="p">:</span><span class="s1">&#39;sdd&#39;</span><span class="p">,</span>
-
+                
                 <span class="s1">&#39;src_ort&#39;</span><span class="p">:</span><span class="s1">&#39;ver_tube&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;src_tan&#39;</span><span class="p">:</span><span class="s1">&#39;tra_tube&#39;</span><span class="p">,</span>
 
@@ -632,33 +683,193 @@
                 <span class="s1">&#39;duration&#39;</span><span class="p">:</span><span class="s1">&#39;total_scantime&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;scan_name&#39;</span><span class="p">}</span>
 
-    <span class="n">records</span> <span class="o">=</span> <span class="n">file_to_dictionary</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;metadata.toml&#39;</span><span class="p">),</span> <span class="n">separator</span> <span class="o">=</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="n">translate</span> <span class="o">=</span> <span class="n">param_dict</span><span class="p">)</span>
+    <span class="n">records</span> <span class="o">=</span> <span class="n">file_to_dictionary</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;metadata.toml&#39;</span><span class="p">),</span> <span class="n">separator</span> <span class="o">=</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="n">translation</span> <span class="o">=</span> <span class="n">param_dict</span><span class="p">)</span>
 
     <span class="c1"># Compute the center of the detector:</span>
     <span class="n">roi</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;[] []&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">records</span><span class="p">[</span><span class="s1">&#39;roi&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
     <span class="n">roi</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">roi</span><span class="p">)</span>
     <span class="n">records</span><span class="p">[</span><span class="s1">&#39;roi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">roi</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    
+    <span class="c1">#calculate image pixel</span>
+    <span class="n">records</span><span class="p">[</span><span class="s1">&#39;img_pixel&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">records</span><span class="p">[</span><span class="s1">&#39;det_pixel&#39;</span><span class="p">]</span><span class="o">/</span><span class="n">records</span><span class="p">[</span><span class="s1">&#39;mag&#39;</span><span class="p">]</span>
 
     <span class="c1"># Detector pixel is not changed here when binning mode is on...</span>
+    <span class="n">pixel_adjustment</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">records</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;HW2SW1High&#39;</span><span class="p">)</span><span class="o">|</span><span class="p">(</span><span class="n">records</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;HW1SW2High&#39;</span><span class="p">):</span>
         <span class="n">records</span><span class="p">[</span><span class="s1">&#39;det_pixel&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">2</span>
-        <span class="n">records</span><span class="p">[</span><span class="s1">&#39;img_pixel&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">2</span>
+        <span class="n">pixel_adjustment</span> <span class="o">=</span> <span class="mi">2</span>
 
     <span class="k">elif</span> <span class="p">(</span><span class="n">records</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;HW2SW2High&#39;</span><span class="p">):</span>
         <span class="n">records</span><span class="p">[</span><span class="s1">&#39;det_pixel&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">4</span>
-        <span class="n">records</span><span class="p">[</span><span class="s1">&#39;img_pixel&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">4</span>
+        <span class="n">pixel_adjustment</span> <span class="o">=</span> <span class="mi">4</span>
+
+    <span class="c1"># Check version</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">records</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;flextoml_version&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">version</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+       <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No version for toml file. Expected </span><span class="si">{</span><span class="n">geom</span><span class="o">.</span><span class="n">FLEXTOML_VERSION</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">version</span> <span class="o">!=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">FLEXTOML_VERSION</span><span class="p">:</span>
+       <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Version </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2"> found for toml file. Expected: </span><span class="si">{</span><span class="n">geom</span><span class="o">.</span><span class="n">FLEXTOML_VERSION</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># Initialize geometry:</span>
     <span class="n">geom</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">circular</span><span class="p">()</span>
     <span class="n">geom</span><span class="o">.</span><span class="n">from_dictionary</span><span class="p">(</span><span class="n">records</span><span class="p">)</span>
+    <span class="n">geom</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Parsed geometry from &#39;metadata.toml&#39;&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">pixel_adjustment</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+       <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Adjusted pixel size by </span><span class="si">{</span><span class="n">pixel_adjustement</span><span class="si">}</span><span class="s2"> due to </span><span class="si">{</span><span class="n">records</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+       <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+       <span class="n">geom</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="n">geom</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;det_pixel&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="n">sample</span>
+    <span class="n">geom</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;img_pixel&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="n">sample</span>
+    
+    <span class="k">if</span> <span class="n">sample</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Adjusted geometry by binning by </span><span class="si">{</span><span class="n">sample</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="n">geom</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="n">geom</span> <span class="o">=</span> <span class="n">fdc</span><span class="o">.</span><span class="n">correct_roi</span><span class="p">(</span><span class="n">geom</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">geom</span></div>
+
+
+<div class="viewcode-block" id="read_flexraydatasettings">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.read_flexraydatasettings">[docs]</a>
+<span class="k">def</span> <span class="nf">read_flexraydatasettings</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+   <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">read_flexraydatasettings is depecrated.</span>
+
+<span class="s2">This function combined too much functionality. If you want similar functionality to what</span>
+<span class="s2">read_flexraydatasettings provided, use:</span>
+<span class="s2">&gt;&gt;&gt; from flexdata import data</span>
+<span class="s2">&gt;&gt;&gt; from flexdata import correct</span>
+<span class="s2">&gt;&gt;&gt; geom = data.parse_flexray_datasettings(path, sample=binning)</span>
+<span class="s2">&gt;&gt;&gt; geom = correct.correct(geom,</span>
+<span class="s2">                           profile=&#39;cwi-flexray-2019-04-24&#39;,</span>
+<span class="s2">                           do_print_changes=True)</span>
+<span class="s2">&gt;&gt;&gt; geom = correct.correct_vol_center(geom)</span>
+
+
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+   <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="parse_flexray_datasettings">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.parse_flexray_datasettings">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_flexray_datasettings</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sample</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read the data settings file of FLexRay scanner and return dictionaries with parameters of the scan.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path   (str): path to the files location</span>
+<span class="sd">        sample (int): subsampling of the input data</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        geometry    : circular geometry class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Dictionary that describes the Flexray log record:</span>
+    <span class="n">param_dict</span> <span class="o">=</span>     <span class="p">{</span><span class="s1">&#39;img_pixel&#39;</span><span class="p">:</span><span class="s1">&#39;voxel size&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;det_pixel&#39;</span><span class="p">:</span><span class="s1">&#39;pixel size&#39;</span><span class="p">,</span>
+
+                    <span class="s1">&#39;src2obj&#39;</span><span class="p">:</span><span class="s1">&#39;sod&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;src2det&#39;</span><span class="p">:</span><span class="s1">&#39;sdd&#39;</span><span class="p">,</span>
+
+                    <span class="s1">&#39;src_ort&#39;</span><span class="p">:</span><span class="s1">&#39;ver_tube&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;src_tan&#39;</span><span class="p">:</span><span class="s1">&#39;tra_tube&#39;</span><span class="p">,</span>
+
+                    <span class="s1">&#39;det_ort&#39;</span><span class="p">:</span><span class="s1">&#39;ver_det&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;det_tan&#39;</span><span class="p">:</span><span class="s1">&#39;tra_det&#39;</span><span class="p">,</span>
+
+                    <span class="s1">&#39;axs_tan&#39;</span><span class="p">:</span><span class="s1">&#39;tra_obj&#39;</span><span class="p">,</span>
+
+                    <span class="s1">&#39;theta_max&#39;</span><span class="p">:</span><span class="s1">&#39;last angle&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;theta_min&#39;</span><span class="p">:</span><span class="s1">&#39;start angle&#39;</span><span class="p">,</span>
+
+                    <span class="s1">&#39;roi&#39;</span><span class="p">:</span><span class="s1">&#39;roi&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;import_roi&#39;</span><span class="p">:</span><span class="s1">&#39;import roi&#39;</span><span class="p">,</span>
+
+                    <span class="s1">&#39;voltage&#39;</span><span class="p">:</span><span class="s1">&#39;tube voltage&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;power&#39;</span><span class="p">:</span><span class="s1">&#39;tube power&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;averages&#39;</span><span class="p">:</span><span class="s1">&#39;number of averages&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;mode&#39;</span><span class="p">:</span><span class="s1">&#39;imaging mode&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;filter&#39;</span><span class="p">:</span><span class="s1">&#39;filter&#39;</span><span class="p">,</span>
+
+                    <span class="s1">&#39;exposure&#39;</span><span class="p">:</span><span class="s1">&#39;exposure time (ms)&#39;</span><span class="p">,</span>
+
+                    <span class="s1">&#39;binning&#39;</span><span class="p">:</span><span class="s1">&#39;binning value&#39;</span><span class="p">,</span>
+
+                    <span class="s1">&#39;dark_avrg&#39;</span> <span class="p">:</span> <span class="s1">&#39;# offset images&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;pre_flat&#39;</span><span class="p">:</span><span class="s1">&#39;# pre flat fields&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;post_flat&#39;</span><span class="p">:</span><span class="s1">&#39;# post flat fields&#39;</span><span class="p">,</span>
+
+                    <span class="s1">&#39;duration&#39;</span><span class="p">:</span><span class="s1">&#39;scan duration&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;sample name&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;comments&#39;</span> <span class="p">:</span> <span class="s1">&#39;comment&#39;</span><span class="p">,</span>
+
+                    <span class="s1">&#39;samp_size&#39;</span><span class="p">:</span><span class="s1">&#39;sample size&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;owner&#39;</span><span class="p">:</span><span class="s1">&#39;sample owner&#39;</span><span class="p">,</span>
+
+                    <span class="s1">&#39;date&#39;</span><span class="p">:</span><span class="s1">&#39;date&#39;</span><span class="p">}</span>
+
+    <span class="c1"># TODO: This function is not able to read every type of</span>
+    <span class="c1"># &#39;data settings XRE.txt&#39; yet. Some do not contain motor positions.</span>
+    <span class="c1"># It is possible to derive good values for those (up to translations)</span>
+    <span class="c1"># from SOD, SDD, HC, VC, COR.</span>
+
+    <span class="c1"># Read file and translate:</span>
+    <span class="n">records</span> <span class="o">=</span> <span class="n">file_to_dictionary</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;data settings XRE.txt&#39;</span><span class="p">),</span> <span class="n">separator</span> <span class="o">=</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="n">translation</span> <span class="o">=</span> <span class="n">param_dict</span><span class="p">,</span> <span class="n">strip_quotes</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">stop_at</span> <span class="o">=</span> <span class="s2">&quot;POIs&quot;</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <span class="c1"># Corrections specific to this type of file:</span>
+    <span class="n">records</span><span class="p">[</span><span class="s1">&#39;img_pixel&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="n">_parse_unit_</span><span class="p">(</span><span class="s1">&#39;mm&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Initialize geometry:</span>
+    <span class="n">geom</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">circular</span><span class="p">()</span>
+    <span class="n">geom</span><span class="o">.</span><span class="n">from_dictionary</span><span class="p">(</span><span class="n">records</span><span class="p">)</span>
+    <span class="n">det_binning</span> <span class="o">=</span> <span class="n">geom</span><span class="p">[</span><span class="s1">&#39;det_pixel&#39;</span><span class="p">]</span><span class="o">//</span><span class="mf">0.0748</span>
+
+    <span class="c1"># ROI handling:</span>
+    <span class="c1"># Prior to a software update in early 2020 this file contained the</span>
+    <span class="c1"># ROI information in a field called &#39;import ROI&#39;. After this update, this</span>
+    <span class="c1"># field no longer contains the full ROI information (only its size), but</span>
+    <span class="c1"># there is a new field called &#39;ROI&#39; that does contain the full ROI.</span>
+
+    <span class="c1"># Furthermore, the format of the ROI in this file (both fields) is</span>
+    <span class="c1"># different from the one in &#39;scan settings.txt&#39;.</span>
+    <span class="c1"># Parse it here, then update the dictionary and re-parse records.</span>
+
+    <span class="c1"># First see if the have the full ROI field.</span>
+    <span class="k">if</span> <span class="n">records</span><span class="p">[</span><span class="s1">&#39;roi&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="n">roi</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">records</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;roi&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="c1"># If not, use the old field.</span>
+      <span class="n">roi</span> <span class="o">=</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">records</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;import_roi&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">))</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">det_binning</span><span class="p">)</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">int32</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+      <span class="c1"># If this roi is not the full detector and starting at (0,0), there is</span>
+      <span class="c1"># a good chance that this ROI is incorrect. (Right size; wrong position.)</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">roi</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">roi</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">1944</span> <span class="ow">or</span> <span class="p">(</span><span class="n">roi</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">roi</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">1536</span><span class="p">:</span>
+          <span class="k">if</span> <span class="n">roi</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">roi</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+              <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Potentially incorrect ROI in data settings XRE.txt&quot;</span><span class="p">)</span>
+
+    <span class="n">records</span><span class="p">[</span><span class="s1">&#39;roi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">roi</span>
+    <span class="n">geom</span><span class="o">.</span><span class="n">from_dictionary</span><span class="p">(</span><span class="n">records</span><span class="p">)</span>
+    <span class="n">geom</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Parsed geometry from &#39;data settings XRE.txt&#39;&quot;</span><span class="p">)</span>
 
     <span class="n">geom</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;det_pixel&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="n">sample</span>
     <span class="n">geom</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;img_pixel&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="n">sample</span>
 
+    <span class="k">if</span> <span class="n">sample</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Adjusted geometry by binning by </span><span class="si">{</span><span class="n">sample</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="n">geom</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="n">geom</span> <span class="o">=</span> <span class="n">fdc</span><span class="o">.</span><span class="n">correct_roi</span><span class="p">(</span><span class="n">geom</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">geom</span></div>
 
-<div class="viewcode-block" id="read_geometry"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.read_geometry">[docs]</a><span class="k">def</span> <span class="nf">read_geometry</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sample</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+
+<div class="viewcode-block" id="read_geometrytoml">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.read_geometrytoml">[docs]</a>
+<span class="k">def</span> <span class="nf">read_geometrytoml</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sample</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Read a native meta file.</span>
 
 <span class="sd">    Args:</span>
@@ -668,9 +879,16 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        geometry    : circular geometry class</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">records</span> <span class="o">=</span> <span class="n">read_toml</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;geometry.toml&#39;</span><span class="p">))</span>
+    <span class="n">records</span> <span class="o">=</span> <span class="n">read_raw_toml</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;geometry.toml&#39;</span><span class="p">))</span>
     <span class="n">records</span><span class="p">[</span><span class="s1">&#39;det_pixel&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="n">sample</span>
     <span class="n">records</span><span class="p">[</span><span class="s1">&#39;img_pixel&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="n">sample</span>
+
+    <span class="c1"># Check version</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">records</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;flextoml_version&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">version</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+       <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No version for toml file. Expected </span><span class="si">{</span><span class="n">geometry</span><span class="o">.</span><span class="n">FLEXTOML_VERSION</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">version</span> <span class="o">!=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">FLEXTOML_VERSION</span><span class="p">:</span>
+       <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Version </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2"> found for toml file. Expected: </span><span class="si">{</span><span class="n">geometry</span><span class="o">.</span><span class="n">FLEXTOML_VERSION</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># Initialize geometry:</span>
     <span class="n">geom</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">circular</span><span class="p">()</span>
@@ -678,14 +896,97 @@
 
     <span class="k">return</span> <span class="n">geom</span></div>
 
-<div class="viewcode-block" id="file_to_dictionary"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.file_to_dictionary">[docs]</a><span class="k">def</span> <span class="nf">file_to_dictionary</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">separator</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">translation</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="geom_diff">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.geom_diff">[docs]</a>
+<span class="k">def</span> <span class="nf">geom_diff</span><span class="p">(</span><span class="n">geom1</span><span class="p">,</span> <span class="n">geom2</span><span class="p">,</span> <span class="n">full_diff</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Returns a dictionary with changed values in two geometries. Diff is computed</span>
+<span class="sd">    per item as: geom1[item] - geom2[item].</span>
+
+<span class="sd">    If `full_diff` is `True`, also returns added, removed and unchanged dict items.</span>
+
+<span class="sd">    Useful if you&#39;d like to see if corrections have been made in one geometry</span>
+<span class="sd">    with respect to a second another.</span>
+
+<span class="sd">    Either provide a path, geometry object or dictionary to `geom2` or `geom1`.</span>
+
+<span class="sd">    :param geom1: First path, geometry object or dictionary.</span>
+<span class="sd">    :param geom2: Second path, geometry object or dictionary.</span>
+<span class="sd">    :param full_diff: If set to `True` also shows added, removed and unchanged.</span>
+<span class="sd">    :return: Geometry dictionary</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="kn">from</span> <span class="nn">flexdata.geometry</span> <span class="kn">import</span> <span class="n">basic</span>
+
+    <span class="k">def</span> <span class="nf">input_to_dict</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">var_name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="nb">input</span> <span class="o">=</span> <span class="n">read_raw_toml</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">basic</span><span class="p">):</span>
+            <span class="nb">input</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">to_dictionary</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`&quot;</span> <span class="o">+</span> <span class="n">var_name</span> <span class="o">+</span> <span class="s2">&quot;` must be a path, dict or a geometry type.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">input</span>
+
+    <span class="n">geom1</span> <span class="o">=</span> <span class="n">input_to_dict</span><span class="p">(</span><span class="n">geom1</span><span class="p">,</span> <span class="s1">&#39;geom1&#39;</span><span class="p">)</span>
+    <span class="n">geom2</span> <span class="o">=</span> <span class="n">input_to_dict</span><span class="p">(</span><span class="n">geom2</span><span class="p">,</span> <span class="s1">&#39;geom2&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Source: https://stackoverflow.com/questions/1165352</span>
+    <span class="k">class</span> <span class="nc">DictDiffer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_dict</span><span class="p">,</span> <span class="n">past_dict</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">past_dict</span> <span class="o">=</span> <span class="n">current_dict</span><span class="p">,</span> <span class="n">past_dict</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_current</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_past</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">current_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="nb">set</span><span class="p">(</span><span class="n">past_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">intersect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_current</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">set_past</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">added</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_current</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">intersect</span>
+
+        <span class="k">def</span> <span class="nf">removed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_past</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">intersect</span>
+
+        <span class="k">def</span> <span class="nf">changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">o</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">intersect</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">past_dict</span><span class="p">[</span><span class="n">o</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_dict</span><span class="p">[</span><span class="n">o</span><span class="p">])</span>
+
+        <span class="k">def</span> <span class="nf">diff</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="p">{}</span>
+
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">changed</span><span class="p">():</span>
+                <span class="n">diff</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_dict</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">past_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+            <span class="k">return</span> <span class="n">diff</span>
+
+        <span class="k">def</span> <span class="nf">unchanged</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">o</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">intersect</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">past_dict</span><span class="p">[</span><span class="n">o</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_dict</span><span class="p">[</span><span class="n">o</span><span class="p">])</span>
+
+    <span class="n">dd</span> <span class="o">=</span> <span class="n">DictDiffer</span><span class="p">(</span><span class="n">geom2</span><span class="p">,</span> <span class="n">geom1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">full_diff</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;added&#39;</span><span class="p">:</span> <span class="n">dd</span><span class="o">.</span><span class="n">added</span><span class="p">(),</span>
+            <span class="s1">&#39;removed&#39;</span><span class="p">:</span> <span class="n">dd</span><span class="o">.</span><span class="n">removed</span><span class="p">(),</span>
+            <span class="s1">&#39;changed&#39;</span><span class="p">:</span> <span class="n">dd</span><span class="o">.</span><span class="n">changed</span><span class="p">(),</span>
+            <span class="s1">&#39;diff_changed&#39;</span><span class="p">:</span> <span class="n">dd</span><span class="o">.</span><span class="n">diff</span><span class="p">(),</span>
+            <span class="s1">&#39;unchanged&#39;</span><span class="p">:</span> <span class="n">dd</span><span class="o">.</span><span class="n">unchanged</span><span class="p">(),</span>
+        <span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">dd</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="file_to_dictionary">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.file_to_dictionary">[docs]</a>
+<span class="k">def</span> <span class="nf">file_to_dictionary</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">separator</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">translation</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">strip_quotes</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">stop_at</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Read a text file and return a dictionary with records.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        file_path (str): file to read</span>
 <span class="sd">        separator (str): separator between the keys and values</span>
 <span class="sd">        translation (dict): dictionary for translating initial keys to a new naming</span>
+<span class="sd">        strip_quotes (bool): if True, remove double quotes (&quot;) from values</span>
+<span class="sd">        stop_at (str): if set, stop all parsing at section containing stop_at</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="c1"># Initialize records:</span>
@@ -708,6 +1009,9 @@
                     <span class="c1"># Remove \n:</span>
                     <span class="n">var</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
 
+                    <span class="k">if</span> <span class="n">strip_quotes</span><span class="p">:</span>
+                        <span class="n">var</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
+
                     <span class="c1"># If needed to separate the var and save the number of save the whole string:</span>
                     <span class="k">try</span><span class="p">:</span>
                         <span class="n">var</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
@@ -720,6 +1024,9 @@
                         <span class="n">var</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
                     <span class="n">records</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">var</span>
+                <span class="k">elif</span> <span class="n">stop_at</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">stop_at</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+                        <span class="k">break</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">records</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Something went wrong during parsing the log file at:&#39;</span> <span class="o">+</span> <span class="n">file_path</span><span class="p">)</span>
@@ -736,8 +1043,11 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">records</span></div>
 
-<div class="viewcode-block" id="read_toml"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.read_toml">[docs]</a><span class="k">def</span> <span class="nf">read_toml</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="read_raw_toml">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.read_raw_toml">[docs]</a>
+<span class="k">def</span> <span class="nf">read_raw_toml</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read a toml file.</span>
 
 <span class="sd">    Args:</span>
@@ -765,13 +1075,31 @@
 
     <span class="k">return</span> <span class="n">record</span></div>
 
-<div class="viewcode-block" id="write_toml"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.write_toml">[docs]</a><span class="k">def</span> <span class="nf">write_toml</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="write_geometrytoml">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.write_geometrytoml">[docs]</a>
+<span class="k">def</span> <span class="nf">write_geometrytoml</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">geometry</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Write a geometry.toml file</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): location to write geometry.toml to</span>
+<span class="sd">        geometry (dict): geometry</span>
+<span class="sd">        overwrite (bool): if True, allow overwriting existing file. Default False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">write_toml</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;geometry.toml&#39;</span><span class="p">),</span> <span class="n">geometry</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="write_toml">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.write_toml">[docs]</a>
+<span class="k">def</span> <span class="nf">write_toml</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">record</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Write a toml file.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        filename (str): location to write the file to</span>
-<span class="sd">        record (dict, geometry): geomety class record or an arbitrary dictionary</span>
+<span class="sd">        record (dict, geometry): geometry class record or an arbitrary dictionary</span>
+<span class="sd">        overwrite (bool): if True, allow overwriting existing file. Default False</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Convert to dictionary:</span>
     <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">record</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">):</span>
@@ -779,7 +1107,7 @@
 
     <span class="c1"># Make path if does not exist:</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 
     <span class="c1"># It looks like TOML module doesnt like numpy arrays and numpy types.</span>
@@ -792,14 +1120,16 @@
     <span class="c1">#        record[key] = _numpy2python_(record[key])</span>
 
     <span class="c1"># Save TOML to a file:</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;w&#39;</span> <span class="k">if</span> <span class="n">overwrite</span> <span class="k">else</span> <span class="s1">&#39;x&#39;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">toml</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">d</span><span class="p">)</span></div>
+
 
         <span class="c1">#toml.dump(meta, f)</span>
 
 <span class="k">def</span> <span class="nf">_numpy2python_</span><span class="p">(</span><span class="n">numpy_var</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Small utility to translate numpy to standard python (needed for TOML compatibility)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># TOML parcer doesnt like tuples:</span>
@@ -823,7 +1153,7 @@
     <span class="k">return</span> <span class="n">numpy_var</span>
 
 <span class="k">def</span> <span class="nf">_python2numpy_</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Small utility to translate standard python to numpy (needed for TOML compatibility)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Numpy array:</span>
@@ -832,19 +1162,24 @@
 
     <span class="k">return</span> <span class="n">var</span>
 
-<div class="viewcode-block" id="write_astra"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.write_astra">[docs]</a><span class="k">def</span> <span class="nf">write_astra</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">data_shape</span><span class="p">,</span> <span class="n">geom</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="write_astra">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.write_astra">[docs]</a>
+<span class="k">def</span> <span class="nf">write_astra</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">data_shape</span><span class="p">,</span> <span class="n">geom</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Write an astra-readable projection geometry vector.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Make path if does not exist:</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 
     <span class="n">numpy</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">geom</span><span class="o">.</span><span class="n">astra_projection_geom</span><span class="p">(</span><span class="n">data_shape</span><span class="p">)[</span><span class="s1">&#39;Vectors&#39;</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="get_files_sorted"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.get_files_sorted">[docs]</a><span class="k">def</span> <span class="nf">get_files_sorted</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="get_files_sorted">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.get_files_sorted">[docs]</a>
+<span class="k">def</span> <span class="nf">get_files_sorted</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sort file entries using the natural (human) sorting</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Get the files</span>
@@ -861,11 +1196,14 @@
 
     <span class="k">return</span> <span class="n">files</span></div>
 
-<div class="viewcode-block" id="get_folders_sorted"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.get_folders_sorted">[docs]</a><span class="k">def</span> <span class="nf">get_folders_sorted</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="get_folders_sorted">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.get_folders_sorted">[docs]</a>
+<span class="k">def</span> <span class="nf">get_folders_sorted</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Get all paths from a path with a star (using glob)</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="kn">from</span> <span class="nn">glob</span> <span class="k">import</span> <span class="n">glob</span>
+    <span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
     <span class="c1"># Get all folders if a &#39;*&#39; was used:</span>
     <span class="n">paths</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
 
@@ -877,14 +1215,19 @@
 
     <span class="k">return</span> <span class="n">paths</span></div>
 
+
 <span class="c1"># &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Methods &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span>
 
-<div class="viewcode-block" id="memmap"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.memmap">[docs]</a><span class="k">class</span> <span class="nc">memmap</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">memmap</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="memmap">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.memmap">[docs]</a>
+<span class="k">class</span> <span class="nc">memmap</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">memmap</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Standard memmaps don&#39;t seem to reliably delete files that are created on disk.</span>
 <span class="sd">    This fixes it...</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-<div class="viewcode-block" id="memmap.delete"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.memmap.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="memmap.delete">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.memmap.delete">[docs]</a>
+    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="c1"># Ref counting wit gc doesnt work.... will need to delte the file by hand.</span>
         <span class="c1"># self.flag[OWNDATA] doesn&#39;t work either ...</span>
@@ -892,10 +1235,14 @@
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">):</span>
 
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Deleting a memmap @&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span></div></div>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span></div>
+</div>
 
-<div class="viewcode-block" id="free_memory"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.free_memory">[docs]</a><span class="k">def</span> <span class="nf">free_memory</span><span class="p">(</span><span class="n">percent</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="free_memory">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.free_memory">[docs]</a>
+<span class="k">def</span> <span class="nf">free_memory</span><span class="p">(</span><span class="n">percent</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Return amount of free RAM memory in GB.</span>
 
 <span class="sd">    Args:</span>
@@ -908,8 +1255,11 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">psutil</span><span class="o">.</span><span class="n">virtual_memory</span><span class="p">()</span><span class="o">.</span><span class="n">available</span> <span class="o">/</span> <span class="n">psutil</span><span class="o">.</span><span class="n">virtual_memory</span><span class="p">()</span><span class="o">.</span><span class="n">total</span> <span class="o">*</span> <span class="mi">100</span></div>
 
-<div class="viewcode-block" id="free_disk"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.free_disk">[docs]</a><span class="k">def</span> <span class="nf">free_disk</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="free_disk">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.free_disk">[docs]</a>
+<span class="k">def</span> <span class="nf">free_disk</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Return amount of free memory on disk in GB.</span>
 
 <span class="sd">    Args:</span>
@@ -919,8 +1269,11 @@
     <span class="n">statvfs</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">statvfs</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">statvfs</span><span class="o">.</span><span class="n">f_frsize</span> <span class="o">*</span> <span class="n">statvfs</span><span class="o">.</span><span class="n">f_bavail</span><span class="o">/</span><span class="mf">1e9</span></div>
 
-<div class="viewcode-block" id="gradient"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.gradient">[docs]</a><span class="k">def</span> <span class="nf">gradient</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="gradient">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.gradient">[docs]</a>
+<span class="k">def</span> <span class="nf">gradient</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Compute the gradient of an array.</span>
 
 <span class="sd">    Args:</span>
@@ -940,8 +1293,11 @@
 
     <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">d</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="divergence"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.divergence">[docs]</a><span class="k">def</span> <span class="nf">divergence</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="divergence">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.divergence">[docs]</a>
+<span class="k">def</span> <span class="nf">divergence</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Compute the divergence of an array.</span>
 
 <span class="sd">    Args:</span>
@@ -964,8 +1320,11 @@
 
     <span class="k">return</span> <span class="n">final_d</span></div>
 
-<div class="viewcode-block" id="convolve_filter"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.convolve_filter">[docs]</a><span class="k">def</span> <span class="nf">convolve_filter</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">filtr</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="convolve_filter">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.convolve_filter">[docs]</a>
+<span class="k">def</span> <span class="nf">convolve_filter</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">filtr</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Apply a filter defined in Fourier space (a CTF) via convolution.</span>
 
 <span class="sd">    Args:</span>
@@ -986,8 +1345,11 @@
     <span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifftn</span><span class="p">(</span> <span class="n">x</span> <span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span><span class="p">))</span>
     <span class="n">array</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">x</span></div>
 
-<div class="viewcode-block" id="convolve_kernel"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.convolve_kernel">[docs]</a><span class="k">def</span> <span class="nf">convolve_kernel</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">kernel</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="convolve_kernel">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.convolve_kernel">[docs]</a>
+<span class="k">def</span> <span class="nf">convolve_kernel</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">kernel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Apply a kernel defined in real space (center in the center of the array) via convolution.</span>
 
 <span class="sd">    Args:</span>
@@ -1007,8 +1369,11 @@
     <span class="n">kernel</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftn</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span><span class="p">)</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span>
     <span class="n">convolve_filter</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">kernel</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="autocorrelation"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.autocorrelation">[docs]</a><span class="k">def</span> <span class="nf">autocorrelation</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="autocorrelation">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.autocorrelation">[docs]</a>
+<span class="k">def</span> <span class="nf">autocorrelation</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Compute autocorrelation.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftn</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span><span class="p">)</span>
@@ -1017,8 +1382,11 @@
     <span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span><span class="p">)</span>
     <span class="n">array</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">x</span></div>
 
-<div class="viewcode-block" id="deconvolve_filter"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.deconvolve_filter">[docs]</a><span class="k">def</span> <span class="nf">deconvolve_filter</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">filtr</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="deconvolve_filter">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.deconvolve_filter">[docs]</a>
+<span class="k">def</span> <span class="nf">deconvolve_filter</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">filtr</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Inverse convolution with Tikhonov regularization.</span>
 
 <span class="sd">    Args:</span>
@@ -1041,8 +1409,11 @@
     <span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifftn</span><span class="p">(</span> <span class="n">x</span> <span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span><span class="p">))</span>
     <span class="n">array</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">x</span></div>
 
-<div class="viewcode-block" id="deconvolve_kernel"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.deconvolve_kernel">[docs]</a><span class="k">def</span> <span class="nf">deconvolve_kernel</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="deconvolve_kernel">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.deconvolve_kernel">[docs]</a>
+<span class="k">def</span> <span class="nf">deconvolve_kernel</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Inverse convolution with Tikhonov regularization.</span>
 
 <span class="sd">    Args:</span>
@@ -1055,8 +1426,11 @@
     <span class="n">kernel</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftn</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="n">axes</span><span class="p">)</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span>
     <span class="n">deconvolve_filter</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">axes</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="cast2type"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.cast2type">[docs]</a><span class="k">def</span> <span class="nf">cast2type</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="cast2type">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.cast2type">[docs]</a>
+<span class="k">def</span> <span class="nf">cast2type</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Cast from float to int or float to float rescaling values if needed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># No? Yes? OK...</span>
@@ -1086,8 +1460,11 @@
 
     <span class="k">return</span> <span class="n">rewrite_memmap</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">new</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="shape_alike"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.shape_alike">[docs]</a><span class="k">def</span> <span class="nf">shape_alike</span><span class="p">(</span><span class="n">array_1</span><span class="p">,</span> <span class="n">array_2</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="shape_alike">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.shape_alike">[docs]</a>
+<span class="k">def</span> <span class="nf">shape_alike</span><span class="p">(</span><span class="n">array_1</span><span class="p">,</span> <span class="n">array_2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Make sure two arrays have the same shape by padding either array_1 or array_2:</span>
 <span class="sd">        Returns: array1, array2 - reshaped.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
@@ -1107,8 +1484,11 @@
 
     <span class="k">return</span> <span class="n">array_1</span><span class="p">,</span> <span class="n">array_2</span></div>
 
-<div class="viewcode-block" id="ramp"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.ramp">[docs]</a><span class="k">def</span> <span class="nf">ramp</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;linear&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ramp">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.ramp">[docs]</a>
+<span class="k">def</span> <span class="nf">ramp</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;linear&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create ramps at the ends of the array (without changing its size).</span>
 
 <span class="sd">    Args:</span>
@@ -1176,8 +1556,11 @@
 
     <span class="k">return</span> <span class="n">array</span></div>
 
-<div class="viewcode-block" id="pad"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.pad">[docs]</a><span class="k">def</span> <span class="nf">pad</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;edge&#39;</span><span class="p">,</span> <span class="n">geometry</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="pad">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.pad">[docs]</a>
+<span class="k">def</span> <span class="nf">pad</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;edge&#39;</span><span class="p">,</span> <span class="n">geometry</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Pad an array along a given dimension.</span>
 <span class="sd">    numpy.pad seems to be very memory hungry! Don&#39;t use it for large arrays.</span>
 
@@ -1227,8 +1610,11 @@
     <span class="c1"># If input is memmap - update it&#39;s size, release RAM memory.</span>
     <span class="k">return</span> <span class="n">rewrite_memmap</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">new</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="bin"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.bin">[docs]</a><span class="k">def</span> <span class="nf">bin</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">geometry</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="bin">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.bin">[docs]</a>
+<span class="k">def</span> <span class="nf">bin</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">geometry</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Simple binning of the data along the chosen direction.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -1281,8 +1667,11 @@
 
         <span class="k">return</span> <span class="n">array</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span></div>
 
-<div class="viewcode-block" id="crop"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.crop">[docs]</a><span class="k">def</span> <span class="nf">crop</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">geometry</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="crop">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.crop">[docs]</a>
+<span class="k">def</span> <span class="nf">crop</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">geometry</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Crop an array along the given dimension. Provide geometry if cropping the projection data,</span>
 <span class="sd">    it will update the detector center.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1326,8 +1715,11 @@
     <span class="c1"># Its better to leave the memmap file as it is. Return a view to it:</span>
     <span class="k">return</span> <span class="n">new</span></div>
 
-<div class="viewcode-block" id="cast2shape"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.cast2shape">[docs]</a><span class="k">def</span> <span class="nf">cast2shape</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="cast2shape">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.cast2shape">[docs]</a>
+<span class="k">def</span> <span class="nf">cast2shape</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Make the array to conform with the given shape.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="n">array</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">):</span>
@@ -1347,8 +1739,11 @@
 
     <span class="k">return</span> <span class="n">array</span></div>
 
-<div class="viewcode-block" id="flipdim"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.flipdim">[docs]</a><span class="k">def</span> <span class="nf">flipdim</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">transpose</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">updown</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="flipdim">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.flipdim">[docs]</a>
+<span class="k">def</span> <span class="nf">flipdim</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">transpose</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">updown</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert a given numpy array (sorted: index, hor, vert) to ASTRA-compatible projections stack</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Transpose seems to be compatible with memmaps:</span>
@@ -1359,8 +1754,11 @@
 
     <span class="k">return</span> <span class="n">array</span></div>
 
-<div class="viewcode-block" id="raw2astra"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.raw2astra">[docs]</a><span class="k">def</span> <span class="nf">raw2astra</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="raw2astra">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.raw2astra">[docs]</a>
+<span class="k">def</span> <span class="nf">raw2astra</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert a given numpy array (sorted: index, hor, vert) to ASTRA-compatible projections stack</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Transpose seems to be compatible with memmaps:</span>
@@ -1369,8 +1767,11 @@
 
     <span class="k">return</span> <span class="n">array</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="medipix2astra"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.medipix2astra">[docs]</a><span class="k">def</span> <span class="nf">medipix2astra</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="medipix2astra">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.medipix2astra">[docs]</a>
+<span class="k">def</span> <span class="nf">medipix2astra</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert a given numpy array (sorted: index, hor, vert) to ASTRA-compatible projections stack</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Don&#39;t apply ascontignuousarray on memmaps!</span>
@@ -1379,8 +1780,11 @@
 
     <span class="k">return</span> <span class="n">array</span></div>
 
-<div class="viewcode-block" id="rewrite_memmap"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.rewrite_memmap">[docs]</a><span class="k">def</span> <span class="nf">rewrite_memmap</span><span class="p">(</span><span class="n">old_array</span><span class="p">,</span> <span class="n">new_array</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="rewrite_memmap">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.rewrite_memmap">[docs]</a>
+<span class="k">def</span> <span class="nf">rewrite_memmap</span><span class="p">(</span><span class="n">old_array</span><span class="p">,</span> <span class="n">new_array</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Reshaping memmaps is tough. We will recreate one instead hoping that this will not overflow our RAM...</span>
 <span class="sd">    This is a dirty qick fix! Try to use resize instead!</span>
 <span class="sd">    &#39;&#39;&#39;</span>
@@ -1403,8 +1807,11 @@
     <span class="k">return</span> <span class="n">old_array</span></div>
 
 
-<div class="viewcode-block" id="add_dim"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.add_dim">[docs]</a><span class="k">def</span> <span class="nf">add_dim</span><span class="p">(</span><span class="n">array_1</span><span class="p">,</span> <span class="n">array_2</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="add_dim">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.add_dim">[docs]</a>
+<span class="k">def</span> <span class="nf">add_dim</span><span class="p">(</span><span class="n">array_1</span><span class="p">,</span> <span class="n">array_2</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Add two arrays with arbitrary dimensions. We assume that one or two dimensions match.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -1446,8 +1853,11 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;ERROR! array_1.ndim - array_2.ndim should be 0, 1 or 2&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="mult_dim"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.mult_dim">[docs]</a><span class="k">def</span> <span class="nf">mult_dim</span><span class="p">(</span><span class="n">array_1</span><span class="p">,</span> <span class="n">array_2</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="mult_dim">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.mult_dim">[docs]</a>
+<span class="k">def</span> <span class="nf">mult_dim</span><span class="p">(</span><span class="n">array_1</span><span class="p">,</span> <span class="n">array_2</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Multiply a 3D array by a 1D or a 2D vector along one of the dimensions.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Shapes to compare:</span>
@@ -1489,8 +1899,11 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span><span class="p">(</span><span class="s1">&#39;ERROR! array_1.ndim - array_2.ndim should be 1 or 2&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="anyslice"><a class="viewcode-back" href="../../flexdata.html#flexdata.data.anyslice">[docs]</a><span class="k">def</span> <span class="nf">anyslice</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">dim</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="anyslice">
+<a class="viewcode-back" href="../../flexdata.html#flexdata.data.anyslice">[docs]</a>
+<span class="k">def</span> <span class="nf">anyslice</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">dim</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Slice an array along an arbitrary dimension.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">sl</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)]</span> <span class="o">*</span> <span class="n">array</span><span class="o">.</span><span class="n">ndim</span>
@@ -1501,10 +1914,11 @@
 
     <span class="k">return</span> <span class="n">sl</span></div>
 
+
 <span class="c1"># &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Utility functions &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span>
 
 <span class="k">def</span> <span class="nf">_sample_image_</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">sample</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Subsample the image or bin it if possible...</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
@@ -1531,7 +1945,7 @@
         <span class="k">return</span> <span class="n">image</span>
 
 <span class="k">def</span> <span class="nf">_parse_unit_</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Look for units in the string and return a factor that converts this unit to Si.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
@@ -1549,41 +1963,17 @@
 
     <span class="k">return</span> <span class="n">factor</span>
 
-<span class="k">def</span> <span class="nf">_flex_motor_correct_</span><span class="p">(</span><span class="n">geom</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Apply some motor offsets to get to a correct coordinate system.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="c1"># Correct some records (FlexRay specific):</span>
-
-    <span class="c1"># Horizontal offsets:</span>
-    <span class="n">geom</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;det_tan&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">24</span>
-    <span class="n">geom</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;src_ort&#39;</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">7</span>
-
-    <span class="c1"># Rotation axis:</span>
-    <span class="n">geom</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;axs_tan&#39;</span><span class="p">]</span> <span class="o">-=</span> <span class="mf">0.5</span>
-
-    <span class="c1"># roi:</span>
-    <span class="n">roi</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">description</span><span class="p">[</span><span class="s1">&#39;roi&#39;</span><span class="p">]</span>
-    <span class="n">centre</span> <span class="o">=</span> <span class="p">[(</span><span class="n">roi</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">roi</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">971</span><span class="p">,</span> <span class="p">(</span><span class="n">roi</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">roi</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">767</span><span class="p">]</span>
-
-    <span class="c1"># Not sure the binning should be taken into account...</span>
-    <span class="n">geom</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;det_ort&#39;</span><span class="p">]</span> <span class="o">-=</span> <span class="n">centre</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">geom</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;det_pixel&#39;</span><span class="p">]</span>
-    <span class="n">geom</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;det_tan&#39;</span><span class="p">]</span> <span class="o">-=</span> <span class="n">centre</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">geom</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;det_pixel&#39;</span><span class="p">]</span>
-
-    <span class="n">geom</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;vol_tra&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;det_ort&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">geom</span><span class="o">.</span><span class="n">src2obj</span> <span class="o">+</span>
-                   <span class="n">geom</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;src_ort&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">geom</span><span class="o">.</span><span class="n">det2obj</span><span class="p">)</span> <span class="o">/</span> <span class="n">geom</span><span class="o">.</span><span class="n">src2det</span>
-
 <span class="k">def</span> <span class="nf">_check_success_</span><span class="p">(</span><span class="n">proj</span><span class="p">,</span> <span class="n">geom</span><span class="p">,</span> <span class="n">success</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    If few files are missing - interpolate, if many - adjust theta record in meta</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">success</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">proj</span>
+        <span class="k">return</span> <span class="n">proj</span><span class="p">,</span> <span class="n">geom</span>
 
     <span class="n">success</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">success</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">success</span><span class="p">)</span> <span class="o">==</span> <span class="nb">sum</span><span class="p">(</span><span class="n">success</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">proj</span>
+        <span class="k">return</span> <span class="n">proj</span><span class="p">,</span> <span class="n">geom</span>
 
     <span class="c1"># Check if failed projections come in bunches or singles:</span>
     <span class="n">fails</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">success</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -1607,47 +1997,37 @@
             <span class="n">thetas</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">geom</span><span class="o">.</span><span class="n">range</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">success</span><span class="p">))</span>
             <span class="n">geom</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;_thetas_&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">thetas</span><span class="p">[</span><span class="n">success</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
             <span class="n">proj</span> <span class="o">=</span> <span class="n">proj</span><span class="p">[</span><span class="n">success</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">geom</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">geom</span><span class="p">)</span>
+            <span class="n">geom</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;Adjusted angles for missing clusters of projections&#39;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">proj</span>
+    <span class="k">return</span> <span class="n">proj</span><span class="p">,</span> <span class="n">geom</span>
 </pre></div>
 
            </div>
-           
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; Copyright 2018, Author
-
-    </p>
+    <p>&#169; Copyright 2018, Author.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
