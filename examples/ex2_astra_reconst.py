@@ -26,7 +26,7 @@ proj = data.read_stack(path, 'scan_', skip=binning, sample=binning)
 
 geom = data.parse_flexray_scansettings(path, sample=binning)
 
-data.write_toml('scan_geometry.toml', overwrite=True)
+data.write_geometrytoml('./output_dir/', geom, overwrite=True)
 
 # Apply profile correction
 geom = correct.correct(geom,
@@ -70,6 +70,4 @@ display.slice(vol, dim = 0, bounds = [0, 0.04], title = 'Projection', cmap = 'ma
 
 
 # Store output data
-data.write_stack('./output_dir/', vol)
-# Write reconstruction geometry
-data.write_geometrytoml('./output_dir/', overwrite=True)
+data.write_stack(path='./output_dir/', name='slice_', data=vol)
