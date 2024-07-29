@@ -17,3 +17,5 @@ style: install_dev
 conda_package:
 	conda build conda/ -c astra-toolbox -c nvidia
 
+pypi_wheels:
+	python -m build --wheel
