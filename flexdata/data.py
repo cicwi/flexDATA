@@ -144,6 +144,9 @@ def read_stack(path, name, skip = 1, sample = 1, shape = None, dtype = None,
     #if shape and sample are used, shape means the shape of the image on disk before subsampling
     shape_samp, dtype = stack_shape(path, name, skip, sample, shape, dtype, format)
 
+    # transpose shape
+    shape_samp = [ shape_samp[transpose[0]], shape_samp[transpose[1]], shape_samp[transpose[2]] ]
+
     if memmap:
         data = numpy.memmap(memmap, dtype=dtype, mode='w+', shape = shape_samp)
 
@@ -155,14 +158,28 @@ def read_stack(path, name, skip = 1, sample = 1, shape = None, dtype = None,
 
     time.sleep(0.3) # This is needed to let print message be printed before the next porogress bar is created
 
+    # The 0 in the transpose tuple indicates the axis along which individual images are stored
+    img_index = transpose.index(0)
+    # The remaining indices indicate if/how the image needs to be transposed
+    img_transpose = [ i - 1 for i in transpose if i != 0 ]
+
     # Loop with a progress bar:
     for k in tqdm(range(len(files)), unit = 'files'):
+
+        # This encodes the index 'k, :, :', or ':, k, :', or ':, :, k'
+        index = [slice(None,None,None), slice(None,None,None), slice(None,None,None)]
+        index[img_index] = k
+        index = tuple(index)
+
 
         # Use try...escept only is success array is provided. Otherwise, crash on errors
         if not success is None:
             try:
                 im = read_image(files[k], sample, shape, format, dtype)
-                data[k, :, :] = im
+                im = numpy.transpose(im, img_transpose)
+                if updown:
+                    im = numpy.flipud(im)
+                data[index] = im
                 success[k] = 1
 
             except Exception:
@@ -172,8 +189,10 @@ def read_stack(path, name, skip = 1, sample = 1, shape = None, dtype = None,
                 pass
         else:
             im = read_image(files[k], sample, shape, format, dtype)
-
-            data[k, :, :] = im
+            im = numpy.transpose(im, img_transpose)
+            if updown:
+                im = numpy.flipud(im)
+            data[index] = im
 
     time.sleep(0.3) # This is needed to let print message be printed before the next porogress bar is created
 
@@ -185,9 +204,6 @@ def read_stack(path, name, skip = 1, sample = 1, shape = None, dtype = None,
         print(f'%u files were loaded. %u%% memory left (%u GB).' % (sum(success), free_memory(True), free_memory(False)))
     else:
         print(f'%u files were loaded. %u%% memory left (%u GB).' % (len(files), free_memory(True), free_memory(False)))
-
-    # Apply dimension switch:
-    data = flipdim(data, transpose, updown)
 
     return data
 
