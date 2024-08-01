@@ -1043,7 +1043,7 @@ def get_files_sorted(path, name):
     files = [os.path.join(path,x) for x in files if (name in x)]
 
     # Keys
-    keys = [int(re.findall('\d+', f)[-1]) for f in files]
+    keys = [int(re.findall('\\d+', f)[-1]) for f in files]
 
     # Sort files using keys:
     files = [f for (k, f) in sorted(zip(keys, files))]
