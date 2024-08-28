@@ -18,7 +18,7 @@ import numpy          # arrays arrays arrays
 import os             # operations with filenames
 import re             # findall function
 import warnings       # warn me if we are in trouble!
-import imageio        # io for images
+import imageio.v2 as imageio        # io for images
 import psutil         # RAM tester
 import toml           # TOML format parcer
 from tqdm import tqdm # Progress barring
@@ -553,7 +553,7 @@ def parse_flexray_metadatatoml(path, sample = 1):
 
                 'src2obj':'sod',
                 'src2det':'sdd',
-                
+
                 'src_ort':'ver_tube',
                 'src_tan':'tra_tube',
 
@@ -589,7 +589,7 @@ def parse_flexray_metadatatoml(path, sample = 1):
     roi = re.sub('[] []', '', records['roi']).split(sep=',')
     roi = numpy.int32(roi)
     records['roi'] = roi.tolist()
-    
+
     #calculate image pixel
     records['img_pixel'] = records['det_pixel']/records['mag']
 
@@ -622,7 +622,7 @@ def parse_flexray_metadatatoml(path, sample = 1):
 
     geom.parameters['det_pixel'] *= sample
     geom.parameters['img_pixel'] *= sample
-    
+
     if sample != 1:
         msg = f"Adjusted geometry by binning by {sample}"
         logging.info(msg)
