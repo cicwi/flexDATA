@@ -208,7 +208,7 @@ def read_stack(path, name, skip = 1, sample = 1, shape = None, dtype = None,
 
     return data
 
-def write_stack(path, name, data, dim = 1, skip = 1, dtype = None, zip = False, format = 'tiff', updown = False):
+def write_stack(path, name, data, dim = 1, skip = 1, dtype = None, zip = None, format = 'tiff', updown = False):
     """
     Write an image stack.
 
@@ -219,9 +219,11 @@ def write_stack(path, name, data, dim = 1, skip = 1, dtype = None, zip = False, 
         dim (int): dimension along which array is separated into images
         skip (int): how many images to skip in between
         dtype (type): force this data type
-        compress (str): use None, 'zip' or 'jp2'.
         format (str): file extension ('raw', 'tiff', 'jp2', etc)
     """
+    if zip is not None:
+        warnings.warn('`zip` argument is deprecated and in going to be ignored.',
+                      category=FutureWarning)
 
     print('Writing data...')
 
@@ -261,11 +263,7 @@ def write_stack(path, name, data, dim = 1, skip = 1, dtype = None, zip = False, 
             img.tofile(os.path.join(path_name, '.raw'))
 
         else:
-            if zip:
-                write_image(path_name + '.' + format, img, 1)
-
-            else:
-                write_image(path_name + '.' + format, img, 0)
+            write_image(path_name + '.' + format, img)
 
 def read_flexray(path, *, sample = 1, skip = 1, memmap = None, proj_number = None, correct, correct_vol_center = True):
     '''
@@ -344,12 +342,15 @@ def read_flexray(path, *, sample = 1, skip = 1, memmap = None, proj_number = Non
 
     return proj, flat, dark, geom
 
-def write_image(filename, image, compress = 0):
+def write_image(filename, image, compress=None):
     """
-    Write a single image. Use compression if needed (0-9).
+    Write a single image.
     """
+    if compress is not None:
+        warnings.warn('`compress` argument is deprecated and is going to be ignored.',
+                      category=FutureWarning)
     with imageio.get_writer(filename) as w:
-        w.append_data(image, {'compress': compress})
+        w.append_data(image)
 
 def read_image(file, sample = 1, shape = None, format = None, dtype = None):
     """
