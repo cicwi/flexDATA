@@ -34,7 +34,7 @@ setup(
             'myst-parser'
         ]
     },
-    version='1.0.0',
+    version='1.0.1',
     description='IO routines for CT data',
     url='https://github.com/cicwi/flexdata'
 )
