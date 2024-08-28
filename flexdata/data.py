@@ -6,7 +6,7 @@ This module contains some input / output routines for stacks of images and parse
 Most of the basic image formats are supported through imageio module.
 Raw binaries and matlab binary files can be loaded.
 
-Utility functions to hande big arrays of data. All routines support memmap arrays.
+Utility functions to handle big arrays of data. All routines support memmap arrays.
 However, some operations will need enough memory for at least one copy of the data for intermediate
 results. This can be improved through better use of memmaps.
 
@@ -20,10 +20,11 @@ import re             # findall function
 import warnings       # warn me if we are in trouble!
 import imageio.v2 as imageio        # io for images
 import psutil         # RAM tester
-import toml           # TOML format parcer
+import toml           # TOML format parser
 from tqdm import tqdm # Progress barring
 import time           # Pausing
 import logging
+from copy import deepcopy
 from scipy.io import loadmat # Reading matlab format
 from . import geometry       # geometry classes
 from . import correct as fdc
@@ -154,9 +155,9 @@ def read_stack(path, name, skip = 1, sample = 1, shape = None, dtype = None,
         data = numpy.zeros(shape_samp, dtype = dtype)
 
     # In flexbox this function can handle tiff stacks with corrupted files.
-    # Here I removed this functionality to make code simplier.
+    # Here I removed this functionality to make code simpler.
 
-    time.sleep(0.3) # This is needed to let print message be printed before the next porogress bar is created
+    time.sleep(0.3) # This is needed to let print message be printed before the next progress bar is created
 
     # The 0 in the transpose tuple indicates the axis along which individual images are stored
     img_index = transpose.index(0)
@@ -172,7 +173,7 @@ def read_stack(path, name, skip = 1, sample = 1, shape = None, dtype = None,
         index = tuple(index)
 
 
-        # Use try...escept only is success array is provided. Otherwise, crash on errors
+        # Use try...except only is success array is provided. Otherwise, crash on errors
         if not success is None:
             try:
                 im = read_image(files[k], sample, shape, format, dtype)
@@ -194,7 +195,7 @@ def read_stack(path, name, skip = 1, sample = 1, shape = None, dtype = None,
                 im = numpy.flipud(im)
             data[index] = im
 
-    time.sleep(0.3) # This is needed to let print message be printed before the next porogress bar is created
+    time.sleep(0.3) # This is needed to let print message be printed before the next progress bar is created
 
     # Get rid of the corrupted data:
     if not success is None:
@@ -217,7 +218,7 @@ def write_stack(path, name, data, dim = 1, skip = 1, dtype = None, zip = False, 
         data (numpy.array): data to write
         dim (int): dimension along which array is separated into images
         skip (int): how many images to skip in between
-        dtype (type): forse this data type
+        dtype (type): force this data type
         compress (str): use None, 'zip' or 'jp2'.
         format (str): file extension ('raw', 'tiff', 'jp2', etc)
     """
@@ -421,7 +422,7 @@ def read_image(file, sample = 1, shape = None, format = None, dtype = None):
 
 def read_flexraylog(path, *args, **kwargs):
    warnings.warn("""
-read_flexraylog is depecrated.
+read_flexraylog is deprecated.
 
 This function combined too much functionality. If you want similar functionality to what
 read_flexraylog provided, use:
@@ -520,7 +521,7 @@ def parse_flexray_scansettings(path, sample = 1):
 
 def read_flexraymeta(*args, **kwargs):
    warnings.warn("""
-read_flexraymeta is depecrated.
+read_flexraymeta is deprecated.
 
 This function combined too much functionality. If you want similar functionality to what
 read_flexraymeta provided, use:
@@ -616,7 +617,7 @@ def parse_flexray_metadatatoml(path, sample = 1):
     geom.log("Parsed geometry from 'metadata.toml'")
 
     if pixel_adjustment != 1:
-       msg = f"Adjusted pixel size by {pixel_adjustement} due to {records['mode']}"
+       msg = f"Adjusted pixel size by {pixel_adjustment} due to {records['mode']}"
        logging.info(msg)
        geom.log(msg)
 
@@ -634,7 +635,7 @@ def parse_flexray_metadatatoml(path, sample = 1):
 
 def read_flexraydatasettings(*args, **kwargs):
    warnings.warn("""
-read_flexraydatasettings is depecrated.
+read_flexraydatasettings is deprecated.
 
 This function combined too much functionality. If you want similar functionality to what
 read_flexraydatasettings provided, use:

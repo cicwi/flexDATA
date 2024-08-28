@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Examples of the geometry classes usage: initialiation of a circular, helical and linear orbits; import ASTRA geometries.
+Examples of the geometry classes usage: initialization of a circular, helical and linear orbits; import ASTRA geometries.
 """
 #%% Imports:
 
@@ -49,7 +49,7 @@ orbit = geo.get_source_orbit(50)
 display.plot3d(orbit[:, 0], orbit[:, 1], orbit[:, 2], connected = True, title = 'Helical source orbit')
 
 # Line:
-geo = geometry.linear(src2obj = 100, det2obj =50, det_pixel = 0.1, img_pixel = 0.05, 
+geo = geometry.linear(src2obj = 100, det2obj =50, det_pixel = 0.1, img_pixel = 0.05,
                       src_hrz_rng = (-50, 50), src_vrt_rng = (0, 0), det_hrz_rng = (50,-50), det_vrt_rng = (0,0))
 
 orbit = geo.get_source_orbit(50)

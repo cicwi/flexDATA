@@ -5,7 +5,7 @@ This module contains acquisition geometry classes: circular, linear, helical.
 The circular class corresponds to the simplest case of circular orbit cone-beam CT with minimal number of parameters.
 Additional parameters can be use to define a non-conventional geometry.
 For instance: offsets and rotations ('det_roll', 'det_tan', 'det_ort', etc.), axis tilts ('axs_roll', 'axs_pitch'),
-volume transformations ('vol_tra', 'vol_rot'), recostruction resolution and anisotropic sampling ('img_pixel', 'det_sample', 'vol_sample').
+volume transformations ('vol_tra', 'vol_rot'), reconstruction resolution and anisotropic sampling ('img_pixel', 'det_sample', 'vol_sample').
 """
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>> Imports >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -162,7 +162,7 @@ class basic():
         min_set = ['src2obj', 'det2obj', 'det_pixel']
         for key in min_set:
             if not key in self.parameters:
-                raise Exception('Geometry parameter missing after parcing: ' + key)
+                raise Exception('Geometry parameter missing after parsing: ' + key)
 
     def log(self, message):
         """Add a message to the geometry changelog.
@@ -578,7 +578,7 @@ class circular(basic):
         det_pos, det_tan, det_rad, det_orth = circular_orbit(det2obj, thetas, roll = axs_roll, pitch = axs_pitch, yaw = 180,
                                                          origin = org, tan_shift = -det_tan + axs_tan, index = index)
 
-        # Invert vectors to keep them alligned with the source vectors:
+        # Invert vectors to keep them aligned with the source vectors:
         det_tan, det_rad, det_orth = -det_tan, -det_rad, -det_orth
 
         # Apply detector rotations:
@@ -687,7 +687,7 @@ class helical(circular):
         if index: vrt = vrt[index]
         det_pos = det_pos + det_orth * vrt[:, None]
 
-        # Invert vectors to keep them alligned with the source vectors:
+        # Invert vectors to keep them aligned with the source vectors:
         det_tan, det_rad, det_orth = -det_tan, -det_rad, -det_orth
 
         # Apply detector rotations:
@@ -722,9 +722,9 @@ class linear(basic):
             det2obj  : object to detector distance
             det_pixel: detector pixel size
             img_pixel: reconstruction volume voxel size (optional)
-            src_hrz_rng: source horizlontal movement range
+            src_hrz_rng: source horizontal movement range
             src_vrt_rng: source vertical movement range
-            det_hrz_rng: detector horizlontal movement range
+            det_hrz_rng: detector horizontal movement range
             det_vrt_rng: detector vertical movement range
             unit     : unit length (default = 'mm')
         '''
@@ -733,10 +733,10 @@ class linear(basic):
 
         # Additional parameters:
         self.parameters.update({
-                           'src_hrz_rng':src_hrz_rng,   # source vertical, horizlontal motion range
+                           'src_hrz_rng':src_hrz_rng,   # source vertical, horizontal motion range
                            'src_vrt_rng':src_vrt_rng,
 
-                           'det_hrz_rng':det_hrz_rng,   # source vertical, horizlontal motion range
+                           'det_hrz_rng':det_hrz_rng,   # source vertical, horizontal motion range
                            'det_vrt_rng':det_vrt_rng,
 
                            'det_roll':0,               # detector rotations (in degrees)
@@ -795,14 +795,14 @@ class linear(basic):
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>> Static methods >>>>>>>>>>>>>>>>>>>>>>>
 def tiles_shape(shape, geometry_list):
     """
-    Compute the size of the stiched dataset.
+    Compute the size of the stitched dataset.
 
     Args:
         shape: shape of a single projection stack.
         geometry_list: list of geometries.
 
     """
-    # Phisical detector size:
+    # Physical detector size:
     min_x, min_y = numpy.inf, numpy.inf
     max_x, max_y = -numpy.inf, -numpy.inf
 
@@ -890,7 +890,7 @@ def volume_bounds(geom, proj_shape):
 
 def volume_shape(geom, proj_shape):
     '''
-    Based on physical volume bnounds compute shape in pixels:
+    Based on physical volume bounds compute shape in pixels:
     '''
     return geom.volume_shape(proj_shape)
 
@@ -907,7 +907,7 @@ def linear_orbit(hrz_rng, rad_rng, vrt_rng, proj_count, index = None):
     Returns:
         position   : position vector
         tangent    : tangent direction
-        radius     : radal direction
+        radius     : radial direction
         orthogonal : orthogonal direction
     '''
 
@@ -948,7 +948,7 @@ def circular_orbit(radius, thetas, roll = 0, pitch = 0, yaw = 0,
     Returns:
         position   : position vector
         tangent    : tangent direction
-        radius     : radal direction
+        radius     : radial direction
         orthogonal : orthogonal direction
     '''
     # Generate axis and orthogonals:
@@ -957,7 +957,7 @@ def circular_orbit(radius, thetas, roll = 0, pitch = 0, yaw = 0,
     tan0 = M.dot([1, 0, 0])
     rad0 = M.dot([0, 1, 0])
 
-    # Genertate initial circular orbit:
+    # Generate initial circular orbit:
     M = _axangle2mat_(axis, yaw)
     v0 = M.dot([0, -radius, 0])
     tan0 = M.dot(tan0)
